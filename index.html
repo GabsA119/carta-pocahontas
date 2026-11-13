@@ -616,6 +616,29 @@ figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;p
 #remote .b2.l{left:22px}#remote .b2.r{right:22px}
 .plg{display:flex;align-items:center;gap:6px;margin:0 0 8px;font-size:21px;font-weight:700;letter-spacing:-.02em}
 .plg svg{width:15px;height:18px;fill:#fff}
+
+/* película: botón a la derecha del título, imagen con movimiento y pantalla final */
+.ttl{position:relative}
+.ttl h1{white-space:nowrap}
+.ttl .pill{position:absolute;right:0;top:4px;white-space:nowrap;font-size:15px;padding:12px 16px}
+.hv .pimg{animation:kbz 16s ease-in-out infinite alternate}
+@keyframes kbz{from{transform:scale(1)}to{transform:scale(1.1) translate(-1.5%,1%)}}
+#endscr{position:fixed;inset:0;z-index:34;display:flex;flex-direction:column;justify-content:center;padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom));background:rgba(5,5,12,.93);color:#fff;font-family:var(--sf);opacity:0;pointer-events:none;transition:opacity .9s ease;overflow-y:auto}
+#endscr.on{opacity:1;pointer-events:auto}
+#endscr .ek{margin:0;font-size:11.5px;font-weight:700;letter-spacing:.14em;opacity:.6}
+#endscr h2{margin:4px 0 14px;font-size:30px;font-weight:800;letter-spacing:-.035em}
+#endscr .ec{position:relative;display:block;width:100%;aspect-ratio:16/6.8;margin:0 0 12px;padding:0;border:0;border-radius:20px;overflow:hidden;background:#222;color:#fff;text-align:left;font-family:var(--sf);cursor:pointer;opacity:0;transform:translateY(18px);transition:transform .25s}
+#endscr.on .ec{animation:ecin .7s cubic-bezier(.2,.8,.2,1) forwards}
+#endscr.on .ec:nth-of-type(2){animation-delay:.12s}#endscr.on .ec:nth-of-type(3){animation-delay:.24s}
+@keyframes ecin{to{opacity:1;transform:none}}
+#endscr .ec:active{transform:scale(.97)!important}
+#endscr .ec img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+#endscr .ec .eg{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0) 65%)}
+#endscr .ec .et{position:absolute;left:16px;right:16px;bottom:13px}
+#endscr .ec small{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;opacity:.75}
+#endscr .ec b{font-size:21px;font-weight:700;letter-spacing:-.02em}
+#endscr .ec.gf{outline:2px solid rgba(255,255,255,.85);outline-offset:-2px}
+#endscr .eb{display:flex;gap:10px;justify-content:center;margin-top:4px}
 </style>
 </head>
 <body>
@@ -752,6 +775,7 @@ figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;p
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pear" viewBox="0 0 100 120"><path d="M50 24C38 24 35 35 31 47C27 59 13 67 13 88C13 107 29 117 50 117C71 117 87 107 87 88C87 67 73 59 69 47C65 35 62 24 50 24Z"/><path d="M50 26C50 17 52 10 59 3" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M55 16C62 4 76 3 83 9C77 21 63 23 55 16Z"/></symbol></svg>
 <div id="pwr"><div id="crt"><b class="ct"></b><b class="cb"></b><i class="cl"></i></div><div id="plogo"><svg viewBox="0 0 100 120"><use href="#pear"/></svg><span>TV</span></div>
 <div id="remote"><i class="pw"><svg viewBox="0 0 16 16"><path d="M8 1.5v6"/><path d="M4.2 3.6a6 6 0 1 0 7.6 0"/></svg></i><i class="tp"></i><i class="b2 l">‹</i><i class="b2 r">tv</i></div></div>
+<div id="endscr"></div>
 <div id="kb" class="kb" aria-hidden="true"></div>
 <div id="kitty" aria-hidden="true"><div class="dz">💫💫</div><div class="stm">♨</div><div class="ks"></div><div class="kw"><svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
 <defs>
@@ -1788,7 +1812,7 @@ async function powerSequence(){
   await sleep(1700);
   P.classList.remove('on'); P.querySelectorAll('*').forEach(e => e.getAnimations().forEach(a => a.cancel()));
   tvSync(); tvScroll();
-  kitty.show(); kitty.say('Toca un capítulo para leerlo, mami 📺');
+  kitty.show(); kitty.say('Toca «Ver película» para empezar 🍿');
 }
 
 
@@ -1868,12 +1892,13 @@ function buildTV(){
   tv.appendChild(nav);
   const hero = el('section', 'hero'); hero.id = 'tvhero';
   hero.innerHTML = '<figure class="hv vid cvid"><img class="pimg" src="media/cover.jpg" alt="" draggable="false"><video class="ph" data-src="media/cover.mp4" data-audio="media/cover.m4a" muted loop playsinline preload="none"></video></figure><div class="hshade"></div>' +
-    '<div class="hinfo"><p class="plg"><svg viewBox="0 0 100 120"><use href="#pear"/></svg>TV</p><p class="hk">UNA CARTA DE GABRIEL</p><h1>Para mi Pocahontas</h1><p class="hs">libre como el viento</p>' +
-    '<div class="hmeta"><span class="bd">♥</span><span>Romance</span><span>2026</span><span>' + src.length + ' capítulos</span><span class="bd">HD</span></div>' +
-    '<div class="hbtn"><button class="pill pri" data-open="0">▶︎&nbsp; Leer la carta</button><button class="pill gl" data-open="rnd">Al azar</button><button class="pill gl rd" data-hero="1" aria-label="Ver el video con sonido">🔊</button></div></div>';
+    '<div class="hinfo"><p class="plg"><svg viewBox="0 0 100 120"><use href="#pear"/></svg>TV</p><p class="hk">UNA PELÍCULA DE GABRIEL</p>' +
+    '<div class="ttl"><h1>Para mi<br>Pocahontas</h1><button class="pill pri" data-play="1">▶︎&nbsp; Ver película</button></div><p class="hs">libre como el viento</p>' +
+    '<div class="hmeta"><span class="bd">♥</span><span>Romance</span><span>2026</span><span>' + src.length + ' capítulos</span><span class="bd">HD</span></div></div>';
   tv.appendChild(hero); heroFig = hero.querySelector('.hv'); heroVid = heroFig.querySelector('video'); regVid(heroVid);
+  heroVid.addEventListener('ended', () => { if(bigVid === heroVid) showEnd(); });
   const row = (id, title, sub) => { const s = el('section', 'row'); s.id = id; s.appendChild(el('h2', '', title + (sub ? '<small>' + sub + '</small>' : ''))); const r = el('div', 'rail'); s.appendChild(r); tv.appendChild(s); return r; };
-  const rc = row('r-cap', 'Capítulos', 'toca uno para leerlo');
+  const rc = row('r-cap', 'Capítulos', 'toca uno para verlo');
   src.forEach((g, i) => {
     const b = el('button', 'tvc ch'); b.dataset.i = i;
     b.innerHTML = '<span class="th"><img loading="lazy" draggable="false" alt="" src="' + thumbOf(g) + '"><span class="sh2"></span><span class="ct">Capítulo ' + (i + 1) + '</span><span class="cn">' + CHT[i] + '</span><i class="bar"><b></b></i></span>';
@@ -1881,7 +1906,7 @@ function buildTV(){
   });
   const rv = row('r-vid', 'Videos', 'toca para verlos con sonido'); allV.forEach(f => rv.appendChild(mcard(f)));
   const rp = row('r-pho', 'Fotos', 'pellizca para acercar'); allP.forEach(f => rp.appendChild(mcard(f)));
-  const sp = el('section', 'surp'); sp.innerHTML = '<div class="sc"><p class="sk">UNA ÚLTIMA SORPRESA</p><h3>Pide tu deseo</h3><p>Cuando hayas leído todo, séllalo y mira lo que guardé para ti.</p><div id="wishslot"></div></div>';
+  const sp = el('section', 'surp'); sp.innerHTML = '<div class="sc"><p class="sk">UNA ÚLTIMA SORPRESA</p><h3>Pide tu deseo</h3><p>Cuando termines de ver la película, pide tu deseo y mira lo que guardé para ti.</p><div id="wishslot"></div></div>';
   tv.appendChild(sp); sp.querySelector('#wishslot').appendChild($('wish'));
   // detalle del capítulo
   dt.innerHTML = '<div class="dbg"></div><div class="dsh"></div><button class="pill gl dback" aria-label="Volver">‹&nbsp; Inicio</button><div class="dsc"><p class="dk"></p><h1 class="dtt"></h1><p class="dss"></p><div class="dmeta"></div><div class="dtx"></div><h2 class="dh">En este capítulo</h2><div class="rail drail"></div><button class="dnext"></button></div>';
@@ -1926,7 +1951,7 @@ function openCh(i){
 function closeCh(){ dtOpen = -1; dt.classList.remove('on'); setTimeout(() => { if(dtOpen < 0) dt.querySelector('.drail').innerHTML = ''; }, 500); tvSync(); }
 /* un solo manejador de toques: sirve para las filas, el detalle y las fotos/videos, y no se confunde con el desplazamiento */
 let tapS = null;
-$('letter').addEventListener('pointerdown', e => { tapS = {x: e.clientX, y: e.clientY, t: performance.now(), tg: e.target}; const c = e.target.closest && e.target.closest('.tvc,.pill,.dnext'); if(c) c.classList.add('pr'); });
+$('letter').addEventListener('pointerdown', e => { if(heroVid && heroVid.paused && dtOpen < 0 && !bigWrap && heroVid.hasAttribute('src')) heroVid.play().catch(()=>{}); tapS = {x: e.clientX, y: e.clientY, t: performance.now(), tg: e.target}; const c = e.target.closest && e.target.closest('.tvc,.pill,.dnext'); if(c) c.classList.add('pr'); });
 const unpr = () => document.querySelectorAll('.pr').forEach(c => c.classList.remove('pr'));
 $('letter').addEventListener('pointercancel', () => { tapS = null; unpr(); });
 $('letter').addEventListener('pointerup', e => {
@@ -1938,11 +1963,31 @@ $('letter').addEventListener('pointerup', e => {
   if((x = t.closest('[data-to]'))){ const to = $(x.dataset.to); if(to) tv.scrollTo({top: x.dataset.to === 'tvhero' ? 0 : to.offsetTop - 70, behavior: 'smooth'}); return; }
   if((x = t.closest('.dback'))){ closeCh(); return; }
   if((x = t.closest('.dnext'))){ const n = +x.dataset.i; if(n < 0) closeCh(); else openCh(n); return; }
-  if((x = t.closest('[data-hero]'))){ openBig(heroFig); return; }
-  if((x = t.closest('[data-open]'))){ openCh(x.dataset.open === 'rnd' ? Math.floor(Math.random()*18) : +x.dataset.open); return; }
+  if((x = t.closest('[data-play]'))){ playMovie(); return; }
   if((x = t.closest('.ch'))){ openCh(+x.dataset.i); return; }
   if((x = t.closest('.tvc.vid'))){ openBig(x); return; }
   if((x = t.closest('.tvc.pho'))){ openPhoto(x.querySelector('img')); return; }
+});
+/* final de la película: recomendaciones como en Netflix (un video y una foto al azar, y el último regalo) */
+function playMovie(){ if(!bigWrap) openBig(heroFig); }
+function showEnd(){
+  stopVidAudio(1000);
+  if(bigAudio){ bigAudio = false; inVideo = false; if(song.paused) song.play().catch(()=>{}); fade(song, musicTarget(), 2200); }
+  const vs = [...tv.querySelectorAll('#r-vid .tvc')], ps = [...tv.querySelectorAll('#r-pho .tvc')], rnd = a => a[Math.floor(Math.random()*a.length)];
+  const rv = rnd(vs), rp = rnd(ps), E = $('endscr');
+  const card = (k, img, lab, ttl) => '<button class="ec' + (k === 'g' ? ' gf' : '') + '" data-rec="' + k + '"><img alt="" draggable="false" src="' + img + '"><span class="eg"></span><span class="et"><small>' + lab + '</small><b>' + ttl + '</b></span></button>';
+  E.innerHTML = '<p class="ek">A CONTINUACIÓN</p><h2>Más para ver</h2>' +
+    card('v', rv.querySelector('.pimg').getAttribute('src'), 'VIDEO', (rv.querySelector('figcaption') || {}).textContent || 'Un video') +
+    card('p', rp.querySelector('.pimg').getAttribute('src'), 'FOTO', (rp.querySelector('figcaption') || {}).textContent || 'Una foto') +
+    card('g', 'media/gift.jpg', 'ÚLTIMO REGALO', 'Tu sorpresa te espera') +
+    '<div class="eb"><button class="pill gl" data-again="1">↻&nbsp; Ver de nuevo</button><button class="pill gl" data-endx="1">Cerrar</button></div>';
+  E.recs = {v: rv, p: rp}; E.classList.add('on');
+}
+$('endscr').addEventListener('click', async e => {
+  const E = $('endscr'), t = e.target.closest ? e.target : null; if(!t) return; let x;
+  if((x = t.closest('[data-rec]'))){ const k = x.dataset.rec, r = E.recs; await closeBig(); if(k === 'v') openBig(r.v); else if(k === 'p') openPhoto(r.p.querySelector('img')); else $('wish').click(); }
+  else if(t.closest('[data-again]')){ await closeBig(); playMovie(); }
+  else if(t.closest('[data-endx]')) closeBig();
 });
 async function showBook(){
   buildTV(); layoutBook();
@@ -1954,7 +1999,7 @@ async function showBook(){
   await sleep(120); tv.classList.add('in');
   await sleep(1400);
   envOn = false; tvSync(); tvScroll();
-  kitty.show(); kitty.say('Toca un capítulo para leerlo, mami 📺');
+  kitty.show(); kitty.say('Toca «Ver película» para empezar 🍿');
 }
 
 /* ================= Videos de la carta ================= */
@@ -2007,7 +2052,7 @@ async function openBig(wrap){
   if(bigWrap) return;
   const v = wrap.querySelector('video'); bigWrap = wrap; bigAudio = false;
   wrap.classList.add('big'); $('vbg').classList.add('on');
-  bigVid = v; bigPh = document.createComment(''); v.parentNode.insertBefore(bigPh, v); loadV(v); $('vfull').appendChild(v); $('vfull').classList.add('on'); if(!v.zoomReset) makeZoom(v, () => closeBig()); v.zoomReset(); v.play().catch(()=>{});   // el video pasa a una capa libre: así no lo recorta la hoja
+  bigVid = v; bigPh = document.createComment(''); v.parentNode.insertBefore(bigPh, v); loadV(v); if(v === heroVid){ v.loop = false; try{ v.currentTime = 0; }catch(e){} } $('vfull').appendChild(v); $('vfull').classList.add('on'); if(!v.zoomReset) makeZoom(v, () => closeBig()); v.zoomReset(); v.play().catch(()=>{});   // el video pasa a una capa libre: así no lo recorta la hoja
   if(v.hasAttribute('data-silent') || !actx) return;      // sin sonido: la música de la carta sigue sonando
   if(!vbuf.has(v)){ await ensureBuf(v); if(bigWrap !== wrap || !vbuf.has(v)) return; }
   bigAudio = true; inVideo = true;
@@ -2018,8 +2063,8 @@ async function openBig(wrap){
 async function closeBig(){
   if(!bigWrap) return;
   if(bigWrap === sbig) return closeSlideBig();
-  const wrap = bigWrap; bigWrap = null;
-  if(bigVid && bigPh && bigPh.parentNode){ if(bigVid.zoomReset) bigVid.zoomReset(); bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); if(bigVid === heroVid) bigVid.play().catch(()=>{}); else unloadV(bigVid); } bigVid = bigPh = null; $('vfull').classList.remove('on');
+  const wrap = bigWrap; bigWrap = null; $('endscr').classList.remove('on');
+  if(bigVid && bigPh && bigPh.parentNode){ if(bigVid.zoomReset) bigVid.zoomReset(); bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); if(bigVid === heroVid){ bigVid.loop = true; bigVid.play().catch(()=>{}); } else unloadV(bigVid); } bigVid = bigPh = null; $('vfull').classList.remove('on');
   wrap.classList.remove('big'); $('vbg').classList.remove('on');
   if(!bigAudio) return;
   bigAudio = false; inVideo = false;
