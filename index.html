@@ -1837,20 +1837,23 @@ async function showBook(){
   book.style.transition = 'transform 1.4s cubic-bezier(.3,.8,.25,1)'; book.style.transform = 'translate(0px,0px) scale(1)';
   await sleep(1450);
   book.style.transition = ''; book.style.transform = 'none'; L.style.transition = '';
-  envOn = false; cur = 0; hinted = false; placeAll(false); showPage(); loadVidAudio();
+  envOn = false; cur = 0; hinted = false; placeAll(false); showPage();
   kitty.show(); kitty.say('Toca el lado derecho para pasar la hoja y el izquierdo para volver 📄');
 }
 
 /* ================= Videos de la carta ================= */
 const vids = [...document.querySelectorAll('.vid video')];
+/* en iPhone cada video cargado ocupa memoria: solo tiene archivo cargado el de la hoja que se ve (y el de la portada) */
+function unloadV(v){ if(!v.dataset.src) v.dataset.src = v.getAttribute('src'); if(v.hasAttribute('src')){ try{ v.pause(); }catch(e){} v.removeAttribute('src'); v.load(); } }
+function loadV(v){ if(!v.dataset.src) v.dataset.src = v.getAttribute('src'); if(!v.hasAttribute('src')){ v.setAttribute('src', v.dataset.src); v.preload = 'auto'; v.load(); } }
+vids.forEach(unloadV);
 vids.forEach(v => { v.muted = true; v.loop = true; v.playsInline = true; });
 function regVid(v){ if(vids.includes(v)) return; vids.push(v); v.muted = true; v.loop = true; v.playsInline = true; v.addEventListener('timeupdate', () => { if(bigWrap && (bigWrap.contains(v) || bigVid === v) && vgain && v.currentTime < vlast - .5) playVidSrc(v, v.currentTime); vlast = v.currentTime; }); }
 let syncT = 0;   // los videos solo corren mientras se ven (menos memoria en el iPhone)
 function syncVideos(){
   if(bigWrap) return;
   const here = pages[cur];
-  vids.forEach(v => { const on = here && here.contains(v); if(on && v.paused) v.play().catch(()=>{}); else if(!on && !v.paused) v.pause(); });
-  const cv = document.querySelector('.pg.cover video'); if(cv){ if(cur === 0) cv.play().catch(()=>{}); else cv.pause(); }
+  vids.forEach(v => { const on = here && here.contains(v); if(on){ loadV(v); if(v.paused) v.play().catch(()=>{}); } else unloadV(v); });
 }
 const playAll = syncVideos;
 /* El sonido de cada video se reproduce por WebAudio (el video siempre va en mudo): sin cortes de audio en iPhone y con fundidos suaves */
@@ -1861,14 +1864,10 @@ async function audioBuf(src){      // el audio va incrustado: así también suen
   else ab = await (await fetch(src)).arrayBuffer();
   return new Promise((res, rej) => { const pr = actx.decodeAudioData(ab, res, rej); if(pr && pr.then) pr.then(res, rej); });
 }
-async function loadVidAudio(){
-  if(!actx) return;
-  for(const v of vids){
-    const src = v.dataset.audio; if(!src || vbuf.has(v)) continue;
-    try{
-      vbuf.set(v, await audioBuf(src));
-    }catch(e){}
-  }
+async function ensureBuf(v){      // el audio se decodifica solo al agrandar el video, y se guardan pocos a la vez (cada uno pesa mucho una vez decodificado)
+  if(!actx || vbuf.has(v)) return;
+  const src = v.dataset.audio || v.getAttribute('data-audio'); if(!src) return;
+  try{ vbuf.set(v, await audioBuf(src)); while(vbuf.size > 3){ const k = vbuf.keys().next().value; if(k === v) break; vbuf.delete(k); } }catch(e){}
 }
 let vsrc = null, vgain = null, vlast = 0;
 function playVidSrc(v, from){
@@ -1897,7 +1896,8 @@ async function openBig(wrap){
   const v = wrap.querySelector('video'); bigWrap = wrap; bigAudio = false;
   wrap.classList.add('big'); $('vbg').classList.add('on');
   bigVid = v; bigPh = document.createComment(''); v.parentNode.insertBefore(bigPh, v); $('vfull').appendChild(v); $('vfull').classList.add('on'); if(!v.zoomReset) makeZoom(v, () => closeBig()); v.zoomReset(); v.play().catch(()=>{});   // el video pasa a una capa libre: así no lo recorta la hoja
-  if(v.hasAttribute('data-silent') || !vbuf.has(v) || !actx) return;      // sin sonido: la música de la carta sigue sonando
+  if(v.hasAttribute('data-silent') || !actx) return;      // sin sonido: la música de la carta sigue sonando
+  if(!vbuf.has(v)){ await ensureBuf(v); if(bigWrap !== wrap || !vbuf.has(v)) return; }
   bigAudio = true; inVideo = true;
   if(actx.state !== 'running') actx.resume();
   startVidAudio(v);
@@ -1930,21 +1930,15 @@ slideVids.forEach(v => {
     vlast = v.currentTime;
   });
 });
-async function loadSlideAudio(){
-  if(!actx) return;
-  for(const v of slideVids){
-    const src = v.dataset.audio; if(!src || vbuf.has(v)) continue;
-    try{
-      vbuf.set(v, await audioBuf(src));
-    }catch(e){}
-  }
-}
-function openSlideBig(fig){        // el video sigue en play y en mudo; solo al agrandarlo suena
+async function loadSlideAudio(){ slideVids.forEach(loadV); }      // el audio de cada uno se decodifica al agrandarlo
+slideVids.forEach(unloadV);
+async function openSlideBig(fig){        // el video sigue en play y en mudo; solo al agrandarlo suena
   if(bigWrap) return;
   bigWrap = sbig; sbigFig = fig; bigAudio = false;
   const v = fig.querySelector('video');
   if(v){
     sbig.appendChild(v); v.play().catch(()=>{});
+    if(!v.hasAttribute('data-silent') && actx && !vbuf.has(v)){ await ensureBuf(v); if(bigWrap !== sbig) return; }
     if(!v.hasAttribute('data-silent') && vbuf.has(v) && actx){
       bigAudio = true; inVideo = true;
       if(actx.state !== 'running') actx.resume();
@@ -2041,7 +2035,7 @@ async function wishScene(){
   cw.classList.remove('cutting'); host.classList.remove('cut');
   kitty.mood(false);
   const b = $('wish1'); b.textContent = 'Continuar 🌿'; kitty.tip('Toca continuar 🌿'); await sleep(900); await waitWish(); kitty.say('');
-  slideEls.forEach(e => e.classList.remove('on')); slideVids.forEach(v => v.pause());
+  slideEls.forEach(e => e.classList.remove('on')); slideVids.forEach(unloadV);
   await sleep(900);
 }
 
