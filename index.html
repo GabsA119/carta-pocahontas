@@ -224,7 +224,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 .vid.big .tag{display:none}
 #vfull{position:fixed;inset:0;z-index:31;display:none;align-items:center;justify-content:center;pointer-events:none}
 #vfull.on{display:flex}
-#vfull video{display:block;width:auto;height:auto;max-width:94vw;max-height:86vh;border-radius:12px;box-shadow:0 20px 70px rgba(0,0,0,.7);background:#04222d}
+#vfull video{pointer-events:auto;touch-action:none;transform-origin:50% 50%;display:block;width:auto;height:auto;max-width:94vw;max-height:86vh;border-radius:12px;box-shadow:0 20px 70px rgba(0,0,0,.7);background:#04222d}
 #pbg{position:fixed;inset:0;z-index:30;background:rgba(2,20,27,.94);opacity:0;pointer-events:none;transition:opacity .5s ease}
 #pbg.on{opacity:1;pointer-events:auto}
 #pim{position:absolute;inset:0;margin:auto;max-width:96vw;max-height:88vh;touch-action:none;transform-origin:50% 50%;-webkit-user-drag:none;border-radius:6px}
@@ -370,6 +370,9 @@ canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 .pg .zone .media.sh-squircle img,.pg .zone .media.sh-squircle video{-webkit-clip-path:url(#cp-squircle);clip-path:url(#cp-squircle)}
 .pg.cover .cvid .ph{-webkit-clip-path:url(#cp-arch);clip-path:url(#cp-arch);border-radius:0;box-shadow:none}
 
+.pg .zone .qt{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px 6px;box-sizing:border-box;opacity:0;transform:rotate(var(--r,0deg));transition:opacity 1.6s ease;pointer-events:none}
+.pg .zone .qt.in{opacity:1}
+.pg .zone .qt span{display:block;font-family:var(--script);font-style:normal;line-height:1.18;color:var(--ruby);max-width:100%}
 .pg .zone.rd{margin-bottom:6px}
 .pg .zone.rd .media{top:6px;bottom:34px;height:auto;left:0;right:0;margin:0 auto;width:auto;aspect-ratio:1/1;border-radius:50%;padding:7px;background:#fffaf4}
 .pg .zone.rd .media video{border-radius:50%}
@@ -566,11 +569,6 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
     <div class="pgsrc" data-lay="b"><div class="zone "><figure class="media vid" style="left:0%;top:0%;width:63%;height:100%;--r:-2deg"><video src="media/L3.mp4" data-audio="media/L3.m4a" poster="media/L3.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Un atardecer cualquiera</figcaption></figure><figure class="media vid" style="left:52%;top:42%;width:47%;height:57%;--r:4deg"><video src="media/L4.mp4" data-audio="media/L4.m4a" poster="media/L4.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Libre como el viento</figcaption></figure></div><p class="p ">Siempre te llamo mi Pocahontas, y no es por una película. Es porque eres libre, valiente y de espíritu fuerte; de esas personas que no se dejan atrapar por nadie y que, cuando sonríen, le ponen color a todo lo que tienen alrededor.</p><p class="p note">Frente al mar te veo más tú que nunca: libre, tranquila, dejando que el viento haga lo suyo.</p></div>
 
     <div class="pgsrc" data-lay="c"><p class="p ">Me acuerdo de tu risa, de tus uñas rositas, de tus enojos que me hacían reír por dentro y de cómo me regañabas para que yo fuera mejor. Hasta lo que no entendía de ti terminaba gustándome, porque eras tú.</p><div class="zone "><figure class="media vid" style="left:37%;top:0%;width:63%;height:100%;--r:2deg"><video src="media/L5.mp4" data-audio="media/L5.m4a" poster="media/L5.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Hasta así te ves linda</figcaption></figure><figure class="media vid" style="left:1%;top:42%;width:47%;height:57%;--r:-4deg"><video src="media/L6.mp4" data-audio="media/L6.m4a" poster="media/L6.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Cantando a tu manera</figcaption></figure></div><p class="p note">«Hasta así me veo linda», dices tú… y tienes razón: hasta así, y hasta cuando te enojas.</p></div>
-<div class="pgsrc"><div class="orn"><span>✦</span></div>
-    <div class="moment" id="moment">
-      <div class="clock">11:11</div>
-      <p>Pide tu deseo, mi Judith.<br>Yo ya pedí el mío.</p>
-    </div></div>
 
     <div class="pgsrc" data-lay="d"><p class="p ">El año pasado tu cumpleaños no terminó como merecías, y desde entonces me quedé con esa espinita. Perdóname por eso. Ahora no vengo a pedirte nada: vengo a que celebres, a que te rías y a que te sientas la persona más querida del mundo, porque lo eres.</p><div class="zone "><figure class="media vid" style="left:1%;top:12%;width:48%;height:88%;--r:3deg"><video src="media/L7.mp4" data-audio="media/L7.m4a" poster="media/L7.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Una letra en la arena</figcaption></figure><figure class="media vid" style="left:51%;top:0%;width:48%;height:88%;--r:-3deg"><video src="media/L8.mp4" data-audio="media/L8.m4a" poster="media/L8.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>La A y la G</figcaption></figure></div><p class="p note">Escribimos en la arena sabiendo que el mar lo borraría, pero lo que sentí ese día no se borra.</p></div>
 
@@ -1713,15 +1711,46 @@ function buildBook(){
   PLAN.forEach((idx, i) => {
     const sh = document.createElement('div'); sh.className = 'sheet';
     const pg = document.createElement('div'); pg.className = 'pg';
-    if(idx[0] === 'cover'){ pg.classList.add('cover'); pg.innerHTML = '<div class="tx">Para mi Pocahontas, libre como el viento</div><figure class="vid cvid"><video class="ph" src="media/cover.mp4" poster="media/cover.jpg" muted loop playsinline preload="auto" data-silent></video></figure>'; }
+    if(idx[0] === 'cover'){ pg.classList.add('cover'); pg.innerHTML = '<div class="tx">Para mi Pocahontas, libre como el viento</div><figure class="vid cvid"><video class="ph" src="media/cover.mp4" poster="media/cover.jpg" muted loop playsinline preload="auto" data-audio="media/cover.m4a"></video></figure>'; }
     else { const g = src[i - 1]; if(g.dataset.lay) pg.dataset.lay = g.dataset.lay; const fit = document.createElement('div'); fit.className = 'fit'; pg.appendChild(fit); while(g.firstChild) fit.appendChild(g.firstChild); }
     sh.appendChild(pg);
     const num = document.createElement('div'); num.className = 'num'; num.textContent = (i + 1) + ' / ' + PLAN.length; sh.appendChild(num);
     book.appendChild(sh); pages.push(sh);
   });
   placeAll(false);
+  const cvv = $('book').querySelector('.pg.cover video'); if(cvv) regVid(cvv);      // el video de la portada también suena al agrandarlo
 }
 
+/* frases y versos en los huecos que dejan las fotos y los videos */
+const QUOTES = ['Contigo hasta el silencio suena bonito.', 'Si volviera a nacer, te buscaría en cada vida.', 'Eres mi lugar favorito en el mundo.', 'Qué suerte la mía: cruzarme contigo.', 'Tu sonrisa es mi mejor mañana.', 'No te quiero por lo que eres, sino por lo que soy contigo.', 'Hay personas que son hogar: tú eres la mía.', 'Contigo aprendí que hasta lo simple es mágico.', 'Si me preguntan qué es bonito, pienso en ti.', 'Te quiero en lo grande, y más en lo pequeño.', 'Eres la razón de mis mejores casualidades.', 'A tu lado el tiempo se vuelve cuento.', 'Que nunca te falte luz, mi Judith.', 'Mi parte favorita del día es pensarte.', 'En cada versión de mí, siempre estás tú.', 'Quién diría que un «hola» sería el comienzo de todo.', 'Eres poesía sin esfuerzo.', 'Por ti, hasta la lluvia es bonita.', 'Cuidarte es mi forma favorita de quererte.', 'Todo lo bonito me recuerda a ti.'];
+let quoteI = 0;
+function fillGaps(sh){
+  sh.querySelectorAll('.zone:not(.rd)').forEach(z => {
+    if(z.dataset.gap || !z.clientWidth || !z.clientHeight) return; z.dataset.gap = '1';
+    const zr = z.getBoundingClientRect(), CS = 8, nx = Math.floor(zr.width/CS), ny = Math.floor(zr.height/CS); if(nx < 6 || ny < 4) return;
+    const g = Array.from({length: ny}, () => new Array(nx).fill(0));
+    z.querySelectorAll('.media').forEach(m => { const r = m.getBoundingClientRect(), pad = 6;
+      for(let y = Math.max(0, Math.floor((r.top - zr.top - pad)/CS)); y <= Math.min(ny - 1, Math.floor((r.bottom - zr.top + pad)/CS)); y++)
+        for(let x = Math.max(0, Math.floor((r.left - zr.left - pad)/CS)); x <= Math.min(nx - 1, Math.floor((r.right - zr.left + pad)/CS)); x++) g[y][x] = 1; });
+    let best = null, h = new Array(nx).fill(0);        // el rectángulo vacío más grande
+    for(let y = 0; y < ny; y++){
+      for(let x = 0; x < nx; x++) h[x] = g[y][x] ? 0 : h[x] + 1;
+      for(let x = 0; x < nx; x++){ let mn = h[x]; for(let x2 = x; x2 < nx && h[x2] > 0; x2++){ mn = Math.min(mn, h[x2]); const a = mn*(x2 - x + 1); if(!best || a > best.a) best = {a, x, y: y - mn + 1, w: x2 - x + 1, h: mn}; } }
+    }
+    if(!best || best.w*CS < 76 || best.h*CS < 48) return;
+    const q = document.createElement('div'); q.className = 'qt';
+    q.style.cssText = 'left:' + (best.x*CS/zr.width*100) + '%;top:' + (best.y*CS/zr.height*100) + '%;width:' + (best.w*CS/zr.width*100) + '%;height:' + (best.h*CS/zr.height*100) + '%;--r:' + ((Math.random() - .5)*3) + 'deg';
+    const sp = document.createElement('span'); q.appendChild(sp); z.appendChild(q);
+    let ok = false;
+    for(let t = 0; t < 8 && !ok; t++){                       // se prueba una frase tras otra hasta que una quepa en el hueco
+      sp.textContent = QUOTES[(quoteI + t) % QUOTES.length];
+      for(let fs = 20; fs >= 12; fs--){ sp.style.fontSize = fs + 'px'; if(sp.offsetHeight <= q.clientHeight - 4 && sp.offsetWidth <= q.clientWidth - 4){ ok = true; break; } }
+      if(ok) quoteI += t + 1;
+    }
+    if(!ok){ q.remove(); return; }
+    requestAnimationFrame(() => q.classList.add('in'));
+  });
+}
 let shapeI = 0;
 const SHAPES = {tall: ['arch', 'oval', 'blob'], sq: ['heart', 'flower', 'hex', 'star', 'diamond', 'squircle', 'blob'], wide: ['oval', 'wave', 'squircle']};
 function shapeTiles(){
@@ -1742,6 +1771,7 @@ function fitPages(){      // cada hoja es fija: si el texto no cabe, se achica h
 }
 function revealPage(i){
   const sh = pages[i]; if(!sh) return;
+  setTimeout(() => fillGaps(sh), 650);
   sh.querySelectorAll('.p,.moment,.sign,.ps,.wish,.media').forEach(el => el.classList.add('in'));
   if(i === 1) $('rose').classList.add('draw');
 }
@@ -1811,6 +1841,7 @@ async function showBook(){
 /* ================= Videos de la carta ================= */
 const vids = [...document.querySelectorAll('.vid video')];
 vids.forEach(v => { v.muted = true; v.loop = true; v.playsInline = true; });
+function regVid(v){ if(vids.includes(v)) return; vids.push(v); v.muted = true; v.loop = true; v.playsInline = true; v.addEventListener('timeupdate', () => { if(bigWrap && (bigWrap.contains(v) || bigVid === v) && vgain && v.currentTime < vlast - .5) playVidSrc(v, v.currentTime); vlast = v.currentTime; }); }
 let syncT = 0;   // los videos solo corren mientras se ven (menos memoria en el iPhone)
 function syncVideos(){
   if(bigWrap) return;
@@ -1862,7 +1893,7 @@ async function openBig(wrap){
   if(bigWrap) return;
   const v = wrap.querySelector('video'); bigWrap = wrap; bigAudio = false;
   wrap.classList.add('big'); $('vbg').classList.add('on');
-  bigVid = v; bigPh = document.createComment(''); v.parentNode.insertBefore(bigPh, v); $('vfull').appendChild(v); $('vfull').classList.add('on'); v.play().catch(()=>{});   // el video pasa a una capa libre: así no lo recorta la hoja
+  bigVid = v; bigPh = document.createComment(''); v.parentNode.insertBefore(bigPh, v); $('vfull').appendChild(v); $('vfull').classList.add('on'); if(!v.zoomReset) makeZoom(v, () => closeBig()); v.zoomReset(); v.play().catch(()=>{});   // el video pasa a una capa libre: así no lo recorta la hoja
   if(v.hasAttribute('data-silent') || !vbuf.has(v) || !actx) return;      // sin sonido: la música de la carta sigue sonando
   bigAudio = true; inVideo = true;
   if(actx.state !== 'running') actx.resume();
@@ -1873,7 +1904,7 @@ async function closeBig(){
   if(!bigWrap) return;
   if(bigWrap === sbig) return closeSlideBig();
   const wrap = bigWrap; bigWrap = null;
-  if(bigVid && bigPh && bigPh.parentNode){ bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); bigVid.play().catch(()=>{}); } bigVid = bigPh = null; $('vfull').classList.remove('on');
+  if(bigVid && bigPh && bigPh.parentNode){ if(bigVid.zoomReset) bigVid.zoomReset(); bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); bigVid.play().catch(()=>{}); } bigVid = bigPh = null; $('vfull').classList.remove('on');
   wrap.classList.remove('big'); $('vbg').classList.remove('on');
   if(!bigAudio) return;
   bigAudio = false; inVideo = false;
@@ -2011,32 +2042,41 @@ async function wishScene(){
   await sleep(900);
 }
 
-/* ================= Fotos con zoom ================= */
-const pbg = $('pbg'), pim = $('pim'), pts = new Map();
-let ps = 1, px = 0, py = 0, d0 = 0, s0 = 1, cx0 = 0, cy0 = 0, px0 = 0, py0 = 0, lastTap = 0;
-const applyP = () => { pim.style.transform = 'translate(' + px + 'px,' + py + 'px) scale(' + ps + ')'; };
-function openPhoto(img){ pim.src = img.currentSrc || img.src; ps = 1; px = py = 0; applyP(); pbg.classList.add('on'); }
-function closePhoto(){ pbg.classList.remove('on'); }
+/* ================= Fotos y videos grandes: pellizcar para acercar, doble toque, arrastrar y un toque para salir ================= */
+const pbg = $('pbg'), pim = $('pim');
+function makeZoom(el, onClose){
+  let ps = 1, px = 0, py = 0, d0 = 0, s0 = 1, cx0 = 0, cy0 = 0, px0 = 0, py0 = 0, lastTap = 0, tmr = 0, tx = 0, ty = 0, tt = 0, mv = 0;
+  const pts = new Map(), apply = () => { el.style.transform = 'translate(' + px + 'px,' + py + 'px) scale(' + ps + ')'; };
+  el.addEventListener('pointerdown', e => {
+    try{ el.setPointerCapture(e.pointerId); }catch(_){}
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if(pts.size === 1){ px0 = px; py0 = py; cx0 = e.clientX; cy0 = e.clientY; tx = e.clientX; ty = e.clientY; tt = performance.now(); mv = 0; }
+    else if(pts.size === 2){ const [a, b] = [...pts.values()]; d0 = Math.hypot(a[0]-b[0], a[1]-b[1]); s0 = ps; mv = 99; }
+  });
+  el.addEventListener('pointermove', e => {
+    if(!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if(pts.size === 1) mv = Math.max(mv, Math.hypot(e.clientX - tx, e.clientY - ty));
+    if(pts.size === 2){ const [a, b] = [...pts.values()]; ps = Math.max(1, Math.min(6, s0*Math.hypot(a[0]-b[0], a[1]-b[1])/d0)); apply(); }
+    else if(pts.size === 1 && ps > 1){ px = px0 + e.clientX - cx0; py = py0 + e.clientY - cy0; apply(); }
+  });
+  const end = e => {
+    const was = pts.size; pts.delete(e.pointerId);
+    if(e.type === 'pointerup' && was === 1 && mv < 10 && performance.now() - tt < 400){      // fue un toque
+      const now = performance.now();
+      if(now - lastTap < 300){ clearTimeout(tmr); ps = ps > 1.2 ? 1 : 2.5; if(ps === 1) px = py = 0; apply(); lastTap = 0; }   // doble toque: acerca o aleja
+      else { lastTap = now; if(ps <= 1.05) tmr = setTimeout(() => { if(ps <= 1.05) onClose(); }, 290); }                      // un toque: sale
+    }
+    if(ps <= 1.02){ ps = 1; px = py = 0; apply(); }
+    if(pts.size === 1){ const [x, y] = [...pts.values()][0]; cx0 = x; cy0 = y; px0 = px; py0 = py; }
+  };
+  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  el.zoomReset = () => { clearTimeout(tmr); ps = 1; px = py = 0; pts.clear(); el.style.transform = ''; };
+}
+makeZoom(pim, () => closePhoto());
+function openPhoto(img){ pim.src = img.currentSrc || img.src; pim.zoomReset(); pbg.classList.add('on'); }
+function closePhoto(){ pbg.classList.remove('on'); pim.zoomReset(); }
 document.querySelectorAll('.pho').forEach(f => f.addEventListener('click', () => openPhoto(f.querySelector('img'))));
-pim.addEventListener('pointerdown', e => {
-  try{ pim.setPointerCapture(e.pointerId); }catch(_){}
-  pts.set(e.pointerId, [e.clientX, e.clientY]);
-  if(pts.size === 1){
-    px0 = px; py0 = py; cx0 = e.clientX; cy0 = e.clientY;
-    const t = Date.now(); if(t - lastTap < 300){ ps = ps > 1.2 ? 1 : 2.5; if(ps === 1) px = py = 0; applyP(); } lastTap = t;
-  } else if(pts.size === 2){ const [a, b] = [...pts.values()]; d0 = Math.hypot(a[0]-b[0], a[1]-b[1]); s0 = ps; }
-});
-pim.addEventListener('pointermove', e => {
-  if(!pts.has(e.pointerId)) return;
-  pts.set(e.pointerId, [e.clientX, e.clientY]);
-  if(pts.size === 2){ const [a, b] = [...pts.values()]; ps = Math.max(1, Math.min(6, s0*Math.hypot(a[0]-b[0], a[1]-b[1])/d0)); applyP(); }
-  else if(pts.size === 1 && ps > 1){ px = px0 + e.clientX - cx0; py = py0 + e.clientY - cy0; applyP(); }
-});
-['pointerup', 'pointercancel'].forEach(ev => pim.addEventListener(ev, e => {
-  pts.delete(e.pointerId);
-  if(ps <= 1.02){ ps = 1; px = py = 0; applyP(); }
-  if(pts.size === 1){ const [x, y] = [...pts.values()][0]; cx0 = x; cy0 = y; px0 = px; py0 = py; }
-}));
 pbg.addEventListener('click', e => { if(e.target === pbg || e.target === $('px')) closePhoto(); });
 addEventListener('keydown', e => { if(e.key === 'Escape') closePhoto(); });
 
@@ -2048,6 +2088,7 @@ $('wish').addEventListener('click', async () => {
   chime();
   const k0 = performance.now(); (function fade(n){ petalK = Math.max(0, 1 - (n - k0)/1500); if(petalK > 0) requestAnimationFrame(fade); })(k0);
   $('letter').classList.remove('show', 'front'); kitty.say(''); setBg(0, .25, 1, 0, 1);
+  if(bigWrap) closeBig(); vids.forEach(v => { try{ v.pause(); }catch(e){} });      // los videos de las hojas se detienen: la caja final va más ligera
   /* la bolsa vuelve a la escena, abierta y sin el paquete de hojas */
   const cdEl = env3d.querySelector('.cd'); cdEl.style.visibility = 'hidden';
   env3d.classList.remove('out', 'rise');

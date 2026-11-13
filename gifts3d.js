@@ -6,7 +6,7 @@
   let renderer;
   try{ renderer = new T.WebGLRenderer({antialias: true, alpha: true, powerPreference: 'high-performance'}); }catch(e){ return; }
   if(!renderer || !renderer.getContext()) return;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.35));
   const host = document.createElement('div'); host.id = 'gift3d';
   const gl = renderer.domElement; gl.style.display = 'none'; host.appendChild(gl);
   const cv = document.createElement('canvas'); cv.style.cssText = 'width:100%;height:100%;display:block;touch-action:none'; host.appendChild(cv);
@@ -243,7 +243,9 @@
     /* collar: cadena fina de plata (eslabones planos) y dije de corazón de cristal con flecha */
     const curve = new T.CatmullRomCurve3([[-.8, -.62], [-.56, -.4], [-.32, -.2], [-.12, -.09], [0, -.075], [.12, -.09], [.32, -.2], [.56, -.4], [.8, -.62]].map(p => new T.Vector3(p[0], .012, p[1])));
     const lgeo = new T.TorusGeometry(.02, .006, 5, 10);
-    for(let i = 0; i <= 90; i++){ const u = i/90, p = curve.getPoint(u), tg = curve.getTangent(u), l = new T.Mesh(lgeo, champ); l.scale.set(1.4, 1, .7); l.position.copy(p); l.lookAt(p.clone().add(tg)); l.rotateY(Math.PI/2); if(i%2) l.rotateX(Math.PI/2); jew.add(l); }
+    { const N = 91, inst = new T.InstancedMesh(lgeo, champ, N), d = new T.Object3D();      // una sola pieza instanciada: un solo dibujo en vez de 91
+      for(let i = 0; i < N; i++){ const u = i/(N - 1), p = curve.getPoint(u), tg = curve.getTangent(u); d.position.copy(p); d.rotation.set(0, 0, 0); d.scale.set(1.4, 1, .7); d.lookAt(p.clone().add(tg)); d.rotateY(Math.PI/2); if(i%2) d.rotateX(Math.PI/2); d.updateMatrix(); inst.setMatrixAt(i, d.matrix); }
+      inst.instanceMatrix.needsUpdate = true; jew.add(inst); }
     const pend = new T.Group(); pend.position.set(0, 0, .13); jew.add(pend);
     const hs = new T.Shape(); hs.moveTo(0, -.14); hs.bezierCurveTo(-.2, -.01, -.16, .17, 0, .09); hs.bezierCurveTo(.16, .17, .2, -.01, 0, -.14);
     const heart = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .03, bevelEnabled: true, bevelThickness: .035, bevelSize: .02, bevelSegments: 1}), clear()); heart.rotation.x = -Math.PI/2; heart.position.y = .025; pend.add(heart);
@@ -270,15 +272,16 @@
     }
     const cp = new T.Mesh(new T.TorusGeometry(.03, .008, 6, 14), gold); cp.rotation.x = Math.PI/2; cp.position.set(.96, .02, .02); br.add(cp);
     /* anillo de plata: piedra rectangular de corte esmeralda (escalonada) en una canasta de cuatro garras, banda con piedritas */
-    const ring = new T.Group(); ring.position.set(.62, .24, .36); ring.rotation.z = .12; ring.scale.setScalar(1.05); jew.add(ring);
+    const ring = new T.Group(); ring.position.set(-.5, .05, -.74); ring.rotation.set(0, -Math.PI/2, Math.PI/2); ring.scale.setScalar(1.05); jew.add(ring);      // tumbado, con la piedra metida bajo la tapa: solo se asoma un poco
     const band = new T.Mesh(new T.TorusGeometry(.2, .024, 10, 40), silver); band.rotation.y = Math.PI/2; ring.add(band);
     const oct = (a, b, c) => { const e = new T.Shape(); e.moveTo(-a + c, -b); e.lineTo(a - c, -b); e.lineTo(a, -b + c); e.lineTo(a, b - c); e.lineTo(a - c, b); e.lineTo(-a + c, b); e.lineTo(-a, b - c); e.lineTo(-a, -b + c); e.closePath(); return e; };
     const stm = clear();
     [[.135, .1, .04, .05, .235], [.11, .078, .034, .04, .285], [.082, .052, .028, .035, .325]].forEach(([a, b, c, d, y]) => { const st = new T.Mesh(new T.ExtrudeGeometry(oct(a, b, c), {depth: d, bevelEnabled: true, bevelThickness: .008, bevelSize: .006, bevelSegments: 1}), stm); st.rotation.x = -Math.PI/2; st.rotation.z = Math.PI/2; st.position.y = y; ring.add(st); });
     [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([sx, sz]) => { const pr = new T.Mesh(new T.CylinderGeometry(.008, .013, .14, 6), silver); pr.position.set(sx*.11, .27, sz*.085); pr.rotation.z = -sx*.1; pr.rotation.x = sz*.1; ring.add(pr); const tp = new T.Mesh(new T.SphereGeometry(.014, 6, 5), silver); tp.position.set(sx*.1, .335, sz*.075); ring.add(tp); });
     const gal = new T.Mesh(new T.BoxGeometry(.26, .02, .02), silver); gal.position.set(0, .215, 0); ring.add(gal);
-    const pvm = clear();
-    for(let i = 0; i < 15; i++){ [-1, 1].forEach(sd => { const t = (i - 7)/7*1.1, pv = new T.Mesh(new T.SphereGeometry(.0105, 6, 5), pvm); pv.position.set(sd*.022, Math.cos(t)*.2, Math.sin(t)*.2); ring.add(pv); }); }
+    { const pvm = clear(), inst = new T.InstancedMesh(new T.SphereGeometry(.0105, 6, 5), pvm, 30), d = new T.Object3D(); let k = 0;
+      for(let i = 0; i < 15; i++) [-1, 1].forEach(sd => { const t = (i - 7)/7*1.1; d.position.set(sd*.022, Math.cos(t)*.2, Math.sin(t)*.2); d.updateMatrix(); inst.setMatrixAt(k++, d.matrix); });
+      inst.instanceMatrix.needsUpdate = true; ring.add(inst); }
     root.add(tray);
     const OPEN = 1.75; root.userData.setOpen = (u, tilt) => { tray.position.z = OPEN*u; root.position.z = -OPEN*u*.5; };
     root.userData.tick = now => glow.forEach((m, i) => { m.emissiveIntensity = (m.userData.b || .35)*(.75 + .5*Math.sin(now/260 + i*1.3)); });
@@ -289,7 +292,7 @@
 
   const makers = [makeTermo, makeCobija, makeWafflera, makeCaja];
   const models = [];
-  let rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
+  let fN = 0, rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
   let W = 0, H = 0;
 
   function resize(){
@@ -316,6 +319,7 @@
   function frame(now){
     requestAnimationFrame(frame);
     if(state === 'idle' || !cur) return;
+    if(state === 'shown' && (fN++ & 1)) return;      // con el regalo ya a la vista se dibuja a 30 cuadros: menos calor y más fluidez
     const t = now - t0;
     if(state === 'rising'){
       const k = Math.min(1, t/2400), b = cur.userData.base;
