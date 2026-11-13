@@ -368,6 +368,8 @@ canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 
 .pg.cover{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;text-align:center}
 .pg.cover .tx{font-family:var(--script);font-size:clamp(30px,8.4vw,42px);color:var(--ruby);line-height:1.2}
+.pg.cover .cvid{margin:0;width:78%}
+.pg.cover .cvid .ph{width:100%}
 .pg.cover .ph{width:78%;aspect-ratio:4/5;object-fit:cover;object-position:50% 22%;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.3);background:#c9a0a8;display:block}
 .edge{position:fixed;top:50%;z-index:6;font-size:38px;line-height:1;color:#fff;padding:14px 8px;transform:translateY(-50%);pointer-events:none;opacity:0;transition:opacity .6s ease;text-shadow:0 0 12px rgba(0,0,0,.5)}
 .edge.l{left:0}.edge.r{right:0}.edge.on{opacity:.65;animation:pulse 2.4s ease-in-out infinite}
@@ -1654,7 +1656,7 @@ function buildBook(){
   PLAN.forEach((idx, i) => {
     const sh = document.createElement('div'); sh.className = 'sheet';
     const pg = document.createElement('div'); pg.className = 'pg';
-    if(idx[0] === 'cover'){ pg.classList.add('cover'); pg.innerHTML = '<div class="tx">Para mi Pocahontas, libre como el viento</div><video class="ph" src="media/cover.mp4" poster="media/cover.jpg" muted loop playsinline preload="auto"></video>'; }
+    if(idx[0] === 'cover'){ pg.classList.add('cover'); pg.innerHTML = '<div class="tx">Para mi Pocahontas, libre como el viento</div><figure class="vid cvid"><video class="ph" src="media/cover.mp4" poster="media/cover.jpg" muted loop playsinline preload="auto" data-silent></video></figure>'; }
     else { const g = src[i - 1]; if(g.dataset.lay) pg.dataset.lay = g.dataset.lay; const fit = document.createElement('div'); fit.className = 'fit'; pg.appendChild(fit); while(g.firstChild) fit.appendChild(g.firstChild); }
     sh.appendChild(pg);
     const num = document.createElement('div'); num.className = 'num'; num.textContent = (i + 1) + ' / ' + PLAN.length; sh.appendChild(num);
