@@ -480,6 +480,116 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
 #aurora .m2{opacity:var(--a2);background:radial-gradient(110% 70% at 50% 0%,rgba(110,160,255,.38),rgba(110,160,255,0) 65%),radial-gradient(90% 60% at 50% 100%,rgba(90,70,200,.4),rgba(90,70,200,0) 70%)}
 #aurora .mb{opacity:var(--ab);background:radial-gradient(100% 70% at 50% 40%,rgba(255,175,215,.30),rgba(255,175,215,0) 70%),radial-gradient(90% 60% at 50% 100%,rgba(255,200,170,.22),rgba(255,200,170,0) 70%)}
 #aurora .m3{opacity:var(--a3);background:radial-gradient(70% 50% at 50% 45%,rgba(255,228,190,.38),rgba(255,228,190,0) 70%),radial-gradient(120% 80% at 50% 100%,rgba(170,120,255,.45),rgba(170,120,255,0) 70%)}
+
+/* ================= Diseño tipo Apple TV (tvOS) ================= */
+:root{--sf:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Inter,system-ui,sans-serif;--script:var(--sf);--serif:var(--sf);--night:#08080f;--pink:#ff9ac6}
+html,body{font-family:var(--sf);background:#08080f}
+#aurora{background:radial-gradient(120% 90% at 50% 0%,#20204a 0%,#0d0d20 55%,#05050b 100%)}
+#aurora i{opacity:.4}
+#aurora i:nth-child(1){background:radial-gradient(circle,rgba(120,100,255,.55),rgba(120,100,255,0) 62%)}
+#aurora i:nth-child(2){background:radial-gradient(circle,rgba(40,140,255,.45),rgba(40,140,255,0) 62%)}
+#aurora i:nth-child(3){background:radial-gradient(circle,rgba(255,120,190,.3),rgba(255,120,190,0) 62%)}
+#aurora .moon,#aurora .rays,#aurora .hills,#aurora #flies,#aurora .co{display:none}
+/* inicio */
+#start .big{font-weight:800;letter-spacing:-.035em;font-size:clamp(42px,12.5vw,68px);line-height:1.03;margin:0 0 22px;background:linear-gradient(180deg,#fff 30%,#b9b9dc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:none}
+#start .apo{max-width:340px;margin:0 0 26px;padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);text-align:left}
+#start .apo b{display:block;font-size:17px;font-weight:700;margin-bottom:6px}
+#start .apo p{display:block!important;font-size:15px;line-height:1.45;margin:0;opacity:.85;letter-spacing:0}
+#start>p{font-size:14px;margin:0 0 18px;opacity:.6;letter-spacing:0}
+.btn{background:#fff;color:#111;font-weight:600;font-size:17px;letter-spacing:0;text-transform:none;padding:16px 40px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.btn::after{display:none}
+/* textos de la secuencia */
+#story .line,.sl-t{font-weight:700;letter-spacing:-.025em;-webkit-text-stroke:0;text-shadow:0 2px 24px rgba(0,0,0,.4);color:#fff}
+#story .line em,.sl-t em{color:var(--pink);font-weight:700;-webkit-text-stroke:0;text-shadow:0 2px 24px rgba(0,0,0,.4)}
+.sub{color:#fff;font-weight:600;letter-spacing:-.01em}
+.hint{letter-spacing:.06em;font-weight:600;text-transform:none;font-size:14px}
+.who,.who2{font-weight:600}
+#mute{border:1px solid rgba(255,255,255,.2);background:rgba(40,40,56,.55)}
+#kb{background:rgba(44,44,62,.92);border:1px solid rgba(255,255,255,.2);color:#fff;font-weight:600;letter-spacing:0;box-shadow:0 8px 22px rgba(0,0,0,.4)}
+#kb::after{background:rgba(44,44,62,.92);border-color:rgba(255,255,255,.2)}
+#gcard{background:rgba(30,30,48,.9);border:1px solid rgba(255,255,255,.18);border-radius:24px;padding:16px 18px;color:#fff;box-shadow:0 18px 40px rgba(0,0,0,.45);transform:translate(-50%,30px)}
+#gcard.on{transform:translate(-50%,0)}
+#gcard::after{display:none}
+#gcard .gk{color:#fff;font-weight:800;letter-spacing:-.02em}
+#gcard .gt{color:rgba(255,255,255,.88)}
+#gcard .gh{color:#8ad0ff;font-style:normal;font-weight:600}
+/* carta: ahora es la pantalla de inicio de la app */
+#book,.edge,.paper{display:none!important}
+#letter{touch-action:auto}
+#tv{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;opacity:0;transform:scale(.94);transition:opacity .9s ease,transform 1.2s cubic-bezier(.2,.8,.2,1);padding-bottom:max(34px,env(safe-area-inset-bottom));font-family:var(--sf);color:#fff;touch-action:pan-y}
+#tv.in{opacity:1;transform:none}
+#tv{z-index:1}
+#tv button,#dt button{font-family:var(--sf)}
+.tvnav{position:sticky;top:max(12px,env(safe-area-inset-top));z-index:6;display:flex;gap:2px;height:40px;width:max-content;max-width:calc(100vw - 84px);margin:max(12px,env(safe-area-inset-top)) 0 calc(-1*(max(12px,env(safe-area-inset-top)) + 40px)) 12px;padding:4px;border-radius:999px;background:rgba(40,40,56,.55);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6)}
+.tvnav button{border:0;background:none;color:rgba(255,255,255,.72);font-weight:600;font-size:13px;padding:0 11px;border-radius:999px;cursor:pointer;transition:background .3s,color .3s}
+.tvnav button.on{background:rgba(255,255,255,.92);color:#111}
+.hero{position:relative;height:min(80vh,660px);min-height:470px;overflow:hidden}
+.hv{position:absolute;inset:0;margin:0;will-change:transform;-webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent)}
+.hv .pimg,.hv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:none;border-radius:0;box-shadow:none}
+.hv.vid.big{opacity:1}
+.hshade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(5,5,12,.7),rgba(5,5,12,0) 58%),linear-gradient(rgba(5,5,12,.45),transparent 22%)}
+.hinfo{position:absolute;left:20px;right:20px;bottom:14px}
+.hk{margin:0;font-size:11.5px;font-weight:700;letter-spacing:.14em;opacity:.75}
+.hinfo h1{margin:6px 0 4px;font-size:clamp(40px,11.5vw,62px);font-weight:800;letter-spacing:-.04em;line-height:1.02}
+.hs{margin:0 0 10px;font-size:19px;opacity:.88}
+.hmeta,.dmeta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:13px;font-weight:600;opacity:.82;margin-bottom:14px}
+.bd{border:1.5px solid currentColor;border-radius:4px;padding:0 5px;font-size:11px;line-height:1.5}
+.hbtn{display:flex;gap:10px;align-items:center}
+.pill{border:0;font-weight:600;font-size:16px;line-height:1;border-radius:999px;padding:15px 22px;color:#fff;background:rgba(255,255,255,.2);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.pill.pri{background:#fff;color:#111}
+.pill.rd{width:48px;height:48px;padding:0;font-size:18px}
+.pr{transform:scale(.95)!important}
+.row{margin-top:22px}
+.row h2{margin:0 20px 8px;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.row h2 small,.dh small{margin-left:10px;font-size:13px;font-weight:500;opacity:.5;letter-spacing:0}
+.rail{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;padding:8px 20px 26px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+.rail::-webkit-scrollbar{display:none}
+.ch{flex:0 0 min(76vw,340px);border:0;background:none;padding:0;color:#fff;text-align:left;scroll-snap-align:start;cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.ch .th{position:relative;display:block;aspect-ratio:16/10;border-radius:20px;overflow:hidden;background:#22222e;box-shadow:0 16px 30px rgba(0,0,0,.45);outline:1px solid rgba(255,255,255,.12);outline-offset:-1px}
+.ch .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.ch .sh2{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0) 62%)}
+.ch .ct{position:absolute;left:15px;bottom:40px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.72}
+.ch .cn{position:absolute;left:15px;right:15px;bottom:14px;font-size:20px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.ch .bar{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.22)}
+.ch .bar b{display:block;height:100%;width:0;background:#fff;transition:width .8s ease}
+figure.media.tvc{position:relative;flex:0 0 auto;width:clamp(132px,38vw,190px);aspect-ratio:3/4.1;margin:0;padding:0;border-radius:20px;overflow:hidden;background:#22222e;opacity:1;transform:none;scroll-snap-align:start;box-shadow:0 16px 30px rgba(0,0,0,.45);outline:1px solid rgba(255,255,255,.12);outline-offset:-1px;cursor:pointer;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+figure.media.tvc .pimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:0;background:none}
+figure.media.tvc video{display:none}
+figure.media.tvc .pl{position:absolute;right:10px;top:10px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;color:#fff;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;padding:30px 12px 11px;font-family:var(--sf);font-size:13.5px;font-weight:600;line-height:1.2;text-align:left;color:#fff;background:linear-gradient(to top,rgba(0,0,0,.72),transparent)}
+.surp{padding:10px 16px 18px}
+.surp .sc{border-radius:28px;padding:26px 22px 24px;background:linear-gradient(135deg,rgba(120,90,255,.6),rgba(255,120,190,.5));border:1px solid rgba(255,255,255,.22);box-shadow:0 20px 44px rgba(0,0,0,.4)}
+.surp .sk{margin:0 0 6px;font-size:11.5px;font-weight:700;letter-spacing:.14em;opacity:.8}
+.surp h3{margin:0 0 6px;font-size:32px;font-weight:800;letter-spacing:-.035em}
+.surp .sc>p:not(.sk){margin:0 0 18px;font-size:16px;line-height:1.4;opacity:.92}
+#wishslot .wish{display:inline-block;margin:0;opacity:1;font-size:17px}
+/* detalle de un capítulo */
+#dt{position:absolute;inset:0;z-index:5;background:#08080f;opacity:0;pointer-events:none;transform:translateY(28px) scale(.97);transition:opacity .45s ease,transform .6s cubic-bezier(.2,.8,.2,1);color:#fff}
+#dt.on{opacity:1;pointer-events:auto;transform:none}
+#dt .dbg{position:absolute;inset:-12%;background-size:cover;background-position:center;filter:blur(44px) saturate(1.5) brightness(.6);transform:translateZ(0)}
+#dt .dsh{position:absolute;inset:0;background:linear-gradient(rgba(8,8,15,.25),rgba(8,8,15,.88))}
+#dt .dback{position:absolute;z-index:3;left:12px;top:max(12px,env(safe-area-inset-top))}
+#dt .dsc{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(max(12px,env(safe-area-inset-top)) + 62px) 0 max(40px,env(safe-area-inset-bottom));touch-action:pan-y}
+.dk{margin:0 20px;font-size:11.5px;font-weight:700;letter-spacing:.14em;opacity:.7}
+.dtt{margin:6px 20px 4px;font-size:clamp(36px,10.5vw,54px);font-weight:800;letter-spacing:-.04em;line-height:1.04}
+.dss{margin:0 20px 12px;font-size:18px;opacity:.82}
+.dmeta{margin:0 20px 16px}
+.dtx{margin:0 16px;padding:20px 20px 6px;border-radius:26px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14)}
+.dp{margin:0 0 16px;font-size:17.5px;line-height:1.6;color:rgba(255,255,255,.94)}
+.dn{margin:0 0 16px;font-size:16px;line-height:1.55;color:rgba(255,255,255,.68)}
+.dtx em{color:var(--pink);font-style:normal;font-weight:600}
+#dt .chips{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 16px;padding:0}
+#dt .chips span{transform:none;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.15);color:#fff;font-size:14.5px;font-weight:600;box-shadow:none;border:0;font-family:var(--sf)}
+.dh{margin:26px 20px 4px;font-size:21px;font-weight:700;letter-spacing:-.02em}
+#dt .drail figure.media.tvc{width:clamp(150px,44vw,220px)}
+.dnext{display:flex;align-items:center;gap:14px;width:calc(100% - 32px);margin:8px 16px 0;padding:12px;border:0;border-radius:22px;background:rgba(255,255,255,.14);color:#fff;text-align:left;cursor:pointer;transition:transform .25s}
+.dnext .nth{flex:0 0 96px;aspect-ratio:16/10;border-radius:12px;overflow:hidden}
+.dnext .nth img{width:100%;height:100%;object-fit:cover;display:block}
+.dnext small{display:block;margin-bottom:3px;font-size:10.5px;font-weight:700;letter-spacing:.1em;opacity:.65}
+.dnext b{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.dnext .nch{margin-left:auto;font-size:30px;opacity:.7}
+#pbg,#vbg{background:rgba(5,5,12,.95)}
+@media(min-width:900px){#dt .dsc{padding-left:calc(50% - 380px);padding-right:calc(50% - 380px)}}
 </style>
 </head>
 <body>
@@ -503,6 +613,7 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
 <!-- INICIO -->
 <section id="start" class="scene">
   <h1 class="big">Tengo algo<br>para ti</h1>
+  <div class="apo"><b>Perdóname, mi Judith 🥺</b><p>Esta carta debía llegar el 11 de noviembre, el día exacto de tu cumpleaños, y llegó tarde. Pero el cariño con el que la hice no se retrasó nada.</p></div>
   <p>Sube un poco el volumen</p>
   <button class="btn" id="go">Comenzar</button>
 </section>
@@ -555,8 +666,7 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
   <div id="pbg"><button id="px" aria-label="Cerrar">✕</button><img id="pim" alt="" draggable="false"></div>
   <div id="vbg"><button id="vx" aria-label="Cerrar">✕</button></div>
   <div id="vfull"></div>
-  <div id="book"></div>
-  <div class="edge l" id="edL">‹</div><div class="edge r" id="edR">›</div>
+  <div id="tv"></div><div id="dt"></div>
   <article class="paper">
 <div class="pgsrc">
 <svg class="rose" id="rose" viewBox="0 0 120 142" aria-hidden="true"><path pathLength="1" d="M60 136 C58 100 62 60 70 16"/><path pathLength="1" class="lf" d="M70 16 C40 30 30 70 58 112"/><path pathLength="1" class="gd" d="M70 16 C98 34 98 80 62 118"/><path pathLength="1" class="lf" d="M66 36 L48 46 M62 58 L42 70 M60 80 L44 94"/><path pathLength="1" class="gd" d="M68 38 L88 50 M66 62 L88 76 M63 86 L82 98"/><path pathLength="1" d="M59 126 a3 3 0 1 0 .1 0"/></svg>
@@ -1667,178 +1777,125 @@ async function closeLetter(){
   startEnv(); kitty.show(); kitty.tip('Toca tu regalo 🎁'); setBg(.15, 1, 0, 0, .3);
 }
 
-/* ================= Paquete de hojas: se toca a la derecha para seguir y a la izquierda para volver ================= */
-let pages = [], cur = 0, busy = false, bookW = 340, bookH = 560, wordsDone = false, bookBuilt = false, hinted = false;
-const PLAN = [['cover']].concat([...document.querySelectorAll('.pgsrc')].map(() => 'src'));
-function splitWords(){
-  if(wordsDone) return; wordsDone = true;
-  document.querySelectorAll('.p').forEach(p => {
-    const walk = node => {
-      [...node.childNodes].forEach(n => {
-        if(n.nodeType === 3){
-          const frag = document.createDocumentFragment();
-          n.textContent.split(/(\s+)/).forEach(tok => {
-            if(!tok) return;
-            if(/^\s+$/.test(tok)) frag.appendChild(document.createTextNode(tok));
-            else { const sp = document.createElement('span'); sp.className = 'w'; sp.textContent = tok; frag.appendChild(sp); }
-          });
-          node.replaceChild(frag, n);
-        } else if(n.nodeType === 1) walk(n);
-      });
-    };
-    walk(p);
-    p.querySelectorAll('.w').forEach((w, i) => w.style.transitionDelay = (i*55) + 'ms');
-  });
-}
-function layoutBook(){
+/* ================= Apple TV: inicio, filas de tarjetas y pantalla de detalle ================= */
+let pages = [], cur = 0, busy = false, bookW = 340, bookH = 560, tvBuilt = false, dtOpen = -1, heroVid = null, heroFig = null;
+const seen = new Set(), tv = $('tv'), dt = $('dt');
+const CHT = ['Mi Judith', '11:11', 'Mi Pocahontas', 'Tu risa', 'Una espinita', 'Deseos para tu año', 'Un espacio para mí', 'Wenosh diash', '«No te pregunté»', 'Todo rosita', 'Esa mirada', 'Eres todas en una', 'Hola y bye', 'Elotes y tamales', 'Tu Irinita', 'Todos tus nombres', 'Gracias por existir', 'Tal como eres'];
+const CHS = ['Una carta para ti', 'La hora de los deseos', 'Libre como el viento', 'Y tus uñas rositas', 'Perdóname', 'Que el viento sople a tu favor', 'Aquí estaré', 'Así empieza mi día', 'Enojona y todo', 'Brillitos rosas', 'Mares de chocolate', 'Kuromi con corazón de Kitty', 'Esperando tu «hola»', 'Cualquier plan contigo', 'Sobre ruedas', 'Mil maneras de decirte', 'Este nuevo año', 'Mi persona favorita'];
+function layoutBook(){      // el sobre guarda dentro una tarjeta de portada: se ajusta a la bolsa
   bookW = Math.min(innerWidth*.92, 460); bookH = Math.min(innerHeight*.86, bookW*1.8);
-  const b = $('book'); b.style.setProperty('--bw', bookW + 'px'); b.style.setProperty('--bh', bookH + 'px');
-  const cd = env3d.querySelector('.cd');      // el paquete cabe dentro de la bolsa: no se ve desde afuera
+  const cd = env3d.querySelector('.cd');
   if(cd && cd.offsetWidth && env3d.offsetHeight){ const ch = cd.offsetWidth*bookH/bookW; cd.style.height = ch + 'px'; cd.style.top = (env3d.offsetHeight - ch - 10) + 'px'; }
 }
-addEventListener('resize', () => { layoutBook(); fitPages(); });
-const rankT = r => { const o = Math.min(r, 4)*3; return r === 0 ? 'none' : 'translate(' + o + 'px,' + o + 'px)'; };
-function place(sh, rank, anim){
-  sh.style.zIndex = pages.length - rank;
-  sh.style.transition = anim ? 'transform .5s cubic-bezier(.4,.1,.2,1)' : 'none';
-  sh.style.transform = rankT(rank);
+addEventListener('resize', layoutBook);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; };
+function thumbOf(g){ const m = g.querySelector('figure.media'); if(!m) return 'media/cover.jpg'; const v = m.querySelector('video'); return v ? v.getAttribute('poster') : m.querySelector('img').getAttribute('src'); }
+function mcard(fig){      // tarjeta de foto o video (las fotos se abren con zoom; los videos se cargan solo al agrandarlos)
+  const isV = fig.classList.contains('vid'), c = el('figure', 'media tvc ' + (isV ? 'vid' : 'pho')), cap = fig.querySelector('figcaption');
+  if(isV){
+    const v = fig.querySelector('video').cloneNode(false); v.preload = 'none'; v.muted = true; v.loop = true; v.playsInline = true;
+    c.appendChild(el('img', 'pimg')).src = v.getAttribute('poster'); c.lastChild.draggable = false; c.lastChild.alt = '';
+    c.appendChild(v); c.appendChild(el('span', 'pl', '▶')); regVid(v);
+  } else { const i = el('img', 'pimg'); i.src = fig.querySelector('img').getAttribute('src'); i.alt = ''; i.draggable = false; i.loading = 'lazy'; c.appendChild(i); }
+  if(cap) c.appendChild(el('figcaption', '', cap.textContent));
+  return c;
 }
-function placeAll(anim){
-  const n = pages.length;
-  pages.forEach((sh, i) => { place(sh, (i - cur + n) % n, anim); sh.classList.toggle('cur', i === cur); });
-}
-function buildBook(){
-  if(bookBuilt) return; bookBuilt = true;
-  splitWords();
-  const src = [...document.querySelectorAll('.pgsrc')], book = $('book');
-  PLAN.forEach((idx, i) => {
-    const sh = document.createElement('div'); sh.className = 'sheet';
-    const pg = document.createElement('div'); pg.className = 'pg';
-    if(idx[0] === 'cover'){ pg.classList.add('cover'); pg.innerHTML = '<div class="tx">Para mi Pocahontas, libre como el viento</div><figure class="vid cvid"><video class="ph" src="media/cover.mp4" poster="media/cover.jpg" muted loop playsinline preload="auto" data-audio="media/cover.m4a"></video></figure>'; }
-    else { const g = src[i - 1]; if(g.dataset.lay) pg.dataset.lay = g.dataset.lay; const fit = document.createElement('div'); fit.className = 'fit'; pg.appendChild(fit); while(g.firstChild) fit.appendChild(g.firstChild); }
-    sh.appendChild(pg);
-    const num = document.createElement('div'); num.className = 'num'; num.textContent = (i + 1) + ' / ' + PLAN.length; sh.appendChild(num);
-    book.appendChild(sh); pages.push(sh);
+function buildTV(){
+  if(tvBuilt) return; tvBuilt = true;
+  const src = [...document.querySelectorAll('.pgsrc')], allV = [], allP = [];
+  src.forEach(g => g.querySelectorAll('figure.media').forEach(f => (f.classList.contains('vid') ? allV : allP).push(f)));
+  tv.innerHTML = '';
+  const nav = el('nav', 'tvnav', '<button data-to="tvhero" class="on">Inicio</button><button data-to="r-cap">Capítulos</button><button data-to="r-vid">Videos</button><button data-to="r-pho">Fotos</button>');
+  tv.appendChild(nav);
+  const hero = el('section', 'hero'); hero.id = 'tvhero';
+  hero.innerHTML = '<figure class="hv vid cvid"><img class="pimg" src="media/cover.jpg" alt="" draggable="false"><video class="ph" data-src="media/cover.mp4" data-audio="media/cover.m4a" muted loop playsinline preload="none"></video></figure><div class="hshade"></div>' +
+    '<div class="hinfo"><p class="hk">UNA CARTA DE GABRIEL</p><h1>Para mi Pocahontas</h1><p class="hs">libre como el viento</p>' +
+    '<div class="hmeta"><span class="bd">♥</span><span>Romance</span><span>2026</span><span>' + src.length + ' capítulos</span><span class="bd">HD</span></div>' +
+    '<div class="hbtn"><button class="pill pri" data-open="0">▶︎&nbsp; Leer la carta</button><button class="pill gl" data-open="rnd">Al azar</button><button class="pill gl rd" data-hero="1" aria-label="Ver el video con sonido">🔊</button></div></div>';
+  tv.appendChild(hero); heroFig = hero.querySelector('.hv'); heroVid = heroFig.querySelector('video'); regVid(heroVid);
+  const row = (id, title, sub) => { const s = el('section', 'row'); s.id = id; s.appendChild(el('h2', '', title + (sub ? '<small>' + sub + '</small>' : ''))); const r = el('div', 'rail'); s.appendChild(r); tv.appendChild(s); return r; };
+  const rc = row('r-cap', 'Capítulos', 'toca uno para leerlo');
+  src.forEach((g, i) => {
+    const b = el('button', 'tvc ch'); b.dataset.i = i;
+    b.innerHTML = '<span class="th"><img loading="lazy" draggable="false" alt="" src="' + thumbOf(g) + '"><span class="sh2"></span><span class="ct">Capítulo ' + (i + 1) + '</span><span class="cn">' + CHT[i] + '</span><i class="bar"><b></b></i></span>';
+    rc.appendChild(b);
   });
-  placeAll(false);
-  const cvv = $('book').querySelector('.pg.cover video'); if(cvv) regVid(cvv);      // el video de la portada también suena al agrandarlo
+  const rv = row('r-vid', 'Videos', 'toca para verlos con sonido'); allV.forEach(f => rv.appendChild(mcard(f)));
+  const rp = row('r-pho', 'Fotos', 'pellizca para acercar'); allP.forEach(f => rp.appendChild(mcard(f)));
+  const sp = el('section', 'surp'); sp.innerHTML = '<div class="sc"><p class="sk">UNA ÚLTIMA SORPRESA</p><h3>Pide tu deseo</h3><p>Cuando hayas leído todo, séllalo y mira lo que guardé para ti.</p><div id="wishslot"></div></div>';
+  tv.appendChild(sp); sp.querySelector('#wishslot').appendChild($('wish'));
+  // detalle del capítulo
+  dt.innerHTML = '<div class="dbg"></div><div class="dsh"></div><button class="pill gl dback" aria-label="Volver">‹&nbsp; Inicio</button><div class="dsc"><p class="dk"></p><h1 class="dtt"></h1><p class="dss"></p><div class="dmeta"></div><div class="dtx"></div><h2 class="dh">En este capítulo</h2><div class="rail drail"></div><button class="dnext"></button></div>';
+  tv.addEventListener('scroll', () => { if(tvRaf) return; tvRaf = requestAnimationFrame(() => { tvRaf = 0; tvScroll(); }); }, {passive: true});
 }
-
-/* frases y versos en los huecos que dejan las fotos y los videos */
-const QUOTES = ['Contigo hasta el silencio suena bonito.', 'Si volviera a nacer, te buscaría en cada vida.', 'Eres mi lugar favorito en el mundo.', 'Qué suerte la mía: cruzarme contigo.', 'Tu sonrisa es mi mejor mañana.', 'No te quiero por lo que eres, sino por lo que soy contigo.', 'Hay personas que son hogar: tú eres la mía.', 'Contigo aprendí que hasta lo simple es mágico.', 'Si me preguntan qué es bonito, pienso en ti.', 'Te quiero en lo grande, y más en lo pequeño.', 'Eres la razón de mis mejores casualidades.', 'A tu lado el tiempo se vuelve cuento.', 'Que nunca te falte luz, mi Judith.', 'Mi parte favorita del día es pensarte.', 'En cada versión de mí, siempre estás tú.', 'Quién diría que un «hola» sería el comienzo de todo.', 'Eres poesía sin esfuerzo.', 'Por ti, hasta la lluvia es bonita.', 'Cuidarte es mi forma favorita de quererte.', 'Todo lo bonito me recuerda a ti.'];
-let quoteI = 0;
-function fillGaps(sh){
-  sh.querySelectorAll('.zone:not(.rd)').forEach(z => {
-    if(z.dataset.gap || !z.clientWidth || !z.clientHeight) return; z.dataset.gap = '1';
-    const zr = z.getBoundingClientRect(), CS = 8, nx = Math.floor(zr.width/CS), ny = Math.floor(zr.height/CS); if(nx < 6 || ny < 4) return;
-    const g = Array.from({length: ny}, () => new Array(nx).fill(0));
-    z.querySelectorAll('.media').forEach(m => { const r = m.getBoundingClientRect(), pad = 6;
-      for(let y = Math.max(0, Math.floor((r.top - zr.top - pad)/CS)); y <= Math.min(ny - 1, Math.floor((r.bottom - zr.top + pad)/CS)); y++)
-        for(let x = Math.max(0, Math.floor((r.left - zr.left - pad)/CS)); x <= Math.min(nx - 1, Math.floor((r.right - zr.left + pad)/CS)); x++) g[y][x] = 1; });
-    let best = null, h = new Array(nx).fill(0);        // el rectángulo vacío más grande
-    for(let y = 0; y < ny; y++){
-      for(let x = 0; x < nx; x++) h[x] = g[y][x] ? 0 : h[x] + 1;
-      for(let x = 0; x < nx; x++){ let mn = h[x]; for(let x2 = x; x2 < nx && h[x2] > 0; x2++){ mn = Math.min(mn, h[x2]); const a = mn*(x2 - x + 1); if(!best || a > best.a) best = {a, x, y: y - mn + 1, w: x2 - x + 1, h: mn}; } }
-    }
-    if(!best || best.w*CS < 76 || best.h*CS < 48) return;
-    const q = document.createElement('div'); q.className = 'qt';
-    q.style.cssText = 'left:' + (best.x*CS/zr.width*100) + '%;top:' + (best.y*CS/zr.height*100) + '%;width:' + (best.w*CS/zr.width*100) + '%;height:' + (best.h*CS/zr.height*100) + '%;--r:' + ((Math.random() - .5)*3) + 'deg';
-    const sp = document.createElement('span'); q.appendChild(sp); z.appendChild(q);
-    let ok = false;
-    for(let t = 0; t < 8 && !ok; t++){                       // se prueba una frase tras otra hasta que una quepa en el hueco
-      sp.textContent = QUOTES[(quoteI + t) % QUOTES.length];
-      for(let fs = 20; fs >= 12; fs--){ sp.style.fontSize = fs + 'px'; if(sp.offsetHeight <= q.clientHeight - 4 && sp.offsetWidth <= q.clientWidth - 4){ ok = true; break; } }
-      if(ok) quoteI += t + 1;
-    }
-    if(!ok){ q.remove(); return; }
-    requestAnimationFrame(() => q.classList.add('in'));
+let tvRaf = 0;
+function tvScroll(){
+  const y = tv.scrollTop, hv = heroFig; if(hv && y < innerHeight) hv.style.transform = 'translate3d(0,' + (y*.3).toFixed(1) + 'px,0)';
+  const ids = ['tvhero', 'r-cap', 'r-vid', 'r-pho']; let on = ids[0];
+  ids.forEach(id => { const e = $(id); if(e && e.offsetTop - tv.clientHeight*.4 <= y) on = id; });
+  tv.querySelectorAll('.tvnav button').forEach(b => b.classList.toggle('on', b.dataset.to === on));
+}
+function tvSync(){
+  const pr = seen.size/18; setBg(0, .5, 0, pr, .5 + pr*.4);          // el fondo se tiñe un poco más con cada capítulo leído
+  tv.querySelectorAll('.ch').forEach(b => { const w = b.querySelector('.bar b'); if(w) w.style.width = seen.has(+b.dataset.i) ? '100%' : '0'; });
+  if(!heroVid) return;
+  if(dtOpen < 0 && !bigWrap && $('letter').classList.contains('show')){ loadV(heroVid); heroVid.play().catch(()=>{}); }
+  else if(!bigWrap) unloadV(heroVid);
+}
+function openCh(i){
+  const src = [...document.querySelectorAll('.pgsrc')], g = src[i]; if(!g) return;
+  dtOpen = i; seen.add(i);
+  const med = [...g.querySelectorAll('figure.media')], nv = med.filter(f => f.classList.contains('vid')).length, np = med.length - nv;
+  dt.querySelector('.dbg').style.backgroundImage = 'url("' + thumbOf(g) + '")';
+  dt.querySelector('.dk').textContent = 'CAPÍTULO ' + (i + 1) + ' DE ' + src.length;
+  dt.querySelector('.dtt').textContent = CHT[i]; dt.querySelector('.dss').textContent = CHS[i];
+  dt.querySelector('.dmeta').innerHTML = '<span class="bd">♥</span>' + (nv ? '<span>' + nv + (nv > 1 ? ' videos' : ' video') + '</span>' : '') + (np ? '<span>' + np + (np > 1 ? ' fotos' : ' foto') + '</span>' : '') + '<span>' + Math.max(1, Math.round(g.textContent.split(/\s+/).length/160)) + ' min</span>';
+  const tx = dt.querySelector('.dtx'); tx.innerHTML = '';
+  [...g.children].forEach(c => {
+    if(c.matches('.p')){ const p = el('p', c.classList.contains('note') ? 'dn' : 'dp'); p.innerHTML = c.innerHTML; tx.appendChild(p); }
+    else if(c.matches('.chips')) tx.appendChild(c.cloneNode(true));
+    else if(c.matches('.ps')){ const p = el('p', 'dn'); p.innerHTML = c.innerHTML; tx.appendChild(p); }
   });
+  const rail = dt.querySelector('.drail'); rail.innerHTML = ''; med.forEach(f => rail.appendChild(mcard(f)));
+  dt.querySelector('.dh').style.display = med.length ? '' : 'none'; rail.style.display = med.length ? '' : 'none';
+  const nx = dt.querySelector('.dnext'), n2 = (i + 1) % src.length;
+  nx.dataset.i = i < src.length - 1 ? i + 1 : -1;
+  nx.innerHTML = i < src.length - 1 ? '<span class="nth"><img alt="" draggable="false" src="' + thumbOf(src[n2]) + '"></span><span class="ntx"><small>SIGUIENTE · CAPÍTULO ' + (i + 2) + '</small><b>' + CHT[n2] + '</b></span><span class="nch">›</span>' : '<span class="ntx"><small>FIN</small><b>Volver al inicio</b></span><span class="nch">›</span>';
+  dt.scrollTop = 0; dt.querySelector('.dsc').scrollTop = 0; rail.scrollLeft = 0;
+  dt.classList.add('on'); tvSync();
 }
-let shapeI = 0;
-const SHAPES = {tall: ['arch', 'oval', 'blob'], sq: ['heart', 'flower', 'hex', 'star', 'diamond', 'squircle', 'blob'], wide: ['oval', 'wave', 'squircle']};
-function shapeTiles(){
-  pages.forEach(sh => sh.querySelectorAll('.zone:not(.rd) .media').forEach(m => {
-    if(m.dataset.sh || !m.offsetWidth || !m.offsetHeight) return;
-    const r = m.offsetWidth/m.offsetHeight, list = r < .8 ? SHAPES.tall : r > 1.3 ? SHAPES.wide : SHAPES.sq, n = list[shapeI++ % list.length];
-    m.dataset.sh = n; m.classList.add('sh', 'sh-' + n);
-  }));
-}
-function fitPages(){      // cada hoja es fija: si el texto no cabe, se achica hasta caber (nunca se desplaza)
-  pages.forEach(sh => {
-    const fit = sh.querySelector('.pg .fit'); if(!fit || !fit.clientHeight) return;
-    let k = 1; fit.style.setProperty('--fs', k);
-    const over = () => fit.lastElementChild.getBoundingClientRect().bottom > fit.getBoundingClientRect().bottom + 1;
-    while(k > .6 && over()){ k -= .04; fit.style.setProperty('--fs', k); }
-  });
-  shapeTiles();
-}
-function revealPage(i){
-  const sh = pages[i]; if(!sh) return;
-  setTimeout(() => fillGaps(sh), 650);
-  sh.querySelectorAll('.p,.moment,.sign,.ps,.wish,.media').forEach(el => el.classList.add('in'));
-  if(i === 1) $('rose').classList.add('draw');
-}
-function showPage(){
-  const pr = pages.length > 1 ? cur/(pages.length - 1) : 0; setBg(0, .5, 0, pr, .5 + pr*.4);      // el fondo se va tiñendo de rosa y dorado hacia el final
-  revealPage(cur); fitPages(); syncVideos();
-  $('edL').classList.toggle('on', !hinted && cur > 0); $('edR').classList.toggle('on', !hinted && cur < pages.length - 1);
-}
-async function go(dir){
-  const n = pages.length;
-  if(busy || !n || (dir > 0 && cur >= n - 1) || (dir < 0 && cur <= 0)) return;
-  busy = true;
-  if(!hinted){ hinted = true; kitty.say(''); kitty.hide(); $('edL').classList.remove('on'); $('edR').classList.remove('on'); }
-  const DUR = 640, EASE = 'cubic-bezier(.42,.05,.2,1)';      // una sola animación continua (sin pausas intermedias)
-  let S, keys;
-  if(dir > 0){
-    S = pages[cur]; S.classList.remove('cur'); cur++;
-    pages.forEach((sh, i) => { if(sh !== S) place(sh, (i - cur + n) % n, true); });
-    pages[cur].classList.add('cur'); revealPage(cur);
-    keys = [{transform: 'none'}, {transform: 'translate(' + (bookW*1.06) + 'px,-14px) rotate(7deg)', offset: .5}, {transform: rankT(n - 1)}];
-  } else {
-    S = pages[cur - 1]; pages[cur].classList.remove('cur'); cur--;
-    pages.forEach((sh, i) => { if(sh !== S) place(sh, (i - cur + n) % n, true); });
-    S.classList.add('cur'); revealPage(cur);
-    keys = [{transform: rankT(n - 1)}, {transform: 'translate(' + (-bookW*1.06) + 'px,-14px) rotate(-7deg)', offset: .5}, {transform: 'none'}];
-  }
-  S.style.transition = 'none'; S.style.willChange = 'transform';
-  const fin = dir > 0 ? rankT(n - 1) : 'none';
-  if(dir < 0) S.style.zIndex = n;                              // la hoja que vuelve pasa por encima del paquete
-  const an = S.animate(keys, {duration: DUR, easing: EASE});
-  if(dir > 0) setTimeout(() => { S.style.zIndex = 1; }, DUR*.5);   // y la que se va pasa por detrás
-  S.style.transform = fin;
-  try{ await an.finished; }catch(e){ await sleep(DUR); }
-  S.style.willChange = ''; busy = false; showPage();
-}
+function closeCh(){ dtOpen = -1; dt.classList.remove('on'); setTimeout(() => { if(dtOpen < 0) dt.querySelector('.drail').innerHTML = ''; }, 500); tvSync(); }
+/* un solo manejador de toques: sirve para las filas, el detalle y las fotos/videos, y no se confunde con el desplazamiento */
 let tapS = null;
-$('letter').addEventListener('pointerdown', e => { tapS = {x: e.clientX, y: e.clientY, t: performance.now()}; });
+$('letter').addEventListener('pointerdown', e => { tapS = {x: e.clientX, y: e.clientY, t: performance.now(), tg: e.target}; const c = e.target.closest && e.target.closest('.tvc,.pill,.dnext'); if(c) c.classList.add('pr'); });
+const unpr = () => document.querySelectorAll('.pr').forEach(c => c.classList.remove('pr'));
+$('letter').addEventListener('pointercancel', () => { tapS = null; unpr(); });
 $('letter').addEventListener('pointerup', e => {
-  if(!tapS) return; const s0 = tapS; tapS = null;
-  const dx = e.clientX - s0.x, dy = e.clientY - s0.y, d = Math.hypot(dx, dy), dt = performance.now() - s0.t;
-  if(bigWrap || $('pbg').classList.contains('on') || !$('letter').classList.contains('show')) return;
-  if(e.target.closest && e.target.closest('.vid,.pho,button,#pbg,#vbg,#vfull')){
-    if(d <= 12 && dt <= 600){ const w = e.target.closest('.vid'), f = e.target.closest('.pho'); if(w) openBig(w); else if(f) openPhoto(f.querySelector('img')); }   // el toque se atiende aquí (en iPhone el «click» de las fotos y videos a veces no llega)
-    return;
-  }
-  if(Math.abs(dx) > 50 && Math.abs(dy) < 45 && dt < 700){ go(dx < 0 ? 1 : -1); return; }   // también se puede deslizar
-  if(d > 12 || dt > 600) return;
-  go(e.clientX > innerWidth/2 ? 1 : -1);
+  unpr(); if(!tapS) return; const s0 = tapS; tapS = null;
+  const d = Math.hypot(e.clientX - s0.x, e.clientY - s0.y), dtm = performance.now() - s0.t;
+  if(d > 12 || dtm > 700 || bigWrap || $('pbg').classList.contains('on') || !$('letter').classList.contains('show')) return;
+  const t = e.target.closest ? e.target : null; if(!t) return;
+  let x;
+  if((x = t.closest('[data-to]'))){ const to = $(x.dataset.to); if(to) tv.scrollTo({top: x.dataset.to === 'tvhero' ? 0 : to.offsetTop - 70, behavior: 'smooth'}); return; }
+  if((x = t.closest('.dback'))){ closeCh(); return; }
+  if((x = t.closest('.dnext'))){ const n = +x.dataset.i; if(n < 0) closeCh(); else openCh(n); return; }
+  if((x = t.closest('[data-hero]'))){ openBig(heroFig); return; }
+  if((x = t.closest('[data-open]'))){ openCh(x.dataset.open === 'rnd' ? Math.floor(Math.random()*18) : +x.dataset.open); return; }
+  if((x = t.closest('.ch'))){ openCh(+x.dataset.i); return; }
+  if((x = t.closest('.tvc.vid'))){ openBig(x); return; }
+  if((x = t.closest('.tvc.pho'))){ openPhoto(x.querySelector('img')); return; }
 });
 async function showBook(){
-  buildBook(); layoutBook();
-  const cdEl = env3d.querySelector('.cd'), r = cdEl.getBoundingClientRect(), L = $('letter'), book = $('book');
-  const k = r.width/bookW;
-  book.style.transition = 'none'; book.style.transform = 'translate(' + (r.left + r.width/2 - innerWidth/2) + 'px,' + (r.top + r.height/2 - innerHeight/2) + 'px) scale(' + k + ')';
-  L.style.transition = 'none'; L.classList.add('show', 'front'); book.getBoundingClientRect();
-  fitPages(); setTimeout(fitPages, 700); setTimeout(fitPages, 2500); book.querySelectorAll('img').forEach(i => i.addEventListener('load', fitPages));
+  buildTV(); layoutBook();
+  const L = $('letter'), cdEl = env3d.querySelector('.cd');
+  tv.classList.remove('in'); tv.scrollTop = 0; dtOpen = -1; dt.classList.remove('on');
+  L.style.transition = ''; L.classList.add('show', 'front');
   cdEl.style.visibility = 'hidden';
   $('env-scene').classList.add('hide');
-  await sleep(60);
-  book.style.transition = 'transform 1.4s cubic-bezier(.3,.8,.25,1)'; book.style.transform = 'translate(0px,0px) scale(1)';
-  await sleep(1450);
-  book.style.transition = ''; book.style.transform = 'none'; L.style.transition = '';
-  envOn = false; cur = 0; hinted = false; placeAll(false); showPage();
-  kitty.show(); kitty.say('Toca el lado derecho para pasar la hoja y el izquierdo para volver 📄');
+  await sleep(120); tv.classList.add('in');
+  await sleep(1400);
+  envOn = false; tvSync(); tvScroll();
+  kitty.show(); kitty.say('Toca un capítulo para leerlo, mami 📺');
 }
 
 /* ================= Videos de la carta ================= */
@@ -1850,11 +1907,7 @@ vids.forEach(unloadV);
 vids.forEach(v => { v.muted = true; v.loop = true; v.playsInline = true; });
 function regVid(v){ if(vids.includes(v)) return; vids.push(v); v.muted = true; v.loop = true; v.playsInline = true; v.addEventListener('timeupdate', () => { if(bigWrap && (bigWrap.contains(v) || bigVid === v) && vgain && v.currentTime < vlast - .5) playVidSrc(v, v.currentTime); vlast = v.currentTime; }); }
 let syncT = 0;   // los videos solo corren mientras se ven (menos memoria en el iPhone)
-function syncVideos(){
-  if(bigWrap) return;
-  const here = pages[cur];
-  vids.forEach(v => { const on = here && here.contains(v); if(on){ loadV(v); if(v.paused) v.play().catch(()=>{}); } else unloadV(v); });
-}
+function syncVideos(){ tvSync(); }
 const playAll = syncVideos;
 /* El sonido de cada video se reproduce por WebAudio (el video siempre va en mudo): sin cortes de audio en iPhone y con fundidos suaves */
 const vbuf = new Map();
@@ -1895,7 +1948,7 @@ async function openBig(wrap){
   if(bigWrap) return;
   const v = wrap.querySelector('video'); bigWrap = wrap; bigAudio = false;
   wrap.classList.add('big'); $('vbg').classList.add('on');
-  bigVid = v; bigPh = document.createComment(''); v.parentNode.insertBefore(bigPh, v); $('vfull').appendChild(v); $('vfull').classList.add('on'); if(!v.zoomReset) makeZoom(v, () => closeBig()); v.zoomReset(); v.play().catch(()=>{});   // el video pasa a una capa libre: así no lo recorta la hoja
+  bigVid = v; bigPh = document.createComment(''); v.parentNode.insertBefore(bigPh, v); loadV(v); $('vfull').appendChild(v); $('vfull').classList.add('on'); if(!v.zoomReset) makeZoom(v, () => closeBig()); v.zoomReset(); v.play().catch(()=>{});   // el video pasa a una capa libre: así no lo recorta la hoja
   if(v.hasAttribute('data-silent') || !actx) return;      // sin sonido: la música de la carta sigue sonando
   if(!vbuf.has(v)){ await ensureBuf(v); if(bigWrap !== wrap || !vbuf.has(v)) return; }
   bigAudio = true; inVideo = true;
@@ -1907,7 +1960,7 @@ async function closeBig(){
   if(!bigWrap) return;
   if(bigWrap === sbig) return closeSlideBig();
   const wrap = bigWrap; bigWrap = null;
-  if(bigVid && bigPh && bigPh.parentNode){ if(bigVid.zoomReset) bigVid.zoomReset(); bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); bigVid.play().catch(()=>{}); } bigVid = bigPh = null; $('vfull').classList.remove('on');
+  if(bigVid && bigPh && bigPh.parentNode){ if(bigVid.zoomReset) bigVid.zoomReset(); bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); if(bigVid === heroVid) bigVid.play().catch(()=>{}); else unloadV(bigVid); } bigVid = bigPh = null; $('vfull').classList.remove('on');
   wrap.classList.remove('big'); $('vbg').classList.remove('on');
   if(!bigAudio) return;
   bigAudio = false; inVideo = false;
@@ -2085,7 +2138,7 @@ $('wish').addEventListener('click', async () => {
   chime();
   const k0 = performance.now(); (function fade(n){ petalK = Math.max(0, 1 - (n - k0)/1500); if(petalK > 0) requestAnimationFrame(fade); })(k0);
   $('letter').classList.remove('show', 'front'); kitty.say(''); setBg(0, .25, 1, 0, 1);
-  if(bigWrap) closeBig(); vids.forEach(v => { try{ v.pause(); }catch(e){} });      // los videos de las hojas se detienen: la caja final va más ligera
+  if(bigWrap) closeBig(); vids.forEach(unloadV); dtOpen = -1; dt.classList.remove('on');      // los videos de las hojas se detienen: la caja final va más ligera
   /* la bolsa vuelve a la escena, abierta y sin el paquete de hojas */
   const cdEl = env3d.querySelector('.cd'); cdEl.style.visibility = 'hidden';
   env3d.classList.remove('out', 'rise');
