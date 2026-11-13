@@ -201,9 +201,66 @@
     return wrap;
   }
 
-  const makers = [makeTermo, makeCobija, makeWafflera];
+  /* ---------- 4. CAJA azul de joyería (BAIMUDA) con collar, pulsera y anillo ---------- */
+  function makeCaja(){
+    const SW = 2.0, SH = .78, SD = 2.0, TH = .64, TW = SW - .14, TD = SD - .04;
+    const slate = M(0x4d5a6b, .96, 0), slateD = M(0x3b4656, .96, 0);
+    const logo = tex(512, 512, (g, w, h) => {
+      g.fillStyle = '#4d5a6b'; g.fillRect(0, 0, w, h);
+      for(let i = 0; i < 2600; i++){ g.fillStyle = 'rgba(' + (i%2 ? '255,255,255' : '0,0,0') + ',.035)'; g.fillRect(Math.random()*w, Math.random()*h, 2, 2); }
+      g.fillStyle = '#d4c49a'; g.textAlign = 'center'; g.font = '700 150px Georgia, serif'; g.fillText('BMD', w/2, h/2 - 6);
+      g.font = '600 38px Georgia, serif'; g.fillText('B A I M U D A', w/2, h/2 + 52);
+      g.strokeStyle = '#d4c49a'; g.lineWidth = 3; g.beginPath(); g.moveTo(w/2 - 70, h/2 + 82); g.lineTo(w/2 + 70, h/2 + 82); g.stroke();
+      g.beginPath(); g.moveTo(w/2 - 24, h/2 - 124); g.lineTo(w/2 - 14, h/2 - 148); g.lineTo(w/2, h/2 - 130); g.lineTo(w/2 + 14, h/2 - 148); g.lineTo(w/2 + 24, h/2 - 124); g.closePath(); g.stroke();
+    });
+    const root = new T.Group(), sleeve = new T.Group(), tray = new T.Group();
+    const top = new T.Mesh(new T.BoxGeometry(SW, .05, SD), [slate, slate, M(0xffffff, .9, 0, {map: logo}), slate, slate, slate]); top.position.y = SH/2 - .025; sleeve.add(top);
+    const bot = new T.Mesh(new T.BoxGeometry(SW, .05, SD), slateD); bot.position.y = -SH/2 + .025; sleeve.add(bot);
+    [-1, 1].forEach(s => { const w = new T.Mesh(new T.BoxGeometry(.05, SH, SD), slate); w.position.x = s*(SW/2 - .025); sleeve.add(w); });
+    root.add(sleeve);
+    const fl = new T.Mesh(new T.BoxGeometry(TW, .06, TD), slateD); fl.position.y = -TH/2 + .03; tray.add(fl);
+    [-1, 1].forEach(s => { const w = new T.Mesh(new T.BoxGeometry(.05, TH, TD), slate); w.position.x = s*(TW/2 - .025); tray.add(w); });
+    const bw = new T.Mesh(new T.BoxGeometry(TW, TH, .05), slate); bw.position.z = -(TD/2 - .025); tray.add(bw);
+    const fw = new T.Mesh(new T.BoxGeometry(TW, TH, .05), slate); fw.position.z = TD/2 - .025; tray.add(fw);
+    const vel = new T.Mesh(new T.BoxGeometry(TW - .1, .02, TD - .1), M(0x0d0d11, 1, 0)); vel.position.y = -TH/2 + .07; tray.add(vel);
+    const tab = new T.Mesh(new T.BoxGeometry(.17, .24, .035), M(0x1f3fd8, .45, 0, {emissive: 0x0a1a66, emissiveIntensity: .35})); tab.position.set(0, -TH/2 + .2, TD/2 + .012); tray.add(tab);
+    const y0 = -TH/2 + .08, gold = M(0xdca94a, .3, .5, {emissive: 0x3a2a08, emissiveIntensity: .25}), silver = M(0xdfe3ea, .22, .45, {emissive: 0x30343c, emissiveIntensity: .3});
+    const glow = []; const gem = (c, r) => { const m = M(c, .12, .2, {emissive: c, emissiveIntensity: .35}); glow.push(m); return new T.Mesh(new T.SphereGeometry(r, 14, 10), m); };
+    const jew = new T.Group(); jew.position.y = y0; jew.scale.setScalar(1.12); tray.add(jew);
+    /* collar: cadena fina con dije de corazón y flecha */
+    const pts = [[-.78, -.62], [-.55, -.38], [-.3, -.14], [-.1, -.02], [0, .0], [.1, -.02], [.3, -.14], [.55, -.38], [.78, -.62]].map(p => new T.Vector3(p[0], .012, p[1]));
+    const chain = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3(pts), 60, .012, 6, false), silver); jew.add(chain);
+    const hs = new T.Shape(); hs.moveTo(0, -.12); hs.bezierCurveTo(-.2, .02, -.14, .16, 0, .08); hs.bezierCurveTo(.14, .16, .2, .02, 0, -.12);
+    const heart = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .05, bevelEnabled: true, bevelThickness: .02, bevelSize: .015, bevelSegments: 2}), M(0xf4f7ff, .1, .15, {emissive: 0x8fa0c8, emissiveIntensity: .3})); glow.push(heart.material);
+    heart.rotation.x = -Math.PI/2; heart.position.set(0, .03, .14); jew.add(heart);
+    const rim = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .02, bevelEnabled: false}), silver); rim.scale.set(1.12, 1.12, 1); rim.rotation.x = -Math.PI/2; rim.position.set(0, .015, .14); jew.add(rim);
+    const arrow = new T.Mesh(new T.BoxGeometry(.46, .012, .018), gold); arrow.position.set(0, .09, .14); arrow.rotation.y = .6; jew.add(arrow);
+    const ahead = new T.Mesh(new T.ConeGeometry(.035, .08, 4), gold); ahead.rotation.z = -Math.PI/2; ahead.rotation.y = .6; ahead.position.set(.12, .09, .06); jew.add(ahead);
+    const bail = new T.Mesh(new T.TorusGeometry(.04, .01, 6, 14), silver); bail.rotation.x = Math.PI/2; bail.position.set(0, .03, .02); jew.add(bail);
+    /* pulsera dorada con flores de colores */
+    const br = new T.Group(); br.position.set(-.4, 0, .5); jew.add(br);
+    for(let i = -5; i <= 5; i++){ if(Math.abs(i) < 1) continue; const l = new T.Mesh(new T.SphereGeometry(1, 10, 8), gold); l.scale.set(.045, .016, .035); l.position.set(i*.085, .02, Math.abs(i)*Math.abs(i)*.004); l.rotation.y = i*.12; br.add(l);
+      const lk = new T.Mesh(new T.CylinderGeometry(.008, .008, .06, 6), gold); lk.rotation.z = Math.PI/2; lk.position.set(i*.085 - Math.sign(i)*.042, .02, Math.abs(i)*Math.abs(i)*.004); br.add(lk); }
+    const bd = new T.Mesh(new T.CylinderGeometry(.15, .15, .03, 20), gold); bd.position.y = .02; br.add(bd);
+    [0xffffff, 0x7ed957, 0x9b5de5, 0xe63946, 0xffd23a, 0xff8fb8].forEach((c, i) => { const a = i*Math.PI/3, g = gem(c, .045); g.position.set(Math.cos(a)*.085, .06, Math.sin(a)*.085); br.add(g); });
+    const gc = gem(0xffffff, .04); gc.position.set(0, .065, 0); br.add(gc);
+    /* anillo de plata con piedra rectangular */
+    const ring = new T.Group(); ring.position.set(.5, .21, .45); jew.add(ring);
+    const band = new T.Mesh(new T.TorusGeometry(.2, .03, 10, 36), silver); band.rotation.y = Math.PI/2; ring.add(band);
+    const st = new T.Mesh(new T.BoxGeometry(.2, .15, .12), M(0xf6f9ff, .05, .1, {emissive: 0xa9b6dc, emissiveIntensity: .45, transparent: true, opacity: .95})); glow.push(st.material); st.position.y = .24; ring.add(st);
+    [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([a, b]) => { const c = new T.Mesh(new T.BoxGeometry(.035, .035, .035), silver); c.position.set(a*.1, .2, b*.06); ring.add(c); });
+    for(let i = -3; i <= 3; i++){ const pv = new T.Mesh(new T.SphereGeometry(.014, 6, 5), M(0xffffff, .1, .1, {emissive: 0xffffff, emissiveIntensity: .4})); pv.position.set(0, Math.sin(i*.28 + Math.PI/2 + 0)*.0 + .07 + Math.cos(i*.28)*.15, Math.sin(i*.28)*.15 - .0); ring.add(pv); }
+    root.add(tray);
+    const OPEN = 1.75; root.userData.setOpen = (u, tilt) => { tray.position.z = OPEN*u; root.position.z = -OPEN*u*.5; };
+    root.userData.tick = now => glow.forEach((m, i) => { m.emissiveIntensity = .3 + .25*Math.sin(now/260 + i*1.3); });
+    root.userData.rx0 = .32; root.userData.rx1 = .95; root.userData.openable = true;
+    const pivot = new T.Group(); pivot.add(root); const wrap = new T.Group(); wrap.add(pivot); wrap.userData.root = root;
+    return wrap;
+  }
+
+  const makers = [makeTermo, makeCobija, makeWafflera, makeCaja];
   const models = [];
-  let frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
+  let rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
   let W = 0, H = 0;
 
   function resize(){
@@ -235,16 +292,24 @@
       const k = Math.min(1, t/2400), b = cur.userData.base;
       if(k < .42){                                                  // sube dentro de la bolsa, recortado por su boca
         const u = ease(k/.42); cur.position.set(from.x, from.y + (exitY - from.y)*u, 0); cur.scale.setScalar(.5*b); clipOn = true;
-        spin += .02; cur.rotation.y = spin; cur.rotation.z = 0;
+        spin += .02; cur.rotation.y = spin; cur.rotation.z = 0; cur.rotation.x = rotX;
       } else {                                                      // ya afuera: se va al centro y crece
         const u = ease((k - .42)/.58), v = back(Math.min(1, (k - .42)/.58*1.02)); clipOn = false;
         cur.position.set(from.x + (to.x - from.x)*u, exitY + (to.y - exitY)*v, 0); cur.scale.setScalar((.5 + .5*u)*b);
-        spin += .02*(1 - u); cur.rotation.y = spin + (1 - u)*1.2; cur.rotation.z = Math.sin(k*5)*.1*(1 - k);
+        spin += .02*(1 - u); cur.rotation.y = spin + (1 - u)*1.2; cur.rotation.z = Math.sin(k*5)*.1*(1 - k); cur.rotation.x = rotX;
       }
       if(k >= 1){ state = 'shown'; clipOn = false; API._res && API._res(); }
     } else if(state === 'shown'){
-      if(frz !== null) spin = frz; else if(!drag){ dragV *= .94; spin += .008 + dragV; }
-      cur.rotation.y = spin; cur.rotation.z = Math.sin(now/900)*.03; cur.position.y = to.y + Math.sin(now/700)*.06; cur.position.x = to.x;
+      const ud = cur.userData, root = ud.root;
+      if(root && root.userData.tick) root.userData.tick(now);
+      if(opening){                                                  // la caja se endereza hacia ti y el cajón se desliza
+        const k = Math.min(1, (now - openT0)/2000), e1 = ease(Math.min(1, k/.5)), e2 = ease(Math.max(0, (k - .3)/.7));
+        spin = os0*(1 - e1); rotX = root.userData.rx0 + (root.userData.rx1 - root.userData.rx0)*e1; root.userData.setOpen(e2);
+        cur.scale.setScalar(ud.base*(1 - .14*e2));
+        if(k >= 1){ opening = false; opened = true; resOpen && resOpen(); }
+      } else if(opened){ if(!drag){ dragV *= .94; } spin += dragV; }
+      else if(frz !== null) spin = frz; else if(!drag){ dragV *= .94; spin += .008 + dragV; }
+      cur.rotation.x = rotX; cur.rotation.y = spin + (opened ? Math.sin(now/1500)*.06 : 0); cur.rotation.z = Math.sin(now/900)*.03; cur.position.y = to.y + Math.sin(now/700)*.06; cur.position.x = to.x;
     } else if(state === 'leaving'){
       const k = Math.min(1, t/900), e = k*k; cur.position.y = to.y + e*3.4; spin += .05; cur.rotation.y = spin; cur.scale.setScalar(cur.userData.base*(1 + .3*e)); alpha = 1 - k;
       if(k >= 1){ scene.remove(cur); cur = null; clipOn = false; state = 'idle'; host.classList.remove('on'); API._res && API._res(); }
@@ -265,13 +330,14 @@
     }
     cur = models[i]; const h = cur.userData.h;
     cur.userData.base = Math.min(1.1, ((px || H*.34)/(H/6.3))/h, (W*.62/(H/6.3))/cur.userData.w);          // alto del regalo en pantalla
-    scene.add(cur); host.classList.add('on'); alpha = 1; spin = -.5; dragV = 0;
+    scene.add(cur); host.classList.add('on'); alpha = 1; spin = -.5; dragV = 0; opened = opening = false; rotX = cur.userData.root ? cur.userData.root.userData.rx0 : 0;
     const mw = toWorld(mouth.x, mouth.y), half = cur.userData.h*cur.userData.base*.5/2;
     from = mw.clone(); from.y = mw.y - half - .15; exitY = mw.y + half + .2; to = toWorld(target.x, target.y); to.x = from.x + (to.x - from.x);
     clipY = mouth.y; clipOn = true;
     state = 'rising'; t0 = performance.now(); API._res = res;
   });
   API.leave = () => new Promise(res => { if(!cur){ res(); return; } state = 'leaving'; t0 = performance.now(); API._res = res; });
+  API.open = () => new Promise(res => { if(!cur || !cur.userData.root || opening || opened){ res(); return; } os0 = ((spin + Math.PI)%(Math.PI*2) + Math.PI*2)%(Math.PI*2) - Math.PI; opening = true; openT0 = performance.now(); resOpen = res; });
   API.state = () => state; API.freeze = v => { frz = v; };
   API.dbg = () => cur ? [state, cur.position.x.toFixed(2), cur.position.y.toFixed(2), cur.scale.x.toFixed(2), to.y.toFixed(2), from.y.toFixed(2), cur.userData.h.toFixed(2)].join(' ') : state;
 })();

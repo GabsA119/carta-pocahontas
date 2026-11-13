@@ -224,7 +224,9 @@ canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 .vid .tag{position:absolute;right:14px;top:14px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;color:#fff;background:rgba(3,28,37,.55);pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .vid.big{transition:none;opacity:1!important}
 .vid.big .tag{display:none}
-.vid.big video{position:fixed;z-index:31;left:50%;top:50%;transform:translate(-50%,-50%);width:auto;height:auto;max-width:94vw;max-height:86vh;border-radius:12px;box-shadow:0 20px 70px rgba(0,0,0,.7)}
+#vfull{position:fixed;inset:0;z-index:31;display:none;align-items:center;justify-content:center;pointer-events:none}
+#vfull.on{display:flex}
+#vfull video{display:block;width:auto;height:auto;max-width:94vw;max-height:86vh;border-radius:12px;box-shadow:0 20px 70px rgba(0,0,0,.7);background:#04222d}
 #pbg{position:fixed;inset:0;z-index:30;background:rgba(2,20,27,.94);opacity:0;pointer-events:none;transition:opacity .5s ease}
 #pbg.on{opacity:1;pointer-events:auto}
 #pim{position:absolute;inset:0;margin:auto;max-width:96vw;max-height:88vh;touch-action:none;transform-origin:50% 50%;-webkit-user-drag:none;border-radius:6px}
@@ -341,7 +343,6 @@ canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 .sheet .wish{margin:22px auto 0}
 /* ---- composiciones: cada hoja es fija, la zona de fotos se ajusta al espacio y el texto se achica si hace falta ---- */
 .vid.big{transform:none!important}
-.vid.big video{border-radius:12px!important;height:auto!important;object-fit:contain!important}
 .pg .fit{height:100%}
 .pg[data-lay] .fit{display:flex;flex-direction:column}
 .pg[data-lay] .p{font-size:calc(var(--fs,1)*clamp(15px,4.2vw,18px));line-height:1.5;margin:0 0 10px;flex:none}
@@ -353,6 +354,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 .pg .zone .media img,.pg .zone .media video{flex:1 1 0;min-height:0;width:100%;height:100%;object-fit:cover;object-position:50% 28%;display:block}
 .pg .zone .media figcaption{flex:none;margin-top:5px;font-size:12px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pg .zone .vid .tag{right:12px;top:12px;width:26px;height:26px;font-size:12px}
+.pg[data-lay=o] .zone{min-height:90px}
 .pg .zone.rd{margin-bottom:6px}
 .pg .zone.rd .media{top:6px;bottom:34px;height:auto;left:0;right:0;margin:0 auto;width:auto;aspect-ratio:1/1;border-radius:50%;padding:7px;background:#fffaf4}
 .pg .zone.rd .media video{border-radius:50%}
@@ -496,6 +498,7 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
 <section id="letter">
   <div id="pbg"><button id="px" aria-label="Cerrar">✕</button><img id="pim" alt="" draggable="false"></div>
   <div id="vbg"><button id="vx" aria-label="Cerrar">✕</button></div>
+  <div id="vfull"></div>
   <div id="book"></div>
   <div class="edge l" id="edL">‹</div><div class="edge r" id="edR">›</div>
   <article class="paper">
@@ -540,7 +543,7 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
 
     <div class="pgsrc" data-lay="n"><p class="p ">Y si hablo de lo que más quieres, tengo que hablar de tu Irinita: «ya no más quiere estar en pijama como la tía» y, luego, toda emocionada en sus patines, como si el mundo fuera suyo.</p><div class="zone "><figure class="media vid" style="left:0%;top:0%;width:48%;height:48%;--r:-2deg"><video src="media/L26.mp4" data-audio="media/L26.m4a" poster="media/L26.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Como la tía</figcaption></figure><figure class="media vid" style="left:52%;top:2%;width:48%;height:48%;--r:2deg"><video src="media/L27.mp4" data-audio="media/L27.m4a" poster="media/L27.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Sobre ruedas</figcaption></figure><figure class="media pho" style="left:2%;top:52%;width:48%;height:48%;--r:2deg"><img src="media/L34.jpg" alt="" loading="eager" draggable="false"><figcaption>Tan hermosa</figcaption></figure><figure class="media pho" style="left:52%;top:52%;width:48%;height:48%;--r:-2deg"><img src="media/L35.jpg" alt="" loading="eager" draggable="false"><figcaption>Tu Irinita</figcaption></figure></div><p class="p note">Se parece mucho a ti, y contigo es su versión más tierna: la que le dice «¿quieres chocolate del pastel?» y se lo regala.</p></div>
 
-    <div class="pgsrc" data-lay="o"><div class="bigq">Todos tus nombres</div><p class="p ">Te he dicho de mil maneras y ninguna alcanza:</p><div class="chips"><span style="--r:-3deg">Preciosa Hermosa</span><span style="--r:2deg">Flaquita</span><span style="--r:-1deg">Reina del mundo mundial</span><span style="--r:3deg">Terroncito de azúcar</span><span style="--r:-2deg">Morenita de ojos rositas</span><span style="--r:1deg">Mademoiselle</span><span style="--r:-3deg">Alejandrita</span><span style="--r:2deg">Rayito de sol</span><span style="--r:-1deg">Belleza deslumbrante</span><span style="--r:3deg">Mi Pocahontas</span><span style="--r:-2deg">Mi Pucca</span><span style="--r:1deg">Princesa</span><span style="--r:-3deg">Bella Bell</span><span style="--r:2deg">La estrella que bajó a la tierra</span></div><p class="p note">Pero mi favorito sigue siendo el primero: Preciosa Hermosa.</p></div>
+    <div class="pgsrc" data-lay="o"><div class="bigq">Todos tus nombres</div><p class="p ">Te he dicho de mil maneras y ninguna alcanza:</p><div class="chips"><span style="--r:-3deg">Preciosa Hermosa</span><span style="--r:2deg">Flaquita</span><span style="--r:-1deg">Reina del mundo mundial</span><span style="--r:3deg">Terroncito de azúcar</span><span style="--r:-2deg">Morenita de ojos rositas</span><span style="--r:1deg">Mademoiselle</span><span style="--r:-3deg">Alejandrita</span><span style="--r:2deg">Rayito de sol</span><span style="--r:-1deg">Belleza deslumbrante</span><span style="--r:3deg">Mi Pocahontas</span><span style="--r:-2deg">Mi Pucca</span><span style="--r:1deg">Princesa</span><span style="--r:-3deg">Bella Bell</span><span style="--r:2deg">La estrella que bajó a la tierra</span></div><p class="p note">Pero mi favorito sigue siendo el primero: Preciosa Hermosa.</p><div class="zone "><figure class="media pho" style="left:24%;top:0%;width:52%;height:100%;--r:-1.5deg"><img src="media/L38.jpg" alt="" loading="eager" draggable="false"><figcaption>La primera foto</figcaption></figure></div></div>
 
     <div class="pgsrc" data-lay="p"><p class="p ">Gracias por existir, por todo lo que me enseñaste y por ser mi Pocahontas. Que este nuevo año de tu vida sea el más bonito de todos.</p><div class="zone "><figure class="media vid" style="left:0%;top:0%;width:63%;height:100%;--r:-2deg"><video src="media/L13.mp4" data-audio="media/L13.m4a" poster="media/L13.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Dormida con Kitty</figcaption></figure><figure class="media vid" style="left:52%;top:42%;width:47%;height:57%;--r:4deg"><video src="media/L14.mp4" data-audio="media/L14.m4a" poster="media/L14.jpg" muted loop playsinline preload="metadata"></video><span class="tag">🔊</span><figcaption>Abrazando a tu Kitty</figcaption></figure></div><p class="p note">Cómo te gusta dormir… y qué bien te ves, con tu pijama de Kitty y tu Kitty en brazos.</p></div>
 
@@ -1148,12 +1151,13 @@ for(let i=0;i<30;i++){ const p = mk('bg'); p.y = Math.random()*H; petals.push(p)
 for(let i=0;i<24;i++){ const p = mk('fg'); p.y = Math.random()*H; petals.push(p); }
 sceneReady = true;
 
+let petalK = 1;           // 1 = hojas visibles; baja a 0 al sellar el deseo
 function petalPath(ctx, p){
   const s = p.s;
   ctx.save();
   ctx.translate(p.x, p.y); ctx.rotate(p.rot);
   ctx.scale(Math.abs(Math.cos(p.fl))*.85 + .15, 1);
-  ctx.globalAlpha = p.a;
+  ctx.globalAlpha = p.a*petalK;
   const g = ctx.createLinearGradient(0,-s,0,s);
   g.addColorStop(0,p.c[0]); g.addColorStop(1,p.c[1]);
   ctx.fillStyle = g;
@@ -1574,7 +1578,7 @@ async function giftSequence(){
     $('gk').textContent = g.t; $('gt').textContent = g.x; $('gh').textContent = i < GIFTS.length - 1 ? 'Toca el regalo para ver el siguiente 🎁' : 'Toca el regalo para ver mi carta 💌';
     gcard.classList.add('on'); chime(); kitty.say(g.k, 5000);
     await sleep(600);
-    const cb = gcard.getBoundingClientRect(), r = env3d.getBoundingClientRect(), mouth = {x: r.left + r.width/2, y: r.top + r.height*.2};
+    const cb = gcard.getBoundingClientRect(), r = env3d.getBoundingClientRect(), mouth = {x: r.left + r.width/2, y: r.top + 6};
     const px = innerHeight*.4;                                      // sale de la bolsa y se queda al centro de la pantalla
     await GIFTS3D.emerge(i, mouth, {x: innerWidth/2, y: Math.max(innerHeight*.5, cb.bottom + px/2 + 14)}, px);
     await waitTap();
@@ -1709,7 +1713,10 @@ $('letter').addEventListener('pointerup', e => {
   if(!tapS) return; const s0 = tapS; tapS = null;
   const dx = e.clientX - s0.x, dy = e.clientY - s0.y, d = Math.hypot(dx, dy), dt = performance.now() - s0.t;
   if(bigWrap || $('pbg').classList.contains('on') || !$('letter').classList.contains('show')) return;
-  if(e.target.closest && e.target.closest('.vid,.pho,button,#pbg,#vbg')) return;
+  if(e.target.closest && e.target.closest('.vid,.pho,button,#pbg,#vbg,#vfull')){
+    if(d <= 12 && dt <= 600){ const w = e.target.closest('.vid'), f = e.target.closest('.pho'); if(w) openBig(w); else if(f) openPhoto(f.querySelector('img')); }   // el toque se atiende aquí (en iPhone el «click» de las fotos y videos a veces no llega)
+    return;
+  }
   if(Math.abs(dx) > 50 && Math.abs(dy) < 45 && dt < 700){ go(dx < 0 ? 1 : -1); return; }   // también se puede deslizar
   if(d > 12 || dt > 600) return;
   go(e.clientX > innerWidth/2 ? 1 : -1);
@@ -1777,14 +1784,15 @@ function stopVidAudio(ms){
   return sleep(ms + 80).then(() => { try{ sr.stop(); }catch(e){} });
 }
 vids.forEach(v => v.addEventListener('timeupdate', () => {          // el video da otra vuelta: el audio vuelve a empezar con él
-  if(bigWrap && bigWrap.contains(v) && vgain && v.currentTime < vlast - .5) playVidSrc(v, v.currentTime);
+  if(bigWrap && (bigWrap.contains(v) || bigVid === v) && vgain && v.currentTime < vlast - .5) playVidSrc(v, v.currentTime);
   vlast = v.currentTime;
 }));
-let bigWrap = null, bigAudio = false;
+let bigWrap = null, bigAudio = false, bigVid = null, bigPh = null;
 async function openBig(wrap){
   if(bigWrap) return;
   const v = wrap.querySelector('video'); bigWrap = wrap; bigAudio = false;
   wrap.classList.add('big'); $('vbg').classList.add('on');
+  bigVid = v; bigPh = document.createComment(''); v.parentNode.insertBefore(bigPh, v); $('vfull').appendChild(v); $('vfull').classList.add('on'); v.play().catch(()=>{});   // el video pasa a una capa libre: así no lo recorta la hoja
   const shp = wrap.closest('.sheet'); if(shp){ shp.dataset.z = shp.style.zIndex; shp.style.zIndex = 60; }
   if(v.hasAttribute('data-silent') || !vbuf.has(v) || !actx) return;      // sin sonido: la música de la carta sigue sonando
   bigAudio = true; inVideo = true;
@@ -1796,6 +1804,7 @@ async function closeBig(){
   if(!bigWrap) return;
   if(bigWrap === sbig) return closeSlideBig();
   const wrap = bigWrap; bigWrap = null;
+  if(bigVid && bigPh && bigPh.parentNode){ bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); bigVid.play().catch(()=>{}); } bigVid = bigPh = null; $('vfull').classList.remove('on');
   wrap.classList.remove('big'); $('vbg').classList.remove('on');
   const shp = wrap.closest('.sheet'); if(shp && shp.dataset.z){ shp.style.zIndex = shp.dataset.z; }
   if(!bigAudio) return;
@@ -1962,16 +1971,31 @@ pim.addEventListener('pointermove', e => {
 pbg.addEventListener('click', e => { if(e.target === pbg || e.target === $('px')) closePhoto(); });
 addEventListener('keydown', e => { if(e.key === 'Escape') closePhoto(); });
 
-/* ================= Deseo ================= */
-$('wish').addEventListener('click', () => {
-  if(heart) return;
-  for(let i=0;i<80;i++){ const p = mk('fg', true); p.extra = true; petals.push(p); }
+/* ================= Deseo: las hojas se van y de la bolsa sale la caja con el collar, la pulsera y el anillo ================= */
+let sealed = false;
+$('wish').addEventListener('click', async () => {
+  if(sealed) return; sealed = true;
   if(navigator.vibrate) navigator.vibrate([40,70,40]);
   chime();
-  $('final').classList.add('show');
-  setTimeout(buildHeart, 700);
-  burstTimer = setInterval(() => { for(let i=0;i<10;i++){ const p = mk('fg', true); p.extra = true; p.x = Math.random()*W; p.y = H*.9; petals.push(p); } }, 6500);
-  setTimeout(closeLetter, 6300 + 5000);   // el mensaje se queda 5 s y la carta se cierra
+  const k0 = performance.now(); (function fade(n){ petalK = Math.max(0, 1 - (n - k0)/1500); if(petalK > 0) requestAnimationFrame(fade); })(k0);
+  $('letter').classList.remove('show', 'front'); kitty.say('');
+  /* la bolsa vuelve a la escena, abierta y sin el paquete de hojas */
+  const cdEl = env3d.querySelector('.cd'); cdEl.style.visibility = 'hidden';
+  env3d.classList.remove('out', 'rise');
+  const sc = $('env-scene'); sc.classList.remove('hide'); sc.classList.add('gifts'); startEnv();
+  await sleep(1800);
+  const gcard = $('gcard');
+  $('gk').textContent = 'Una última sorpresa 💎'; $('gt').textContent = 'Cierra los ojos y pide tu deseo… y mientras lo piensas, mira lo que quiero que lleves contigo.'; $('gh').textContent = 'Toca la caja para abrirla 🎁';
+  gcard.classList.add('on'); chime(); kitty.show(); kitty.say('¡Ábrela, mami! 💎', 5000);
+  await sleep(700);
+  if(!(window.GIFTS3D && GIFTS3D.ok)) return;
+  const cb = gcard.getBoundingClientRect(), r = env3d.getBoundingClientRect(), mouth = {x: r.left + r.width/2, y: r.top + 6}, px = innerHeight*.4;
+  await GIFTS3D.emerge(3, mouth, {x: innerWidth/2, y: Math.max(innerHeight*.5, cb.bottom + px/2 + 14)}, px);
+  await waitTap();
+  if(navigator.vibrate) navigator.vibrate(30);
+  gcard.classList.remove('on'); await GIFTS3D.open(); chime();
+  $('gk').textContent = 'Para ti, mi Judith'; $('gt').textContent = 'Un collar, una pulsera y un anillo, para que me lleves contigo a donde vayas. Que todos tus deseos se cumplan. Feliz mes de tu cumpleaños, mi Pocahontas 🌿'; $('gh').textContent = 'Con amor, siempre';
+  gcard.classList.add('on'); kitty.say('¡Qué bonito, mami! 💖', 5000);
 });
 </script>
 </body>
