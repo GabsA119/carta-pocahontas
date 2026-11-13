@@ -137,8 +137,8 @@
   }
   const ring = (list, h, R, y, off = 0) => list.forEach((f, i) => prop(f, h, R, y, off + i/list.length*Math.PI*2));
   ring(['b_lips', 'z_logo', 'm_flower', 'p_fan', 'b_crown', 'z_bow', 'm_mushu', 'z_dice'], .62, 1.78, .1, .2);          // sobre el plato
-  ring(['b_star', 'p_heartfig', 'z_dollar', 'm_fan', 'b_lipstick', 'p_flowers', 'z_lips'], .46, 1.3, Y1 + H1 + .05, .45);   // sobre el piso de abajo
-  ring(['z_bowpink', 'm_comb', 'p_hug', 'b_logo', 'p_logo'], .36, .88, Y2 + H2 + .05, .75);                              // sobre el piso de en medio
+  ring(['b_star', 'p_heartfig', 'z_dollar', 'p_hug', 'b_lipstick', 'p_flowers', 'z_lips'], .46, 1.3, Y1 + H1 + .05, .45);   // sobre el piso de abajo
+  ring(['z_bowpink', 'm_comb', 'm_fan', 'b_logo', 'p_logo'], .36, .88, Y2 + H2 + .05, .75);                              // sobre el piso de en medio
 
   /* ---- cámara, giro con el dedo y bucle ---- */
   let yaw = 0, elev = .38, dist = 11.6, resumeAt = 0, last = 0, dragging = false;
