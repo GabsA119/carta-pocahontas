@@ -2064,9 +2064,15 @@ const fbufs = new Map(); let fSrc = null, fGain = null;
 async function getFBuf(src){ if(fbufs.has(src)) return fbufs.get(src); try{ const b = await audioBuf(src); fbufs.set(src, b); while(fbufs.size > 3) fbufs.delete(fbufs.keys().next().value); return b; }catch(e){ return null; } }
 function stopFA(ms){ if(!fGain) return; const g = fGain, s = fSrc; fGain = fSrc = null; try{ const t = actx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0, t + ms/1000); }catch(e){} setTimeout(() => { try{ s.stop(); }catch(e){} }, ms + 80); }
 function startFA(buf, from){ stopFA(0); fGain = actx.createGain(); fGain.connect(actx.destination); fSrc = actx.createBufferSource(); fSrc.buffer = buf; fSrc.connect(fGain); fSrc.start(0, Math.min(from, buf.duration - .05)); }
-function duck(on){
-  inVideo = on; fade(song, on ? .1 : musicTarget(), on ? 700 : 1400);
-  try{ if(actx && master) master.gain.setTargetAtTime(on ? .1 : (musicOn ? .9 : 0), actx.currentTime, .4); }catch(e){}
+function musicOff(){      // la música de fondo se va despacio y, cuando ya no se oye, se pone en pausa
+  inVideo = true;
+  try{ if(actx && master) master.gain.setTargetAtTime(0, actx.currentTime, 1.4); }catch(e){}
+  fade(song, 0, 4500).then(() => { if(filmOn) song.pause(); });
+}
+function musicBack(){
+  inVideo = false;
+  try{ if(actx && master) master.gain.setTargetAtTime(musicOn ? .9 : 0, actx.currentTime, .6); }catch(e){}
+  if(musicOn){ if(song.paused) song.play().catch(()=>{}); fade(song, musicTarget(), 2500); }
 }
 let film = null;
 const Fq = s => $('film').querySelector(s);
@@ -2091,9 +2097,9 @@ async function playScene(my, sc){
     setBd(sc.poster); e = mk('md vd', '<video muted playsinline preload="auto"></video>'); const v = e.querySelector('video'); my.v = v; v.poster = sc.poster; v.src = sc.src; setCap(sc.cap);
     const buf = (sc.aud && actx) ? await getFBuf(sc.aud) : null;
     try{ await v.play(); }catch(x){}
-    if(buf && !my.stop){ if(actx.state !== 'running') actx.resume(); duck(true); startFA(buf, v.currentTime); }
+    if(buf && !my.stop){ if(actx.state !== 'running') actx.resume(); startFA(buf, v.currentTime); }
     await new Promise(res => { v.onended = res; const t = setTimeout(res, Math.min(sc.dur, 24)*1000 + 3500); my.skip = () => { clearTimeout(t); res(); }; });
-    stopFA(500); if(buf) duck(false); setCap('');
+    stopFA(500); setCap('');
     try{ v.pause(); v.removeAttribute('src'); v.load(); }catch(x){} my.v = null;
   }
   if(e) await outE(e);
@@ -2103,7 +2109,7 @@ async function startFilm(){
   if(bigWrap) await closeBig();
   const my = film = {stop: false, cum: 0, skip: null, v: null}, S = buildScript(); my.total = S.reduce((a, s) => a + s.est, 0);
   unloadV(heroVid); kitty.say(''); kitty.hide();
-  if(song.paused) song.play().catch(()=>{}); if(actx && actx.state !== 'running') actx.resume();
+  if(actx && actx.state !== 'running') actx.resume(); musicOff();
   const F = $('film'); Fq('.fbar i').style.transition = 'none'; Fq('.fbar i').style.width = '0'; F.classList.add('on');
   await sleep(700);
   for(const sc of S){ if(my.stop) return; await playScene(my, sc); }
@@ -2113,7 +2119,7 @@ async function startFilm(){
 async function stopFilm(){
   if(!filmOn) return; filmOn = false;
   if(film){ film.stop = true; if(film.skip) film.skip(); if(film.v){ try{ film.v.pause(); film.v.removeAttribute('src'); film.v.load(); }catch(e){} } }
-  stopFA(300); duck(false);
+  stopFA(300); musicBack();
   const F = $('film'); F.classList.remove('on'); setTimeout(() => { if(!filmOn) Fq('.fst').innerHTML = ''; }, 900);
   kitty.show(); tvSync();
 }
