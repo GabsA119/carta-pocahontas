@@ -142,6 +142,7 @@
 
   /* ---- cámara, giro con el dedo y bucle ---- */
   let yaw = 0, elev = .38, dist = 11.6, resumeAt = 0, last = 0, dragging = false;
+  let tapOK = false, tx0 = 0, ty0 = 0, tt0 = 0;
   const pts = new Map(); let pd = 0, pdist = 11.6, lx = 0, ly = 0;
   function size(){
     const w = host.clientWidth || 300, h = host.clientHeight || 300;
@@ -151,15 +152,18 @@
   cv.addEventListener('pointerdown', e => {
     try{ cv.setPointerCapture(e.pointerId); }catch(_){}
     pts.set(e.pointerId, [e.clientX, e.clientY]); dragging = true; cv.style.cursor = 'grabbing'; lx = e.clientX; ly = e.clientY;
+    if(pts.size === 1){ tapOK = true; tx0 = e.clientX; ty0 = e.clientY; tt0 = performance.now(); } else tapOK = false;
     if(pts.size === 2){ const [a, b] = [...pts.values()]; pd = Math.hypot(a[0] - b[0], a[1] - b[1]); pdist = dist; }
   });
   cv.addEventListener('pointermove', e => {
     if(!pts.has(e.pointerId)) return;
     pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if(Math.hypot(e.clientX - tx0, e.clientY - ty0) > 10) tapOK = false;
     if(pts.size === 2){ const [a, b] = [...pts.values()]; dist = Math.max(8.5, Math.min(17, pdist*pd/Math.hypot(a[0] - b[0], a[1] - b[1]))); }
     else { yaw += (e.clientX - lx)*.011; elev = Math.max(.1, Math.min(.8, elev + (e.clientY - ly)*.004)); lx = e.clientX; ly = e.clientY; }
   });
   ['pointerup', 'pointercancel'].forEach(ev => cv.addEventListener(ev, e => {
+    if(ev === 'pointerup' && tapOK && pts.size === 1 && performance.now() - tt0 < 600){ tapOK = false; const f = window.CAKE3D && window.CAKE3D.onTap; if(f){ window.CAKE3D.onTap = null; f(); } }
     pts.delete(e.pointerId); if(!pts.size){ dragging = false; cv.style.cursor = 'grab'; }
     resumeAt = performance.now() + 2000;                // se queda quieto 2 s y sigue girando
     const r = [...pts.values()][0]; if(r){ lx = r[0]; ly = r[1]; }
