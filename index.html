@@ -1258,8 +1258,8 @@ const kitty = (() => {
   requestAnimationFrame(frame);
   const api = {
     show(){ size(); if(on) return; on = true; x = W*.5; y = lanes().yF; tx = x; ty = y; path = []; mode = 'idle'; until = 1.2; el.classList.add('on'); jump(true); wave(); },
-    hide(){ on = false; el.classList.remove('on'); bub.classList.remove('on'); },
-    say(t, ms){ clearInterval(this._tip); this._say(t, ms, REACT[t] ? [REACT[t]] : null); },
+    hide(){ on = false; this._gen = (this._gen || 0) + 1; clearInterval(this._tip); el.classList.remove('on'); bub.classList.remove('on'); },
+    say(t, ms){ clearInterval(this._tip); this._gen = (this._gen || 0) + 1; this._say(t, ms, REACT[t] ? [REACT[t]] : null); },
     _say(t, ms, clips, done){
       clearTimeout(this._t);
       if(!t){ bub.classList.remove('on'); say_ = ''; stopVoice(); pendingClips = null; return; }
@@ -1269,13 +1269,14 @@ const kitty = (() => {
     },
     /* una instrucción siempre va al principio o al final de lo que dice, con una frase cariñosa al azar */
     tip(instr){
-      clearInterval(this._tip); this._instr = instr;
+      clearInterval(this._tip); this._instr = instr; const gen = this._gen = (this._gen || 0) + 1;      // si algo más habla o se muestra otra instrucción, esta se cancela
       const chat = ['¡Hola, mami! 🎀', 'Estás hermosa hoy, mami 💕', '¡Feliz mes de cumpleaños, mami! 🎂', 'Este mes es tuyo, mami ✨', 'Te preparé algo bonito, mami 💝', 'Qué guapa te ves, mami 😍', 'Que todos tus deseos se cumplan, mami 🌟', 'Eres muy especial, mami 💖', 'Soy Kitty, ¡tu amiguita, mami! 🐾', 'Me encanta pasear contigo, mami 🎶', 'Este mes el viento sopla a tu favor, mami 🌿', 'Te quieren muchísimo, mami 💗'];
       let lastC = -1;
       const go = () => {
+        if(gen !== this._gen) return;
         let i; do { i = Math.floor(Math.random()*chat.length); } while(i === lastC); lastC = i;
         const first = Math.random() < .5, t = first ? chat[i] + ' ' + this._instr : this._instr + ' ' + chat[i], ik = INSTR[this._instr];
-        this._say(t, 0, first ? ['c' + i, ik] : [ik, 'c' + i], () => { bub.classList.remove('on'); say_ = ''; this._tip = setTimeout(go, 4000); });   // tras hablar, calla al menos 5 s if(Math.random() < .6) wave();
+        this._say(t, 0, first ? ['c' + i, ik] : [ik, 'c' + i], () => { bub.classList.remove('on'); say_ = ''; if(gen === this._gen) this._tip = setTimeout(go, 4000); });   // tras hablar, calla al menos 5 s if(Math.random() < .6) wave();
       };
       go();
     },
@@ -1287,7 +1288,7 @@ const kitty = (() => {
       moodTb = setTimeout(() => bub.classList.remove('on'), 3200);
     },
     mood(on){
-      moodOn = on; clearInterval(this._tip); clearTimeout(this._t); clearTimeout(moodT); clearTimeout(moodTb); stopVoice(); pendingClips = null;
+      moodOn = on; this._gen = (this._gen || 0) + 1; clearInterval(this._tip); clearTimeout(this._t); clearTimeout(moodT); clearTimeout(moodTb); stopVoice(); pendingClips = null;
       bub.classList.remove('on'); say_ = '';
       if(!on) return;
       sideX = Math.random() < .5 ? Math.max(w*.6, W*.1) : Math.min(W - w*.6, W*.9);
