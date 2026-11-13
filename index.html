@@ -639,47 +639,6 @@ figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;p
 #endscr .ec b{font-size:21px;font-weight:700;letter-spacing:-.02em}
 #endscr .ec.gf{outline:2px solid rgba(255,255,255,.85);outline-offset:-2px}
 #endscr .eb{display:flex;gap:10px;justify-content:center;margin-top:4px}
-
-/* ================= La película ================= */
-#film{position:fixed;inset:0;z-index:36;background:#000;color:#fff;font-family:var(--sf);opacity:0;pointer-events:none;transition:opacity .9s ease;overflow:hidden}
-#film.on{opacity:1;pointer-events:auto}
-#film .b1,#film .b2{position:absolute;inset:-12%;background-size:cover;background-position:center;opacity:0;transition:opacity 1.6s ease;filter:blur(46px) saturate(1.5) brightness(.75);transform:translateZ(0)}
-#film .b1.on,#film .b2.on{opacity:1}
-#film .fvg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 45%,rgba(0,0,0,.6))}
-#film .fst{position:absolute;inset:0}
-#film .fs{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;transition:opacity .9s ease;padding:max(70px,env(safe-area-inset-top)) 26px max(70px,env(safe-area-inset-bottom))}
-#film .fs.in{opacity:1}
-#film .ti .k{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.2em;opacity:.7}
-#film .ti h1{margin:0;font-size:clamp(40px,12vw,72px);font-weight:800;letter-spacing:-.04em;line-height:1.04;animation:fti 2.4s ease-out both}
-#film .ti .s{margin:14px 0 0;font-size:20px;opacity:.85}
-@keyframes fti{from{filter:blur(18px);transform:scale(.94)}to{filter:none;transform:none}}
-#film .tx p{margin:0;max-width:560px;font-size:clamp(22px,6.3vw,30px);line-height:1.45;font-weight:600;letter-spacing:-.015em;text-shadow:0 2px 24px rgba(0,0,0,.55)}
-#film .tx.nt p{font-weight:500;font-size:clamp(20px,5.6vw,26px);opacity:.88}
-#film .tx em{color:#ff9ac6;font-style:normal}
-#film .tx.q p{font-style:italic;font-weight:500;font-size:clamp(24px,7vw,34px)}
-#film .tx .qm{display:block;margin-bottom:14px;font-size:22px;color:#ff9ac6;opacity:.9}
-#film .md{padding:max(64px,env(safe-area-inset-top)) 18px 130px}
-#film .md img,#film .md video{display:block;max-width:100%;max-height:100%;border-radius:22px;object-fit:contain;box-shadow:0 26px 64px rgba(0,0,0,.6);background:#111}
-#film .md img{animation:fkb var(--d,6500ms) ease-out forwards}
-@keyframes fkb{from{transform:scale(1)}to{transform:scale(1.07)}}
-#film .fcap{position:absolute;left:20px;right:20px;bottom:calc(max(44px,env(safe-area-inset-bottom)) + 26px);text-align:center;font-size:17px;font-weight:600;text-shadow:0 2px 14px rgba(0,0,0,.8);opacity:0;transition:opacity .7s ease;pointer-events:none}
-#film .fcap.on{opacity:.95}
-#film .nm h2{margin:0 0 18px;font-size:30px;font-weight:800;letter-spacing:-.03em}
-#film .nc{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:420px}
-#film .nc span{opacity:0;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.14);font-size:16px;font-weight:600;animation:nmi .9s ease forwards}
-@keyframes nmi{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
-#film .cr{justify-content:flex-start}
-#film .crs{position:absolute;left:0;right:0;top:100%;padding:0 24px;animation:crl 29s linear forwards}
-@keyframes crl{to{transform:translateY(calc(-100% - 100vh))}}
-#film .crs small{display:block;margin:34px 0 8px;font-size:11.5px;font-weight:700;letter-spacing:.18em;opacity:.6}
-#film .crs b{display:block;font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
-#film .crs p{margin:56px 0 0;font-size:18px;opacity:.85;line-height:1.4}
-#film .crs h3{margin:30px 0 0;font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.15}
-#film .fbar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.18)}
-#film .fbar i{display:block;height:100%;width:0;background:#fff}
-#film .fbt{position:absolute;top:max(12px,env(safe-area-inset-top));right:12px;display:flex;gap:8px;z-index:3}
-#film .fbt button{width:40px;height:40px;border-radius:50%;border:0;color:#fff;font-size:15px;background:rgba(40,40,56,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer;font-family:var(--sf)}
-#endscr{z-index:40}
 </style>
 </head>
 <body>
@@ -816,7 +775,6 @@ figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;p
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pear" viewBox="0 0 100 120"><path d="M50 24C38 24 35 35 31 47C27 59 13 67 13 88C13 107 29 117 50 117C71 117 87 107 87 88C87 67 73 59 69 47C65 35 62 24 50 24Z"/><path d="M50 26C50 17 52 10 59 3" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M55 16C62 4 76 3 83 9C77 21 63 23 55 16Z"/></symbol></svg>
 <div id="pwr"><div id="crt"><b class="ct"></b><b class="cb"></b><i class="cl"></i></div><div id="plogo"><svg viewBox="0 0 100 120"><use href="#pear"/></svg><span>TV</span></div>
 <div id="remote"><i class="pw"><svg viewBox="0 0 16 16"><path d="M8 1.5v6"/><path d="M4.2 3.6a6 6 0 1 0 7.6 0"/></svg></i><i class="tp"></i><i class="b2 l">‹</i><i class="b2 r">tv</i></div></div>
-<div id="film"><div class="b1"></div><div class="b2"></div><div class="fvg"></div><div class="fst"></div><div class="fcap"></div><div class="fbar"><i></i></div><div class="fbt"><button data-fskip="1" aria-label="Siguiente escena">⏭</button><button data-fx="1" aria-label="Cerrar">✕</button></div></div>
 <div id="endscr"></div>
 <div id="kb" class="kb" aria-hidden="true"></div>
 <div id="kitty" aria-hidden="true"><div class="dz">💫💫</div><div class="stm">♨</div><div class="ks"></div><div class="kw"><svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
@@ -1965,7 +1923,7 @@ function tvSync(){
   const pr = seen.size/18; setBg(0, .5, 0, pr, .5 + pr*.4);          // el fondo se tiñe un poco más con cada capítulo leído
   tv.querySelectorAll('.ch').forEach(b => { const w = b.querySelector('.bar b'); if(w) w.style.width = seen.has(+b.dataset.i) ? '100%' : '0'; });
   if(!heroVid) return;
-  if(dtOpen < 0 && !bigWrap && !filmOn && $('letter').classList.contains('show')){ loadV(heroVid); heroVid.play().catch(()=>{}); }
+  if(dtOpen < 0 && !bigWrap && $('letter').classList.contains('show')){ loadV(heroVid); heroVid.play().catch(()=>{}); }
   else if(!bigWrap) unloadV(heroVid);
 }
 function openCh(i){
@@ -2011,8 +1969,7 @@ $('letter').addEventListener('pointerup', e => {
   if((x = t.closest('.tvc.pho'))){ openPhoto(x.querySelector('img')); return; }
 });
 /* final de la película: recomendaciones como en Netflix (un video y una foto al azar, y el último regalo) */
-function playMovie(){ startFilm(); }
-async function endClose(){ $('endscr').classList.remove('on'); await stopFilm(); if(bigWrap) await closeBig(); }
+function playMovie(){ if(!bigWrap) openBig(heroFig); }
 function showEnd(){
   stopVidAudio(1000);
   if(bigAudio){ bigAudio = false; inVideo = false; if(song.paused) song.play().catch(()=>{}); fade(song, musicTarget(), 2200); }
@@ -2028,101 +1985,10 @@ function showEnd(){
 }
 $('endscr').addEventListener('click', async e => {
   const E = $('endscr'), t = e.target.closest ? e.target : null; if(!t) return; let x;
-  if((x = t.closest('[data-rec]'))){ const k = x.dataset.rec, r = E.recs; await endClose(); if(k === 'v') openBig(r.v); else if(k === 'p') openPhoto(r.p.querySelector('img')); else $('wish').click(); }
-  else if(t.closest('[data-again]')){ await endClose(); startFilm(); }
-  else if(t.closest('[data-endx]')) endClose();
+  if((x = t.closest('[data-rec]'))){ const k = x.dataset.rec, r = E.recs; await closeBig(); if(k === 'v') openBig(r.v); else if(k === 'p') openPhoto(r.p.querySelector('img')); else $('wish').click(); }
+  else if(t.closest('[data-again]')){ await closeBig(); playMovie(); }
+  else if(t.closest('[data-endx]')) closeBig();
 });
-/* ================= La película: todo el contenido seguido, con textos, poemas, fotos y videos ================= */
-let filmOn = false;
-const FDUR = {L1: 13.2, L2: 17.8, L3: 14.7, L4: 9.1, L5: 20, L6: 10.3, L7: 6.6, L8: 3.7, L9: 7.8, L10: 18.2, L11: 20, L13: 15.1, L14: 8.8, L16: 9.9, L17: 15, L19: 9.9, L20: 7.7, L21: 14.6, L22: 5.8, L23: 4.9, L26: 10.4, L27: 15.1, L36: 7.2, cover: 10.7};
-const FQ = ['Contigo hasta el silencio suena bonito.', 'Si volviera a nacer, te buscaría en cada vida.', 'Eres mi lugar favorito en el mundo.', 'Qué suerte la mía: cruzarme contigo.', 'Tu sonrisa es mi mejor mañana.', 'Hay personas que son hogar: tú eres la mía.', 'Contigo aprendí que hasta lo simple es mágico.', 'Si me preguntan qué es bonito, pienso en ti.', 'Te quiero en lo grande, y más en lo pequeño.', 'Eres la razón de mis mejores casualidades.', 'A tu lado el tiempo se vuelve cuento.', 'Que nunca te falte luz, mi Judith.', 'Mi parte favorita del día es pensarte.', 'En cada versión de mí, siempre estás tú.', 'Quién diría que un «hola» sería el comienzo de todo.', 'Eres poesía sin esfuerzo.', 'Por ti, hasta la lluvia es bonita.', 'Cuidarte es mi forma favorita de quererte.', 'Todo lo bonito me recuerda a ti.'];
-const wc = h => h.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
-function buildScript(){
-  const src = [...document.querySelectorAll('.pgsrc')], S = [];
-  S.push({t: 'title', k: 'PERA TV Y GABRIEL', h: 'presentan', ms: 3400, bd: 'media/cover.jpg'});
-  S.push({t: 'title', k: 'UNA PELÍCULA DE GABRIEL', h: 'Para mi<br>Pocahontas', s: 'libre como el viento', ms: 5600, bd: 'media/cover.jpg'});
-  S.push({t: 'video', src: 'media/cover.mp4', aud: 'media/cover.m4a', poster: 'media/cover.jpg', dur: FDUR.cover, cap: ''});
-  const media = f => {
-    const v = f.querySelector('video'), cap = (f.querySelector('figcaption') || {}).textContent || '';
-    if(v){ const s0 = v.dataset.src || v.getAttribute('src'), key = s0.replace(/^.*\//, '').replace(/\.\w+$/, ''); return {t: 'video', src: s0, aud: v.hasAttribute('data-silent') ? '' : v.dataset.audio, poster: v.getAttribute('poster'), dur: FDUR[key] || 10, cap}; }
-    const s1 = f.querySelector('img').getAttribute('src'); return {t: 'photo', src: s1, cap, ms: 6500};
-  };
-  src.forEach((g, i) => {
-    S.push({t: 'title', k: 'CAPÍTULO ' + (i + 1), h: CHT[i], s: CHS[i], ms: 4000, bd: thumbOf(g)});
-    [...g.children].forEach(c => {
-      if(c.matches('.p,.ps')) S.push({t: 'text', html: c.innerHTML, note: c.classList.contains('note') || c.classList.contains('ps'), ms: Math.min(17000, Math.max(5000, 2000 + wc(c.innerHTML)*340))});
-      else if(c.matches('.chips')){ const l = [...c.children].map(x => x.textContent); S.push({t: 'names', list: l, ms: (l.length*1.05 + 4)*1000}); }
-      else if(c.matches('.zone')) c.querySelectorAll('figure.media').forEach(f => S.push(media(f)));
-    });
-    if(i < src.length - 1) S.push({t: 'quote', html: FQ[i % FQ.length], ms: 5200});
-  });
-  S.push({t: 'credits', ms: 29000});
-  S.forEach(s => { s.est = (s.t === 'video' ? Math.min(s.dur, 24) + 1 : s.ms/1000) + 1.2; });
-  return S;
-}
-const fbufs = new Map(); let fSrc = null, fGain = null;
-async function getFBuf(src){ if(fbufs.has(src)) return fbufs.get(src); try{ const b = await audioBuf(src); fbufs.set(src, b); while(fbufs.size > 3) fbufs.delete(fbufs.keys().next().value); return b; }catch(e){ return null; } }
-function stopFA(ms){ if(!fGain) return; const g = fGain, s = fSrc; fGain = fSrc = null; try{ const t = actx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0, t + ms/1000); }catch(e){} setTimeout(() => { try{ s.stop(); }catch(e){} }, ms + 80); }
-function startFA(buf, from){ stopFA(0); fGain = actx.createGain(); fGain.connect(actx.destination); fSrc = actx.createBufferSource(); fSrc.buffer = buf; fSrc.connect(fGain); fSrc.start(0, Math.min(from, buf.duration - .05)); }
-function duck(on){
-  inVideo = on; fade(song, on ? .1 : musicTarget(), on ? 700 : 1400);
-  try{ if(actx && master) master.gain.setTargetAtTime(on ? .1 : (musicOn ? .9 : 0), actx.currentTime, .4); }catch(e){}
-}
-let film = null;
-const Fq = s => $('film').querySelector(s);
-function mk(cls, html){ const e = document.createElement('div'); e.className = 'fs ' + cls; e.innerHTML = html; Fq('.fst').appendChild(e); void e.offsetWidth; e.classList.add('in'); return e; }
-async function outE(e){ e.classList.remove('in'); await sleep(900); e.remove(); }
-function setBd(src){ if(!src) return; const a = Fq('.b1'), b = Fq('.b2'), on = a.classList.contains('on') ? a : b, off = on === a ? b : a; if(on.dataset.s === src) return; off.style.backgroundImage = 'url("' + src + '")'; off.dataset.s = src; off.classList.add('on'); on.classList.remove('on'); }
-function setCap(t){ const c = Fq('.fcap'); c.classList.remove('on'); if(t) setTimeout(() => { if(filmOn){ c.textContent = t; c.classList.add('on'); } }, 450); }
-const fwait = (my, ms) => new Promise(res => { const t = setTimeout(res, ms); my.skip = () => { clearTimeout(t); res(); }; });
-async function playScene(my, sc){
-  if(sc.bd) setBd(sc.bd);
-  const bar = Fq('.fbar i'); bar.style.transition = 'width ' + sc.est.toFixed(1) + 's linear'; bar.style.width = Math.min(100, (my.cum + sc.est)/my.total*100) + '%'; my.cum += sc.est;
-  let e;
-  if(sc.t === 'title'){ e = mk('ti', '<p class="k">' + sc.k + '</p>' + (sc.h ? '<h1>' + sc.h + '</h1>' : '') + (sc.s ? '<p class="s">' + sc.s + '</p>' : '')); await fwait(my, sc.ms); }
-  else if(sc.t === 'text'){ e = mk('tx' + (sc.note ? ' nt' : ''), '<p>' + sc.html + '</p>'); await fwait(my, sc.ms); }
-  else if(sc.t === 'quote'){ e = mk('tx q', '<span class="qm">❦</span><p>' + sc.html + '</p>'); await fwait(my, sc.ms); }
-  else if(sc.t === 'names'){ e = mk('nm', '<h2>Todos tus nombres</h2><div class="nc">' + sc.list.map((n, i) => '<span style="animation-delay:' + (i*1.05 + .8).toFixed(2) + 's">' + n + '</span>').join('') + '</div>'); await fwait(my, sc.ms); }
-  else if(sc.t === 'photo'){ setBd(sc.src); e = mk('md', '<img src="' + sc.src + '" alt="" draggable="false" style="--d:' + sc.ms + 'ms">'); setCap(sc.cap); await fwait(my, sc.ms); setCap(''); }
-  else if(sc.t === 'credits'){
-    e = mk('cr', '<div class="crs"><small>PROTAGONISTA</small><b>Judith Alejandra<br>Arcoamarillo Soto</b><small>TAMBIÉN CONOCIDA COMO</small><b>Mi Pocahontas · Mi Pucca<br>Flaquita · Mi Kuromi con corazón de Kitty</b><small>DIRECCIÓN Y GUION</small><b>Gabriel, el moreno</b><small>CON LA PARTICIPACIÓN ESPECIAL DE</small><b>Kitty, la peluche</b><small>MÚSICA</small><b>Once y once</b><small>REGALOS</small><b>Un termo, una cobija, una wafflera<br>y una cajita azul</b><small>DISTRIBUIDA POR</small><b>Pera TV</b><p>Hecha con todo mi cariño,<br>aunque un poquito tarde.</p><h3>Feliz mes de tu cumpleaños,<br>mi Judith 💙</h3></div>'); await fwait(my, sc.ms);
-  }
-  else if(sc.t === 'video'){
-    setBd(sc.poster); e = mk('md vd', '<video muted playsinline preload="auto"></video>'); const v = e.querySelector('video'); my.v = v; v.poster = sc.poster; v.src = sc.src; setCap(sc.cap);
-    const buf = (sc.aud && actx) ? await getFBuf(sc.aud) : null;
-    try{ await v.play(); }catch(x){}
-    if(buf && !my.stop){ if(actx.state !== 'running') actx.resume(); duck(true); startFA(buf, v.currentTime); }
-    await new Promise(res => { v.onended = res; const t = setTimeout(res, Math.min(sc.dur, 24)*1000 + 3500); my.skip = () => { clearTimeout(t); res(); }; });
-    stopFA(500); if(buf) duck(false); setCap('');
-    try{ v.pause(); v.removeAttribute('src'); v.load(); }catch(x){} my.v = null;
-  }
-  if(e) await outE(e);
-}
-async function startFilm(){
-  if(filmOn) return; filmOn = true;
-  if(bigWrap) await closeBig();
-  const my = film = {stop: false, cum: 0, skip: null, v: null}, S = buildScript(); my.total = S.reduce((a, s) => a + s.est, 0);
-  unloadV(heroVid); kitty.say(''); kitty.hide();
-  if(song.paused) song.play().catch(()=>{}); if(actx && actx.state !== 'running') actx.resume();
-  const F = $('film'); Fq('.fbar i').style.transition = 'none'; Fq('.fbar i').style.width = '0'; F.classList.add('on');
-  await sleep(700);
-  for(const sc of S){ if(my.stop) return; await playScene(my, sc); }
-  if(my.stop) return;
-  Fq('.fbar i').style.width = '100%'; showEnd();
-}
-async function stopFilm(){
-  if(!filmOn) return; filmOn = false;
-  if(film){ film.stop = true; if(film.skip) film.skip(); if(film.v){ try{ film.v.pause(); film.v.removeAttribute('src'); film.v.load(); }catch(e){} } }
-  stopFA(300); duck(false);
-  const F = $('film'); F.classList.remove('on'); setTimeout(() => { if(!filmOn) Fq('.fst').innerHTML = ''; }, 900);
-  kitty.show(); tvSync();
-}
-$('film').addEventListener('click', e => {
-  if(e.target.closest('[data-fx]')){ stopFilm(); return; }
-  if(e.target.closest('[data-fskip]')){ if(film && film.skip) film.skip(); return; }
-  if(film && film.v && film.v.paused) film.v.play().catch(()=>{});
-});
-
 async function showBook(){
   buildTV(); layoutBook();
   const L = $('letter'), cdEl = env3d.querySelector('.cd');
