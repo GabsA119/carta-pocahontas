@@ -873,12 +873,16 @@ const kitty = (() => {
   function pick(){ const m = w*.65; walkTo(rnd(m, W - m), Math.random() < .6 ? H : 0); }
   function jump(big){ jt = 0; jd = big ? .7 : .5; jh = big ? h*.42 : h*.16; }      // brincos bajitos: nunca llega muy alto
   function wave(){ wt = 0; mode = 'wave'; until = 2.2; }
+  let moodOn = false, moodT = 0, moodTb = 0, sideX = 0;
+  const FEEL = ['😋','🥰','😍','😊','🤤','😌','💖','😆','🥹','✨'];
   function startAct(n, d){ act = n; at = 0; actDur = d; if(mode !== 'perch') mode = 'act'; }
   function bagFree(){ const s = document.getElementById('stage'); const sc = document.getElementById('env-scene');
     return s && sc && !sc.classList.contains('hide') && !s.classList.contains('opening') && !!obstacles().find(b => b.id === 'env3d'); }
   function think(){
     const ln0 = lanes(); if(y < ln0.yB - 30){ dropDown(); return; }       // si está arriba de algo, primero baja
     const r = Math.random(), bag = bagFree();
+    if(moodOn){ if(Math.abs(x - sideX) > 14){ walkTo(sideX, ln0.yF); return; }      // se queda a un lado para no estorbar los trozos
+      if(r < .75) startAct('coffee', 6); else startAct('phone', rnd(3, 4)); return; }
     if(r < .22) pick();
     else if(r < .3) startAct('phone', rnd(3.4, 5));
     else if(r < .36) startAct('film', rnd(3.5, 5));
@@ -1056,6 +1060,25 @@ const kitty = (() => {
         this._say(t, 0, first ? ['c' + i, ik] : [ik, 'c' + i], () => { bub.classList.remove('on'); say_ = ''; this._tip = setTimeout(go, 4000); });   // tras hablar, calla al menos 5 s if(Math.random() < .6) wave();
       };
       go();
+    },
+    /* mientras están los trozos de pastel: Kitty no habla, solo pone un emoji de cómo se siente mientras toma su café */
+    feel(){
+      if(!moodOn) return; clearTimeout(moodTb); clearTimeout(this._t);
+      bub.classList.remove('on'); bw = 0;
+      setTimeout(() => { if(!moodOn) return; bub.textContent = FEEL[Math.floor(Math.random()*FEEL.length)]; bub.classList.add('on'); bw = 0; }, 160);
+      moodTb = setTimeout(() => bub.classList.remove('on'), 3200);
+    },
+    mood(on){
+      moodOn = on; clearInterval(this._tip); clearTimeout(this._t); clearTimeout(moodT); clearTimeout(moodTb); stopVoice(); pendingClips = null;
+      bub.classList.remove('on'); say_ = '';
+      if(!on) return;
+      sideX = Math.random() < .5 ? Math.max(w*.6, W*.1) : Math.min(W - w*.6, W*.9);
+      if(mode === 'perch' || mode === 'climb') dropDown(); else if(Math.abs(x - sideX) > 14) walkTo(sideX, lanes().yF);
+      const loop = () => { if(!moodOn) return;
+        if(mode === 'idle' && Math.abs(x - sideX) <= 14) startAct('coffee', 6);
+        setTimeout(() => this.feel(), 1800);
+        moodT = setTimeout(loop, 7500); };
+      moodT = setTimeout(loop, 600);
     },
     hello(t, ms){ this.say(t, ms); wave(); },
     jump(){ jump(true); },
@@ -1889,21 +1912,22 @@ async function wishScene(){
     await sleep(500);
     cakePieces.forEach(p => { p.tx = p.dx*ex; p.ty = p.dy*ex; p.el.style.transform = 'translate(' + p.tx + 'px,' + p.ty + 'px)'; p.el.classList.add('glow'); });
   } else { svgCake.style.pointerEvents = 'auto'; svgCake.style.cursor = 'pointer'; }
-  kitty.tip('Toca un trozo de pastel 🍰');
+  kitty.mood(true);                      // sin texto que estorbe: solo emojis y café
   await sleep(900);
   for(let i = 0; i < slideEls.length; i++){
     const p = await nextTap();
-    kitty.say(['¡Qué rico, mami! 💕', '¡Uy, qué bonito! ✨', '¡Me encanta, mami! 💖', '¡Sigue, sigue! 🍰', '¡Último, mami! 🌿'][i % 5], 1800); kitty.jump();
+    kitty.feel(); kitty.jump();
     if(navigator.vibrate) navigator.vibrate(20);
     if(p){                                                       // el trozo se va volando
       p.gone = true; p.el.classList.remove('glow');
       p.el.style.transform = 'translate(' + p.dx*host.clientWidth*.9 + 'px,' + (p.dy*host.clientWidth*.9 - host.clientWidth*.25) + 'px) scale(.5) rotate(' + p.dx*14 + 'deg)'; p.el.style.opacity = 0;
     } else { svgCake.style.transition = 'opacity 1s ease, transform 1s ease'; svgCake.style.transform = 'scale(' + (1 - (i + 1)*.1) + ')'; if(i === slideEls.length - 1) svgCake.style.opacity = 0; }
     showSlide(i);
-    if(i < slideEls.length - 1){ await sleep(1600); kitty.tip('Toca otro trozo 🍰'); }
+    if(i < slideEls.length - 1) await sleep(1600);
   }
   await sleep(2200);
   cw.classList.remove('cutting'); host.classList.remove('cut');
+  kitty.mood(false);
   const b = $('wish1'); b.textContent = 'Continuar 🌿'; kitty.tip('Toca continuar 🌿'); await sleep(900); await waitWish(); kitty.say('');
   slideEls.forEach(e => e.classList.remove('on')); slideVids.forEach(v => v.pause());
   await sleep(900);
