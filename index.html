@@ -1941,6 +1941,7 @@ async function wishScene(){
   const host = $('cake3d'), cw = $('cw'), api = window.CAKE3D;
   loadSlideAudio();
   $('sub').classList.remove('on');
+  if(api) await api.face();                                  // primero el pastel se pone de frente
   const r = host.getBoundingClientRect(), cy = r.top + r.height*.42;
   [0, 380, 760].forEach((d, i) => setTimeout(() => spawnGust(-90, cy + (i - 1)*50, (i - 1)*.05, false, 24), d));   // la brisa cruza el pastel
   if(navigator.vibrate) navigator.vibrate(30);

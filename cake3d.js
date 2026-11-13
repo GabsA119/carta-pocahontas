@@ -171,7 +171,8 @@
   cv.addEventListener('wheel', e => { e.preventDefault(); dist = Math.max(8.5, Math.min(17, dist + e.deltaY*.005)); resumeAt = performance.now() + 2000; }, {passive: false});
 
   const cw = document.getElementById('cw');
-  let frozen = false, settle = null, glowK = 1;
+  let frozen = false, settle = null, glowK = 1, hold = false;
+  const FRONT = -(.2 + Math.PI), TAU = Math.PI*2;          // el frente del pastel: la corona y el centro del collar miran al frente
   const scv = document.createElement('canvas'); scv.width = scv.height = 48;
   (() => { const c = scv.getContext('2d'), g = c.createRadialGradient(24, 24, 1, 24, 24, 23);
     g.addColorStop(0, 'rgba(235,240,240,.9)'); g.addColorStop(1, 'rgba(235,240,240,0)'); c.fillStyle = g; c.fillRect(0, 0, 48, 48); })();
@@ -184,10 +185,10 @@
     if(host.clientWidth && (Math.abs(gl.width/renderer.getPixelRatio() - host.clientWidth) > 2)) size();   // por si el contenedor cambia de tamaño o estaba oculto
     const dt = Math.min(50, now - (last || now))/16.7; last = now;
     if(settle){                                                    // antes de partirlo, el pastel se acomoda de frente
-      const ty = Math.round(yaw/(Math.PI*2))*Math.PI*2;
+      const ty = FRONT + Math.round((yaw - FRONT)/TAU)*TAU;
       yaw += (ty - yaw)*Math.min(1, .09*dt); elev += (.42 - elev)*Math.min(1, .09*dt); dist += (11.6 - dist)*Math.min(1, .09*dt);
       if(Math.abs(ty - yaw) < .004 && Math.abs(.42 - elev) < .004 && settle){ const r = settle; settle = null; yaw = ty; elev = .42; dist = 11.6; r(); }
-    } else if(!dragging && now >= resumeAt) yaw += .0032*dt;
+    } else if(!dragging && !hold && now >= resumeAt) yaw += .0032*dt;
     world.rotation.y = yaw;
     camera.position.set(0, 1.25 + dist*Math.sin(elev), dist*Math.cos(elev)); camera.lookAt(0, 1.2, 0);
     const t = now/1000;
@@ -230,6 +231,7 @@
   }
   const api = window.CAKE3D = {
     ok: true, N,
+    face(){ return new Promise(res => { hold = true; resumeAt = 0; settle = res; }); },     // gira el pastel hasta ponerlo de frente
     blow(){ const now = performance.now(); flames.forEach((f, i) => { f.userData.out = now + 120 + (i*137)%520; }); glowK = .99; },
     split(){
       return new Promise(res => {
@@ -237,16 +239,17 @@
           resumeAt = 0; dragging = false;
           const w = gl.width, h = gl.height, faces = [], pieces = [];
           for(let i = 0; i < N; i++) faces.push(cutFaces(i));
-          world.rotation.y = 0; camera.position.set(0, 1.25 + dist*Math.sin(elev), dist*Math.cos(elev)); camera.lookAt(0, 1.2, 0);
+          world.rotation.y = FRONT; camera.position.set(0, 1.25 + dist*Math.sin(elev), dist*Math.cos(elev)); camera.lookAt(0, 1.2, 0);
           flames.forEach(f => f.visible = false); smoke.forEach(sm => sm.visible = false); glow.intensity = .35;
           for(let i = 0; i < N; i++){
             const c = i*Math.PI*2/N, a = c - Math.PI/N, b = c + Math.PI/N;
-            renderer.clippingPlanes = [new T.Plane(new T.Vector3(Math.cos(a), 0, -Math.sin(a)), 0), new T.Plane(new T.Vector3(-Math.cos(b), 0, Math.sin(b)), 0)];
+            const ra = a + FRONT, rb = b + FRONT;      // los planos de corte están en el espacio global; el pastel está girado FRONT
+            renderer.clippingPlanes = [new T.Plane(new T.Vector3(Math.cos(ra), 0, -Math.sin(ra)), 0), new T.Plane(new T.Vector3(-Math.cos(rb), 0, Math.sin(rb)), 0)];
             faces.forEach((g, k) => g.visible = k === i);
             renderer.render(scene, camera);
             const q = document.createElement('canvas'); q.width = w; q.height = h; q.className = 'slice';
             q.getContext('2d').drawImage(gl, 0, 0);
-            host.appendChild(q); pieces.push({el: q, c, ctx: q.getContext('2d')});
+            host.appendChild(q); pieces.push({el: q, c: c + FRONT, ctx: q.getContext('2d')});
           }
           renderer.clippingPlanes = [];
           frozen = true; cv.style.display = 'none';
