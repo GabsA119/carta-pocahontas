@@ -224,46 +224,61 @@
     const fw = new T.Mesh(new T.BoxGeometry(TW, TH, .05), slate); fw.position.z = TD/2 - .025; tray.add(fw);
     const vel = new T.Mesh(new T.BoxGeometry(TW - .1, .02, TD - .1), M(0x0d0d11, 1, 0)); vel.position.y = -TH/2 + .07; tray.add(vel);
     const tab = new T.Mesh(new T.BoxGeometry(.17, .24, .035), M(0x1f3fd8, .45, 0, {emissive: 0x0a1a66, emissiveIntensity: .35})); tab.position.set(0, -TH/2 + .2, TD/2 + .012); tray.add(tab);
-    const y0 = -TH/2 + .08, gold = M(0xe2b45a, .26, .55, {emissive: 0x3a2a08, emissiveIntensity: .3}), champ = M(0xe8d2aa, .28, .5, {emissive: 0x3a3020, emissiveIntensity: .25}), silver = M(0xdfe3ea, .2, .5, {emissive: 0x30343c, emissiveIntensity: .3});
-    const glow = [], clear = () => { const m = M(0xc4cfe6, .04, .1, {emissive: 0x7c8ab5, emissiveIntensity: .12, flatShading: true}); m.userData.b = .12; glow.push(m); return m; };
-    const gem = (c, r) => { const m = M(c, .08, .15, {emissive: c, emissiveIntensity: .4, flatShading: true}); glow.push(m); const g = new T.Mesh(new T.IcosahedronGeometry(r, 1), m); g.scale.y = .75; return g; };
-    const jew = new T.Group(); jew.position.y = y0; jew.scale.setScalar(1.0); tray.add(jew);
-    /* collar: cadena fina de eslabones con dije de corazón de cristal atravesado por una flecha */
+    /* reflejos: un cielo de estudio con luces suaves que hace brillar el metal y destellar las piedras */
+    const env = (() => {
+      const c = document.createElement('canvas'); c.width = 512; c.height = 256; const g = c.getContext('2d');
+      const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, '#dfe6f0'); gr.addColorStop(.45, '#8fa0b4'); gr.addColorStop(.52, '#6a7078'); gr.addColorStop(1, '#14100e'); g.fillStyle = gr; g.fillRect(0, 0, 512, 256);
+      g.fillStyle = '#fff'; [[40, 30, 90, 26], [170, 60, 60, 40], [300, 20, 120, 24], [430, 70, 50, 50], [250, 100, 40, 14], [90, 110, 70, 12], [380, 118, 70, 10]].forEach(r => g.fillRect(...r));
+      g.fillStyle = '#ffd9a0'; g.fillRect(210, 40, 30, 60); g.fillRect(470, 20, 30, 30);
+      const t = new T.CanvasTexture(c); t.mapping = T.EquirectangularReflectionMapping;
+      try{ const pm = new T.PMREMGenerator(renderer); const r = pm.fromEquirectangular(t).texture; pm.dispose(); return r; }catch(e){ return null; }
+    })();
+    const MM = (c, r, m, k, extra) => { const mt = M(c, r, m, Object.assign({}, extra || {})); if(env){ mt.envMap = env; mt.envMapIntensity = k; } return mt; };
+    const y0 = -TH/2 + .08;
+    const gold = MM(0xe0b04e, .3, .85, .9), champ = MM(0xdcd3c2, .3, .85, 1.0), silver = MM(0xe6eaf0, .25, .9, 1.0);
+    const glow = [];
+    const clear = () => { const m = MM(0xd5deee, .02, 0, .55, {transparent: true, opacity: .8, flatShading: true, emissive: 0x6f7ca5, emissiveIntensity: .1}); m.userData.b = .1; glow.push(m); return m; };
+    const colorGem = c => { const m = MM(c, .04, .1, 1.3, {flatShading: true, emissive: c, emissiveIntensity: .3}); m.userData.b = .3; glow.push(m); return m; };
+    const jew = new T.Group(); jew.position.y = y0; tray.add(jew);
+    /* collar: cadena fina de plata (eslabones planos) y dije de corazón de cristal con flecha */
     const curve = new T.CatmullRomCurve3([[-.8, -.62], [-.56, -.4], [-.32, -.2], [-.12, -.09], [0, -.075], [.12, -.09], [.32, -.2], [.56, -.4], [.8, -.62]].map(p => new T.Vector3(p[0], .012, p[1])));
-    const lgeo = new T.TorusGeometry(.02, .0055, 5, 10);
-    for(let i = 0; i <= 84; i++){ const u = i/84, p = curve.getPoint(u), tg = curve.getTangent(u), l = new T.Mesh(lgeo, champ); l.scale.x = 1.35; l.position.copy(p); l.lookAt(p.clone().add(tg)); l.rotateY(Math.PI/2); if(i%2) l.rotateX(Math.PI/2); jew.add(l); }
-    const pend = new T.Group(); pend.position.set(0, 0, .12); jew.add(pend);
-    const hs = new T.Shape(); hs.moveTo(0, -.13); hs.bezierCurveTo(-.2, .0, -.15, .17, 0, .09); hs.bezierCurveTo(.15, .17, .2, .0, 0, -.13);
-    const heart = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .035, bevelEnabled: true, bevelThickness: .03, bevelSize: .018, bevelSegments: 1}), clear()); heart.rotation.x = -Math.PI/2; heart.position.y = .02; pend.add(heart);
-    const rim = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .02, bevelEnabled: false}), champ); rim.scale.set(1.2, 1.2, 1); rim.rotation.x = -Math.PI/2; rim.position.y = .005; pend.add(rim);
-    [[-.14, .02], [.14, .02], [0, -.15]].forEach(([x, z]) => { const pr = new T.Mesh(new T.SphereGeometry(.014, 6, 5), champ); pr.position.set(x, .07, z); pend.add(pr); });
-    const bail = new T.Mesh(new T.TorusGeometry(.04, .009, 6, 14), champ); bail.rotation.x = Math.PI/2; bail.scale.set(.7, 1.2, 1); bail.position.set(0, .03, -.18); pend.add(bail);
-    const arrow = new T.Group(); arrow.position.set(0, .085, 0); arrow.rotation.y = .62; pend.add(arrow);
-    arrow.add(Object.assign(new T.Mesh(new T.BoxGeometry(.52, .012, .014), gold), {}));
-    const head = new T.Mesh(new T.ConeGeometry(.034, .09, 4), gold); head.rotation.z = Math.PI/2; head.position.x = -.3; arrow.add(head);
-    [-1, 1].forEach(sd => { const f = new T.Mesh(new T.BoxGeometry(.11, .008, .03), gold); f.position.set(.24, 0, sd*.022); f.rotation.y = sd*.5; arrow.add(f); const f2 = f.clone(); f2.position.x = .3; arrow.add(f2); });
-    /* pulsera dorada: racimo de piedras de colores, un corazón blanco y eslabones de hojitas */
-    const br = new T.Group(); br.position.set(-.74, 0, .4); jew.add(br);
-    const bez = new T.Mesh(new T.CylinderGeometry(.13, .13, .025, 18), gold); bez.position.y = .015; br.add(bez);
-    [0xffffff, 0x76c442, 0x8e4fd6, 0xe63232, 0xffd23a, 0xff8fb8, 0xffffff, 0xffffff].forEach((c, i) => { const a = i*Math.PI/4, g = gem(c, .036); g.position.set(Math.cos(a)*.085, .055, Math.sin(a)*.085); br.add(g); const ring = new T.Mesh(new T.TorusGeometry(.04, .008, 5, 12), gold); ring.rotation.x = Math.PI/2; ring.position.copy(g.position); ring.position.y = .042; br.add(ring); });
-    const cg = gem(0xffffff, .045); cg.position.set(0, .06, 0); br.add(cg);
-    const bh = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .02, bevelEnabled: true, bevelThickness: .015, bevelSize: .01, bevelSegments: 1}), clear()); bh.scale.setScalar(.38); bh.rotation.x = -Math.PI/2; bh.rotation.z = Math.PI/2; bh.position.set(.2, .02, 0); br.add(bh);
-    const lf = new T.SphereGeometry(1, 10, 8);
-    for(let i = 0; i < 9; i++){
-      const x = .32 + i*.075, z = Math.sin(i*.35)*.04;
-      [-1, 1].forEach(sd => { const l = new T.Mesh(lf, gold); l.scale.set(.05, .012, .022); l.position.set(x, .02, z + sd*.018); l.rotation.y = sd*.7; br.add(l); });
-      const bar = new T.Mesh(new T.BoxGeometry(.04, .012, .012), gold); bar.position.set(x + .037, .02, z); br.add(bar);
+    const lgeo = new T.TorusGeometry(.02, .006, 5, 10);
+    for(let i = 0; i <= 90; i++){ const u = i/90, p = curve.getPoint(u), tg = curve.getTangent(u), l = new T.Mesh(lgeo, champ); l.scale.set(1.4, 1, .7); l.position.copy(p); l.lookAt(p.clone().add(tg)); l.rotateY(Math.PI/2); if(i%2) l.rotateX(Math.PI/2); jew.add(l); }
+    const pend = new T.Group(); pend.position.set(0, 0, .13); jew.add(pend);
+    const hs = new T.Shape(); hs.moveTo(0, -.14); hs.bezierCurveTo(-.2, -.01, -.16, .17, 0, .09); hs.bezierCurveTo(.16, .17, .2, -.01, 0, -.14);
+    const heart = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .03, bevelEnabled: true, bevelThickness: .035, bevelSize: .02, bevelSegments: 1}), clear()); heart.rotation.x = -Math.PI/2; heart.position.y = .025; pend.add(heart);
+    const table = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .01, bevelEnabled: true, bevelThickness: .015, bevelSize: .01, bevelSegments: 1}), clear()); table.scale.setScalar(.62); table.rotation.x = -Math.PI/2; table.position.set(0, .088, -.012); pend.add(table);
+    const rim = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .02, bevelEnabled: false}), silver); rim.scale.set(1.22, 1.22, 1); rim.rotation.x = -Math.PI/2; rim.position.y = .004; pend.add(rim);
+    [[-.15, .0], [.15, .0], [0, -.16], [-.07, .15], [.07, .15]].forEach(([x, z]) => { const pr = new T.Mesh(new T.SphereGeometry(.014, 6, 5), silver); pr.position.set(x, .075, z); pend.add(pr); });
+    const bail = new T.Mesh(new T.TorusGeometry(.042, .01, 6, 14), silver); bail.rotation.x = Math.PI/2; bail.scale.set(.65, 1.3, 1); bail.position.set(0, .035, -.2); pend.add(bail);
+    const arrow = new T.Group(); arrow.position.set(0, .105, 0); arrow.rotation.y = .62; pend.add(arrow);
+    arrow.add(new T.Mesh(new T.CylinderGeometry(.007, .007, .5, 6), silver)); arrow.children[0].rotation.z = Math.PI/2;
+    const head = new T.Mesh(new T.ConeGeometry(.034, .1, 4), silver); head.rotation.z = Math.PI/2; head.position.x = -.3; arrow.add(head);
+    [-1, 1].forEach(sd => [.22, .29].forEach(x => { const f = new T.Mesh(new T.BoxGeometry(.1, .006, .028), silver); f.position.set(x, 0, sd*.02); f.rotation.y = sd*.55; arrow.add(f); }));
+    /* pulsera dorada: ramillete de piedras (margaritas blancas, verde, morada, roja, amarilla, rosa), corazón blanco y eslabones de florecitas */
+    const br = new T.Group(); br.position.set(-.6, 0, .4); jew.add(br);
+    const daisy = (mat, r) => { const d = new T.Group(); for(let i = 0; i < 8; i++){ const a = i*Math.PI/4, pt = new T.Mesh(new T.SphereGeometry(r*.42, 6, 5), mat); pt.position.set(Math.cos(a)*r*.62, 0, Math.sin(a)*r*.62); pt.scale.y = .6; d.add(pt); } const ct = new T.Mesh(new T.SphereGeometry(r*.42, 8, 6), mat); ct.scale.y = .7; d.add(ct); return d; };
+    const wh = clear(), cl = [[wh, 0, 0, .1, true], [wh, .1, .07, .085, true], [colorGem(0x7fc23f), .0, .13, .07, false], [colorGem(0x8a4fd2), -.08, .1, .06, false], [colorGem(0xe33232), .1, -.06, .065, false], [colorGem(0xffd23a), -.1, -.04, .085, true], [colorGem(0xff8fb8), .0, -.12, .06, true], [wh, -.12, .16, .07, true]];
+    cl.forEach(([m, x, z, r, dz]) => { const base = new T.Mesh(new T.CylinderGeometry(r*1.15, r*1.15, .018, 14), gold); base.position.set(x, .012, z); br.add(base); const g = dz ? daisy(m, r) : new T.Mesh(new T.IcosahedronGeometry(r*.62, 1), m); g.position.set(x, .04, z); if(!dz) g.scale.y = .7; br.add(g); });
+    const bh = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .02, bevelEnabled: true, bevelThickness: .015, bevelSize: .01, bevelSegments: 1}), clear()); bh.scale.setScalar(.34); bh.rotation.x = -Math.PI/2; bh.rotation.z = Math.PI/2; bh.position.set(.24, .025, 0); br.add(bh);
+    const flower = (x, z) => { const f = new T.Group(); for(let i = 0; i < 5; i++){ const a = i*Math.PI*2/5, pt = new T.Mesh(new T.SphereGeometry(1, 8, 6), gold); pt.scale.set(.034, .012, .02); pt.position.set(Math.cos(a)*.032, 0, Math.sin(a)*.032); pt.rotation.y = -a; f.add(pt); } const c0 = new T.Mesh(new T.TorusGeometry(.012, .006, 5, 8), gold); c0.rotation.x = Math.PI/2; f.add(c0); f.position.set(x, .02, z); return f; };
+    for(let i = 0; i < 8; i++){
+      const x = .36 + i*.07, z = Math.sin(i*.35)*.035;
+      br.add(flower(x, z));
+      const bar = new T.Mesh(new T.BoxGeometry(.05, .012, .01), gold); bar.position.set(x + .05, .02, z); br.add(bar);
+      if(i % 2) [-1, 1].forEach(sd => { const l = new T.Mesh(new T.SphereGeometry(1, 8, 6), gold); l.scale.set(.034, .01, .016); l.position.set(x + .05, .02, z + sd*.02); l.rotation.y = sd*.7; br.add(l); });
     }
-    const cl = new T.Mesh(new T.TorusGeometry(.03, .008, 6, 14), gold); cl.rotation.x = Math.PI/2; cl.position.set(1.04, .02, .02); br.add(cl);
-    /* anillo de plata: piedra rectangular de corte esmeralda sobre una canasta con garras y banda con piedritas */
-    const ring = new T.Group(); ring.position.set(.62, .24, .5); ring.rotation.z = .12; ring.scale.setScalar(1.15); jew.add(ring);
-    const band = new T.Mesh(new T.TorusGeometry(.2, .026, 10, 40), silver); band.rotation.y = Math.PI/2; ring.add(band);
-    const es = new T.Shape(), a = .13, b = .1, c = .04; es.moveTo(-a + c, -b); es.lineTo(a - c, -b); es.lineTo(a, -b + c); es.lineTo(a, b - c); es.lineTo(a - c, b); es.lineTo(-a + c, b); es.lineTo(-a, b - c); es.lineTo(-a, -b + c); es.closePath();
-    const stone = new T.Mesh(new T.ExtrudeGeometry(es, {depth: .06, bevelEnabled: true, bevelThickness: .035, bevelSize: .02, bevelSegments: 1}), clear()); stone.rotation.x = -Math.PI/2; stone.rotation.z = Math.PI/2; stone.position.y = .245; ring.add(stone);
-    const table = new T.Mesh(new T.BoxGeometry(.11, .004, .15), M(0xf2f5ff, .02, .1, {emissive: 0xbfc8e8, emissiveIntensity: .15})); table.position.y = .345; table.rotation.y = Math.PI/2; ring.add(table);
-    [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([sx, sz]) => { const cp = new T.Mesh(new T.CylinderGeometry(.009, .014, .12, 6), silver); cp.position.set(sx*.115, .26, sz*.085); cp.rotation.z = -sx*.12; cp.rotation.x = sz*.1; ring.add(cp); });
-    const gal = new T.Mesh(new T.BoxGeometry(.25, .02, .02), silver); gal.position.set(0, .2, 0); ring.add(gal);
-    for(let i = 0; i < 14; i++){ [-1, 1].forEach(sd => { const t = (i - 6.5)/6.5*1.05, pv = new T.Mesh(new T.SphereGeometry(.0105, 6, 5), M(0xffffff, .05, .15, {emissive: 0xffffff, emissiveIntensity: .45})); pv.position.set(sd*.024, Math.cos(t)*.2, Math.sin(t)*.2); ring.add(pv); }); }
+    const cp = new T.Mesh(new T.TorusGeometry(.03, .008, 6, 14), gold); cp.rotation.x = Math.PI/2; cp.position.set(.96, .02, .02); br.add(cp);
+    /* anillo de plata: piedra rectangular de corte esmeralda (escalonada) en una canasta de cuatro garras, banda con piedritas */
+    const ring = new T.Group(); ring.position.set(.62, .24, .36); ring.rotation.z = .12; ring.scale.setScalar(1.05); jew.add(ring);
+    const band = new T.Mesh(new T.TorusGeometry(.2, .024, 10, 40), silver); band.rotation.y = Math.PI/2; ring.add(band);
+    const oct = (a, b, c) => { const e = new T.Shape(); e.moveTo(-a + c, -b); e.lineTo(a - c, -b); e.lineTo(a, -b + c); e.lineTo(a, b - c); e.lineTo(a - c, b); e.lineTo(-a + c, b); e.lineTo(-a, b - c); e.lineTo(-a, -b + c); e.closePath(); return e; };
+    const stm = clear();
+    [[.135, .1, .04, .05, .235], [.11, .078, .034, .04, .285], [.082, .052, .028, .035, .325]].forEach(([a, b, c, d, y]) => { const st = new T.Mesh(new T.ExtrudeGeometry(oct(a, b, c), {depth: d, bevelEnabled: true, bevelThickness: .008, bevelSize: .006, bevelSegments: 1}), stm); st.rotation.x = -Math.PI/2; st.rotation.z = Math.PI/2; st.position.y = y; ring.add(st); });
+    [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([sx, sz]) => { const pr = new T.Mesh(new T.CylinderGeometry(.008, .013, .14, 6), silver); pr.position.set(sx*.11, .27, sz*.085); pr.rotation.z = -sx*.1; pr.rotation.x = sz*.1; ring.add(pr); const tp = new T.Mesh(new T.SphereGeometry(.014, 6, 5), silver); tp.position.set(sx*.1, .335, sz*.075); ring.add(tp); });
+    const gal = new T.Mesh(new T.BoxGeometry(.26, .02, .02), silver); gal.position.set(0, .215, 0); ring.add(gal);
+    const pvm = clear();
+    for(let i = 0; i < 15; i++){ [-1, 1].forEach(sd => { const t = (i - 7)/7*1.1, pv = new T.Mesh(new T.SphereGeometry(.0105, 6, 5), pvm); pv.position.set(sd*.022, Math.cos(t)*.2, Math.sin(t)*.2); ring.add(pv); }); }
     root.add(tray);
     const OPEN = 1.75; root.userData.setOpen = (u, tilt) => { tray.position.z = OPEN*u; root.position.z = -OPEN*u*.5; };
     root.userData.tick = now => glow.forEach((m, i) => { m.emissiveIntensity = (m.userData.b || .35)*(.75 + .5*Math.sin(now/260 + i*1.3)); });
