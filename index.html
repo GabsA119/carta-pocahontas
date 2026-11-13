@@ -8,7 +8,7 @@
 <title>Para Judith · Feliz cumpleaños</title>
 <style>
 :root{
-  --night:#031c25; --wine:#06303b; --plum:#0b6f84; --rose:#8fe6d8; --rose-d:#2fc7bd; --ruby:#0e7c86;
+  --night:#070626; --wine:#06303b; --plum:#0b6f84; --rose:#8fe6d8; --rose-d:#2fc7bd; --ruby:#0e7c86;
   --cream:#fff4ea; --paper:#fbeee0; --ink:#1f3a40; --gold:#e8c27a; --gold-l:#fbe6b4;
   --script:"Snell Roundhand","Apple Chancery","Zapfino","Segoe Script","Brush Script MT",cursive;
   --serif:"Iowan Old Style","Palatino","Baskerville","Georgia",serif;
@@ -464,6 +464,17 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
 #aurora .c2{right:max(8px,env(safe-area-inset-right));top:max(8px,env(safe-area-inset-top));transform:scaleX(-1)}
 #aurora .c3{left:max(8px,env(safe-area-inset-left));bottom:max(8px,env(safe-area-inset-bottom));transform:scaleY(-1)}
 #aurora .c4{right:max(8px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));transform:scale(-1,-1)}
+
+/* fondo azul morado que reacciona al avance: cada escena enciende una capa distinta */
+#aurora{--a1:0;--a2:0;--a3:0;--ab:0;background:radial-gradient(120% 70% at 50% -5%,rgba(190,170,255,.26),rgba(190,170,255,0) 62%),radial-gradient(130% 100% at 50% 100%,#1d1a63 0%,#11114a 46%,#070625 100%)}
+#aurora i{background:radial-gradient(circle,rgba(150,160,255,.16),rgba(150,160,255,0) 62%)}
+#aurora i:nth-child(2){background:radial-gradient(circle,rgba(150,90,230,.28),rgba(150,90,230,0) 62%)}
+#aurora i:nth-child(3){background:radial-gradient(circle,rgba(255,170,210,.14),rgba(255,170,210,0) 62%)}
+#aurora .mood{position:absolute;inset:0;pointer-events:none;transition:opacity 2.6s ease}
+#aurora .m1{opacity:var(--a1);background:radial-gradient(90% 60% at 50% 105%,rgba(214,110,255,.45),rgba(214,110,255,0) 70%),radial-gradient(80% 50% at 50% 0%,rgba(255,170,220,.24),rgba(255,170,220,0) 65%)}
+#aurora .m2{opacity:var(--a2);background:radial-gradient(110% 70% at 50% 0%,rgba(110,160,255,.38),rgba(110,160,255,0) 65%),radial-gradient(90% 60% at 50% 100%,rgba(90,70,200,.4),rgba(90,70,200,0) 70%)}
+#aurora .mb{opacity:var(--ab);background:radial-gradient(100% 70% at 50% 40%,rgba(255,175,215,.30),rgba(255,175,215,0) 70%),radial-gradient(90% 60% at 50% 100%,rgba(255,200,170,.22),rgba(255,200,170,0) 70%)}
+#aurora .m3{opacity:var(--a3);background:radial-gradient(70% 50% at 50% 45%,rgba(255,228,190,.38),rgba(255,228,190,0) 70%),radial-gradient(120% 80% at 50% 100%,rgba(170,120,255,.45),rgba(170,120,255,0) 70%)}
 </style>
 </head>
 <body>
@@ -479,7 +490,7 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
 <clipPath id="cp-wave" clipPathUnits="objectBoundingBox"><path d="M0,0 H1 V.88 C.83,1 .67,.78 .5,.9 C.33,1 .17,.78 0,.9Z"/></clipPath>
 <clipPath id="cp-squircle" clipPathUnits="objectBoundingBox"><rect x="0" y="0" width="1" height="1" rx=".26" ry=".26"/></clipPath>
 </defs></svg>
-<div id="aurora"><i></i><i></i><i></i><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gld" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1c8"/><stop offset="1" stop-color="#d8b268"/></linearGradient><symbol id="corner" viewBox="0 0 120 120"><g fill="none" stroke="url(#gld)" stroke-width="1.3" stroke-linecap="round"><path d="M8 62 V28 Q8 8 28 8 H62"/><path d="M17 54 V32 Q17 17 32 17 H54"/><path d="M26 26 C42 32 52 46 48 66"/><path d="M26 26 C32 42 46 52 66 48"/><circle cx="8" cy="68" r="2.2"/><circle cx="68" cy="8" r="2.2"/><ellipse cx="38" cy="36" rx="5" ry="2.4" transform="rotate(35 38 36)"/><ellipse cx="46" cy="46" rx="5" ry="2.4" transform="rotate(75 46 46)"/><ellipse cx="34" cy="44" rx="5" ry="2.4" transform="rotate(-20 34 44)"/></g></symbol></defs></svg><svg class="co c1" viewBox="0 0 120 120"><use href="#corner"/></svg><svg class="co c2" viewBox="0 0 120 120"><use href="#corner"/></svg><svg class="co c3" viewBox="0 0 120 120"><use href="#corner"/></svg><svg class="co c4" viewBox="0 0 120 120"><use href="#corner"/></svg><div class="vig"></div></div>
+<div id="aurora"><i></i><i></i><i></i><div class="mood m1"></div><div class="mood m2"></div><div class="mood mb"></div><div class="mood m3"></div><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gld" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1c8"/><stop offset="1" stop-color="#d8b268"/></linearGradient><symbol id="corner" viewBox="0 0 120 120"><g fill="none" stroke="url(#gld)" stroke-width="1.3" stroke-linecap="round"><path d="M8 62 V28 Q8 8 28 8 H62"/><path d="M17 54 V32 Q17 17 32 17 H54"/><path d="M26 26 C42 32 52 46 48 66"/><path d="M26 26 C32 42 46 52 66 48"/><circle cx="8" cy="68" r="2.2"/><circle cx="68" cy="8" r="2.2"/><ellipse cx="38" cy="36" rx="5" ry="2.4" transform="rotate(35 38 36)"/><ellipse cx="46" cy="46" rx="5" ry="2.4" transform="rotate(75 46 46)"/><ellipse cx="34" cy="44" rx="5" ry="2.4" transform="rotate(-20 34 44)"/></g></symbol></defs></svg><svg class="co c1" viewBox="0 0 120 120"><use href="#corner"/></svg><svg class="co c2" viewBox="0 0 120 120"><use href="#corner"/></svg><svg class="co c3" viewBox="0 0 120 120"><use href="#corner"/></svg><svg class="co c4" viewBox="0 0 120 120"><use href="#corner"/></svg><div class="vig"></div></div>
 <canvas id="bg"></canvas>
 <canvas id="fg"></canvas>
 <button id="mute" aria-label="Música">♪</button>
@@ -1198,6 +1209,8 @@ const petals = [];
 petals.push = () => 0;      // sin hojas flotando: el fondo ahora es sereno y elegante
 sceneReady = true;
 
+let bgE = 0, bgET = 0;     // energía del fondo: más destellos y motas cuando la historia se acerca al final
+function setBg(a1, a2, a3, ab, e){ const st = $('aurora').style; st.setProperty('--a1', a1); st.setProperty('--a2', a2); st.setProperty('--a3', a3); st.setProperty('--ab', ab); bgET = e || 0; }
 let petalK = 1;           // 1 = hojas visibles; baja a 0 al sellar el deseo
 const petalSp = {};
 function petalSprite(c){
@@ -1265,19 +1278,19 @@ function spawnGust(gx, gy, ga, noLeaves, extra){
 }
 let frame = 0;
 function loop(now){
-  frame++;
+  frame++; bgE += (bgET - bgE)*.01;
   /* --- fondo --- */
   bx.clearRect(0,0,W,H);
   for(const s of stars){
     s.t += s.sp;
-    bx.globalAlpha = .35 + .65*Math.abs(Math.sin(s.t));
+    bx.globalAlpha = Math.min(1, (.35 + .65*Math.abs(Math.sin(s.t)))*(1 + bgE*.45));
     bx.fillStyle = 'rgb(' + s.c + ')';
     bx.beginPath(); bx.arc(s.x, s.y, s.r, 0, 6.283); bx.fill();
   }
   for(const b of bokeh){
-    b.y -= b.vy; b.ph += .01;
+    b.y -= b.vy*(1 + bgE*1.6); b.ph += .01;
     if(b.y < -40){ b.y = H + 40; b.x = Math.random()*W; }
-    bx.globalAlpha = b.a*(.7 + .3*Math.sin(b.ph)); bx.drawImage(bokehSprite(b.c), b.x - b.r, b.y - b.r, b.r*2, b.r*2);
+    bx.globalAlpha = Math.min(.5, b.a*(.7 + .3*Math.sin(b.ph))*(1 + bgE*.9)); bx.drawImage(bokehSprite(b.c), b.x - b.r, b.y - b.r, b.r*2, b.r*2);
   }
   for(const sh of shoots){
     if(!sh.on){ if(--sh.wait <= 0) spawnShoot(sh); continue; }
@@ -1476,13 +1489,13 @@ async function run(){
   startMusic();
   $('start').classList.add('hide');
   await sleep(900);
-  const story = $('story'); story.classList.remove('hide');
+  const story = $('story'); story.classList.remove('hide'); setBg(.5, 0, 0, 0, .1);
   await sleep(500);
   for(const id of ['l1','l2']){
     $(id).classList.add('on'); await sleep(3600);
     $(id).classList.remove('on'); await sleep(1300);
   }
-  $('cw').classList.add('on'); await sleep(2200);
+  $('cw').classList.add('on'); setBg(1, 0, 0, 0, .35); await sleep(2200);
   kitty.tip('Toca el pastel para partirlo 🍰'); await sleep(1800);
   await waitCakeTap();
   kitty.say('');                       // se toca el pastel para continuar
@@ -1490,7 +1503,7 @@ async function run(){
   $('cw').classList.remove('on'); await sleep(1500);
   $('l3').classList.add('on'); await sleep(4200);
   story.classList.add('hide'); await sleep(1400);
-  $('env-scene').classList.remove('hide');
+  $('env-scene').classList.remove('hide'); setBg(.15, 1, 0, 0, .3);
   startEnv();
   kitty.tip('Toca tu regalo 🎁'); kitty.jump();
 }
@@ -1620,7 +1633,7 @@ async function giftSequence(){
   if(!(window.GIFTS3D && GIFTS3D.ok)) return;
   const gcard = $('gcard'); $('env-scene').classList.add('gifts'); await sleep(1000);
   for(let i = 0; i < GIFTS.length; i++){
-    const g = GIFTS[i];
+    const g = GIFTS[i]; setBg(.15 + i*.2, 1, 0, 0, .4 + i*.1);
     $('gk').textContent = g.t; $('gt').textContent = g.x; $('gh').textContent = i < GIFTS.length - 1 ? 'Toca el regalo para ver el siguiente 🎁' : 'Toca el regalo para ver mi carta 💌';
     gcard.classList.add('on'); chime(); kitty.say(g.k, 5000);
     await sleep(600);
@@ -1650,7 +1663,7 @@ async function closeLetter(){
   opening = false; facing = false; vel = 0; tiltU = 0; drag = false; resumeAt = 0;
   stage.classList.remove('opening', 'facing');
   hint.textContent = 'Toca tu regalo 🎁';
-  startEnv(); kitty.show(); kitty.tip('Toca tu regalo 🎁');
+  startEnv(); kitty.show(); kitty.tip('Toca tu regalo 🎁'); setBg(.15, 1, 0, 0, .3);
 }
 
 /* ================= Paquete de hojas: se toca a la derecha para seguir y a la izquierda para volver ================= */
@@ -1733,6 +1746,7 @@ function revealPage(i){
   if(i === 1) $('rose').classList.add('draw');
 }
 function showPage(){
+  const pr = pages.length > 1 ? cur/(pages.length - 1) : 0; setBg(0, .5, 0, pr, .5 + pr*.4);      // el fondo se va tiñendo de rosa y dorado hacia el final
   revealPage(cur); fitPages(); syncVideos();
   $('edL').classList.toggle('on', !hinted && cur > 0); $('edR').classList.toggle('on', !hinted && cur < pages.length - 1);
 }
@@ -2033,7 +2047,7 @@ $('wish').addEventListener('click', async () => {
   if(navigator.vibrate) navigator.vibrate([40,70,40]);
   chime();
   const k0 = performance.now(); (function fade(n){ petalK = Math.max(0, 1 - (n - k0)/1500); if(petalK > 0) requestAnimationFrame(fade); })(k0);
-  $('letter').classList.remove('show', 'front'); kitty.say('');
+  $('letter').classList.remove('show', 'front'); kitty.say(''); setBg(0, .25, 1, 0, 1);
   /* la bolsa vuelve a la escena, abierta y sin el paquete de hojas */
   const cdEl = env3d.querySelector('.cd'); cdEl.style.visibility = 'hidden';
   env3d.classList.remove('out', 'rise');
