@@ -84,7 +84,7 @@
   });
 
   /* ---- collar de Pocahontas (piso de arriba) ---- */
-  const necklace = new T.Group(); world.add(necklace);
+  const necklace = new T.Group(); world.add(necklace); necklace.rotation.y = .2 + Math.PI;     // el frente del collar (la pluma) queda del mismo lado que la corona
   const NB = 22, RN = R3 + .1, yN = TOP - .08;
   for(let i = 0; i < NB; i++){
     const th = i/NB*Math.PI*2, c = Math.cos(th), y = yN - .14*Math.pow(Math.max(0, c), 2);
