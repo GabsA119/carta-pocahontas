@@ -7,7 +7,7 @@
   let renderer;
   try{ renderer = new T.WebGLRenderer({antialias: true, alpha: true, powerPreference: 'high-performance'}); }catch(e){ return; }
   if(!renderer || !renderer.getContext()) return;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
   const gl = renderer.domElement; gl.style.display = 'none'; host.appendChild(gl);     // el lienzo WebGL va oculto y se copia a uno 2D: se ve igual en todos los navegadores
   const cv = document.createElement('canvas');
   cv.style.cssText = 'width:100%;height:100%;display:block;touch-action:none;cursor:grab';
