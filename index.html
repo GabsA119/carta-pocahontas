@@ -854,8 +854,8 @@ const kitty = (() => {
     return out; };
   const lastR = {};
   function lanes(){ let mb = 0; obstacles().forEach(b => { if(b.B < H*.97 && b.B > mb) mb = b.B; });
-    const yF = Math.min(H - 6, Math.max(H*.93, mb + 12)), yB = Math.max(H*.6, Math.min(H*.8, (mb || H*.84) - 10));
-    return {yF, yB: Math.min(yB, yF - 24)}; }
+    const yF = H*.95, yB = Math.max(H*.85, Math.min(H*.9, (mb || H*.9) - 6));      // solo la franja de abajo, nunca por el centro
+    return {yF, yB: Math.min(yB, yF - 14)}; }
   let path = [], after = null, act = '', at = 0, actDur = 0, pdir = 1, rotz = 0, ds = 1;
   let climb = null, perch = null, fall = null, hug = null, drop = null, hold = null;
   const laneF = ln => y > (ln.yB + ln.yF)/2;
@@ -987,6 +987,7 @@ const kitty = (() => {
     }
     if(act !== 'dizzy' && el.classList.contains('dizzy')) el.classList.remove('dizzy');
     if(mode === 'act' && act === 'dizzy' && at >= actDur) el.classList.remove('dizzy');
+    if(mode === 'idle' || mode === 'walk' || mode === 'act' || mode === 'wave' || mode === 'hug'){ if(y < ln.yB - 2 && !(mode === 'act' && act === 'dizzy')) y = Math.min(ln.yF, y + 260*dt); }   // si quedó arriba, regresa al suelo
     /* profundidad: más arriba en el suelo = más lejos (más chica) */
     ds = .82 + .18*Math.max(0, Math.min(1, (y - ln.yB)/Math.max(1, ln.yF - ln.yB)));
     if(mode === 'climb' || mode === 'perch' || mode === 'drop' || mode === 'fall') ds = 1;
@@ -1369,7 +1370,15 @@ $('mute').addEventListener('click', () => {
 });
 document.addEventListener('visibilitychange', () => {
   if(!actx) return;
-  if(document.hidden){ actx.suspend(); song.pause(); if(keepAlive) keepAlive.pause(); } else { forcePlayback(); actx.resume(); song.play().catch(()=>{}); }
+  if(document.hidden){                         // al salir de Safari el sonido baja en un instante y luego se pausa (sin corte seco)
+    try{ master.gain.cancelScheduledValues(actx.currentTime); master.gain.setTargetAtTime(0, actx.currentTime, .04); }catch(e){}
+    fade(song, 0, 160);
+    setTimeout(() => { if(document.hidden){ try{ actx.suspend(); song.pause(); if(keepAlive) keepAlive.pause(); }catch(e){} } }, 260);
+  } else {
+    forcePlayback(); actx.resume().catch(()=>{}); song.play().catch(()=>{});
+    try{ master.gain.cancelScheduledValues(actx.currentTime); master.gain.setTargetAtTime(musicOn ? .9 : 0, actx.currentTime + .05, .25); }catch(e){}
+    fade(song, musicTarget(), 700);
+  }
 });
 function chime(){
   if(!actx) return;
