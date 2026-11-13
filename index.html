@@ -276,7 +276,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 /* ---- Kitty, la peluche que guía ---- */
 #start p,.sub,#hint{display:none!important}
 #env-scene .stage{margin-top:42px}
-#kitty{position:fixed;left:0;top:0;width:clamp(100px,29vw,150px);z-index:10;pointer-events:none;opacity:0;transition:opacity .5s ease}
+#kitty{position:fixed;left:0;top:0;width:clamp(70px,20vw,104px);z-index:10;pointer-events:none;opacity:0;transition:opacity .5s ease}
 #kitty.on{opacity:1}
 #kitty .kw{aspect-ratio:4/5}
 #kitty .kw svg{display:block;width:100%;height:auto;overflow:visible}
@@ -284,8 +284,8 @@ canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 #kitty .legL,#kitty .legR,#kitty .armL,#kitty .armR{transform-box:fill-box;transform-origin:50% 8%}
 #kitty .head{transform-box:fill-box;transform-origin:50% 100%}
 #kitty .ks{position:absolute;left:12%;right:12%;bottom:-3%;height:10%;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.4),transparent 70%)}
-#kitty .kb{position:absolute;bottom:100%;left:0;width:max-content;max-width:min(72vw,270px);padding:10px 15px 11px;margin-bottom:6px;border-radius:20px;background:#fff8fb;border:2px solid #ff9ac6;color:#a8326f;
-  font-family:var(--script);font-size:clamp(18px,4.8vw,23px);line-height:1.2;text-align:center;box-shadow:0 8px 24px rgba(0,30,40,.35);opacity:0;transform:translateY(6px) scale(.9);transition:opacity .35s ease,transform .35s ease;--tx:50%}
+#kitty .kb{position:absolute;bottom:100%;left:0;width:max-content;max-width:min(58vw,215px);padding:7px 11px 8px;margin-bottom:5px;border-radius:16px;background:#fff8fb;border:2px solid #ff9ac6;color:#a8326f;
+  font-family:var(--script);font-size:clamp(14px,3.8vw,17.5px);line-height:1.2;text-align:center;box-shadow:0 6px 18px rgba(0,30,40,.35);opacity:0;transform:translateY(6px) scale(.9);transition:opacity .35s ease,transform .35s ease;--tx:50%}
 #kitty .kb.on{opacity:1;transform:none}
 #kitty .kb::after{content:"";position:absolute;top:100%;left:var(--tx);width:14px;height:14px;margin:-8px 0 0 -7px;background:#fff8fb;border:solid #ff9ac6;border-width:0 2px 2px 0;transform:rotate(45deg)}
 
