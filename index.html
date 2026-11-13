@@ -846,10 +846,13 @@ const kitty = (() => {
   /* ---- suelo, carriles y obstáculos: Kitty solo camina por el suelo y puede pasar por detrás de las cosas ---- */
   const OBS = ['#env3d', '#cake3d', '#go', '#wish1'];
   const obstacles = () => { const out = [];
-    OBS.forEach(s => { const e = document.querySelector(s); if(!e) return; const r = e.getBoundingClientRect(); if(r.width < 24 || r.height < 24) return;
+    OBS.forEach(s => { const e = document.querySelector(s); if(!e) return; let r = e.getBoundingClientRect();
       const sc = e.closest('.scene'); if(sc && (sc.classList.contains('hide') || +getComputedStyle(sc).opacity < .3)) return;
+      if(r.width < 24 || r.height < 24){ r = lastR[e.id]; if(!r) return; }       // la bolsa de canto casi no tiene ancho: se usa su última medida
+      else lastR[e.id] = {left: r.left, right: r.right, top: r.top, bottom: r.bottom, height: r.height, width: r.width};
       out.push({el: e, id: e.id, L: r.left, R: r.right, T: r.top, B: r.bottom, h: r.height}); });
     return out; };
+  const lastR = {};
   function lanes(){ let mb = 0; obstacles().forEach(b => { if(b.B < H*.97 && b.B > mb) mb = b.B; });
     const yF = Math.min(H - 6, Math.max(H*.93, mb + 12)), yB = Math.max(H*.6, Math.min(H*.8, (mb || H*.84) - 10));
     return {yF, yB: Math.min(yB, yF - 24)}; }
@@ -860,7 +863,7 @@ const kitty = (() => {
     const ln = lanes(), o = obstacles(), mar = w*.55, tf = py > (ln.yB + ln.yF)/2;
     const free = xx => !o.some(b => xx > b.L - mar && xx < b.R + mar);
     py = tf ? ln.yF - Math.random()*4 : ln.yB + Math.random()*6;
-    path = [];
+    path = []; act = '';
     if(laneF(ln) !== tf){                                    // para cambiar de carril hay que salir por donde no hay nada
       let fx = null; for(let d = 0; d < W; d += 10){ const c = [x + d, x - d].find(v => v > w*.6 && v < W - w*.6 && free(v)); if(c !== undefined){ fx = c; break; } }
       if(fx !== null){ path.push([fx, y], [fx, py]); } else { py = laneF(ln) ? ln.yF : ln.yB; }
@@ -874,6 +877,7 @@ const kitty = (() => {
   function bagFree(){ const s = document.getElementById('stage'); const sc = document.getElementById('env-scene');
     return s && sc && !sc.classList.contains('hide') && !s.classList.contains('opening') && !!obstacles().find(b => b.id === 'env3d'); }
   function think(){
+    const ln0 = lanes(); if(y < ln0.yB - 30){ dropDown(); return; }       // si está arriba de algo, primero baja
     const r = Math.random(), bag = bagFree();
     if(r < .22) pick();
     else if(r < .3) startAct('phone', rnd(3.4, 5));
@@ -900,7 +904,7 @@ const kitty = (() => {
   function perchTop(b){ return b.T + b.h*.12; }
   function dropDown(){
     const b = obstacles().find(o => o.id === 'env3d'), ln = lanes(); if(!b) { mode = 'idle'; perch = null; return; }
-    const side = perch ? perch.side : 1, nx = side < 0 ? b.L - w*.7 : b.R + w*.7;
+    const side = perch ? perch.side : (x < (b.L + b.R)/2 ? -1 : 1), nx = side < 0 ? b.L - w*.7 : b.R + w*.7;
     drop = {x0: x, y0: y, x1: Math.max(w*.6, Math.min(W - w*.6, nx)), y1: ln.yF, t: 0}; mode = 'drop'; perch = null; act = ''; jt = -1;
   }
   const hitLines = ['¡Ay! 😵 ¡Me tiraste, mami!', '¡Auch! 🥴 ¡Qué golpe, mami!', '¡Uy! 😵‍💫 ¡Me caí, mami!'];
@@ -1002,7 +1006,7 @@ const kitty = (() => {
     if(wt >= 0){ aR = -150 + Math.sin(wt*11)*20; tilt = Math.sin(wt*5)*3; }
     const hd = (walking ? sw*2.5 : (wt >= 0 ? Math.sin(wt*5)*4 : 0)) + (talking ? Math.sin(now/170)*4 : 0);
     el.classList.toggle('coffee', act === 'coffee');
-    const curAct = mode === 'climb' ? 'climb' : mode === 'hug' ? 'hug' : mode === 'fall' ? 'fall' : act;
+    const curAct = mode === 'climb' ? 'climb' : mode === 'hug' ? 'hug' : mode === 'fall' ? 'fall' : (mode === 'act' || mode === 'perch') ? act : '';
     if(m3){
       m3.apply({walking, wave: wt >= 0, dir, sw, tilt, sx: 1 + (sx - 1)*.6, sy, aL: -aR*0 + aL, aR: aR*-1, head: hd, bob, t: now/1000, dt, act: curAct, at, dur: actDur, pdir, rotz: rz, ph});
       shadow.style.transform = 'translateY(' + up + 'px) scale(' + (1 - Math.min(.4, up/h)) + ')'; shadow.style.opacity = (mode === 'fall' ? 0 : 1 - Math.min(.6, up/h));
