@@ -15,9 +15,9 @@
 
   const scene = new T.Scene();
   const camera = new T.PerspectiveCamera(32, 1, .1, 60); camera.position.set(0, 0, 11);
-  scene.add(new T.AmbientLight(0xffffff, .78));
-  const key = new T.DirectionalLight(0xfff3e2, .95); key.position.set(3, 5, 7); scene.add(key);
-  const fill = new T.DirectionalLight(0x9fe9f2, .5); fill.position.set(-5, 2, 4); scene.add(fill);
+  scene.add(new T.AmbientLight(0xffffff, .5));
+  const key = new T.DirectionalLight(0xfff3e2, .62); key.position.set(3, 5, 7); scene.add(key);
+  const fill = new T.DirectionalLight(0x9fe9f2, .32); fill.position.set(-5, 2, 4); scene.add(fill);
   const rim = new T.DirectionalLight(0xffc2dc, .45); rim.position.set(0, 4, -6); scene.add(rim);
 
   const M = (c, r = .5, m = 0, extra) => new T.MeshStandardMaterial(Object.assign({color: c, roughness: r, metalness: m}, extra || {}));
@@ -45,45 +45,71 @@
     g.beginPath(); g.moveTo(0, 18); g.bezierCurveTo(-30, 8, -30, -22, 0, -22); g.bezierCurveTo(30, -22, 30, 8, 0, 18); g.fill(); g.stroke();
     for(let i = -2; i <= 2; i++){ g.beginPath(); g.moveTo(0, 16); g.lineTo(i*11, -18); g.stroke(); } g.restore(); }
 
-  /* ---------- 1. TERMO ---------- */
+  function melodyFace(g, x, y, s){
+    g.save(); g.translate(x, y); g.scale(s, s);
+    g.strokeStyle = '#3a2a30'; g.lineWidth = 2.4;
+    [[-27, -1], [27, 1]].forEach(([ex, sd]) => {
+      g.fillStyle = '#f58fb4'; g.beginPath(); g.ellipse(ex, -44, 14, 36, sd*.22, 0, 7); g.fill(); g.stroke();
+      g.fillStyle = '#ffc6da'; g.beginPath(); g.ellipse(ex, -42, 7, 25, sd*.22, 0, 7); g.fill();
+    });
+    g.fillStyle = '#f58fb4'; g.beginPath(); g.ellipse(0, 2, 46, 38, 0, 0, 7); g.fill(); g.stroke();
+    g.fillStyle = '#fff'; g.beginPath(); g.ellipse(0, 7, 34, 27, 0, 0, 7); g.fill(); g.stroke();
+    g.fillStyle = '#2b2025'; g.beginPath(); g.arc(-13, 5, 3.4, 0, 7); g.arc(13, 5, 3.4, 0, 7); g.fill();
+    g.fillStyle = '#ffc21a'; g.beginPath(); g.ellipse(0, 12, 4.4, 3.2, 0, 0, 7); g.fill();
+    g.fillStyle = 'rgba(255,120,160,.55)'; g.beginPath(); g.arc(-22, 14, 5.5, 0, 7); g.arc(22, 14, 5.5, 0, 7); g.fill();
+    g.fillStyle = '#ff4f86'; g.strokeStyle = '#b02a58'; g.lineWidth = 1.6;
+    for(let i = 0; i < 5; i++){ const a = i*Math.PI*2/5; g.beginPath(); g.arc(-36 + Math.cos(a)*6, -20 + Math.sin(a)*6, 5.6, 0, 7); g.fill(); g.stroke(); }
+    g.fillStyle = '#ffd23a'; g.beginPath(); g.arc(-36, -20, 3.4, 0, 7); g.fill();
+    g.restore();
+  }
+
+  /* ---------- 1. TERMO (largo, de 40 oz, con asa cuadrada) ---------- */
   function makeTermo(){
-    const grp = new T.Group();
-    const R = y => .5 + .25*Math.pow(y/1.5, .9);                 // el termo se ensancha hacia arriba
-    const prof = []; prof.push(new T.Vector2(0, 0)); prof.push(new T.Vector2(.42, 0)); prof.push(new T.Vector2(.5, .05));
-    for(let y = .12; y <= 1.5; y += .1) prof.push(new T.Vector2(R(y), y));
-    const pink = M(0xf8a9c6, .38, .05);
-    const body = new T.Mesh(new T.LatheGeometry(prof, 56), pink); grp.add(body);
-    const band = new T.Mesh(new T.CylinderGeometry(R(1.52) + .008, R(1.38) + .008, .17, 56, 1, true), M(0xd96fb0, .4, .05, {side: T.DoubleSide})); band.position.y = 1.43; grp.add(band);
-    /* calcomanía "HELLO FRIENDS" */
-    const dec = tex(768, 512, (g, w, h) => {
+    const grp = new T.Group(), TOP = 3.0;
+    const R = y => y < 1.25 ? .44 + .2*Math.sin(Math.min(1, y/1.25)*Math.PI/2) : .64 + .015*(y - 1.25)/1.75;     // angosto abajo y casi recto arriba
+    const prof = [new T.Vector2(0, 0), new T.Vector2(.36, 0), new T.Vector2(.44, .05)];
+    for(let y = .12; y <= TOP + .001; y += .1) prof.push(new T.Vector2(R(y), y));
+    const pink = M(0xf590b8, .5, .02);
+    grp.add(new T.Mesh(new T.LatheGeometry(prof, 56), pink));
+    const band = new T.Mesh(new T.CylinderGeometry(R(TOP) + .012, R(TOP - .2) + .012, .22, 56, 1, true), M(0xe266ac, .4, .05, {side: T.DoubleSide})); band.position.y = TOP - .11; grp.add(band);
+    const dec = tex(900, 760, (g, w, h) => {
       g.clearRect(0, 0, w, h);
       const block = (txt, x, y, sz) => { g.font = '900 ' + sz + 'px Impact, "Arial Black", sans-serif'; g.textAlign = 'center';
-        for(let d = 10; d > 0; d--){ g.fillStyle = d > 5 ? '#f0763a' : '#d9602a'; g.fillText(txt, x + d, y + d); }
-        g.fillStyle = '#8fd6ea'; g.fillText(txt, x, y); g.lineWidth = 3; g.strokeStyle = '#f0763a'; g.strokeText(txt, x, y); };
-      block('HELLO', 330, 190, 150); block('FRIENDS', 360, 350, 136);
-      kittyFace(g, 120, 150, 1.25);
-      star(g, 600, 80, 22, '#ffd36a'); star(g, 690, 250, 16, '#fff'); star(g, 70, 330, 18, '#ffd36a'); star(g, 640, 430, 20, '#fff'); star(g, 250, 450, 14, '#ffd36a');
-      g.fillStyle = '#e8456b'; g.font = 'italic 700 40px "Segoe Script", cursive'; g.fillText('Smile', 640, 60);
-      g.fillStyle = '#ffd36a'; g.beginPath(); g.arc(90, 430, 28, 0, 7); g.fill(); g.fillStyle = '#3a2a30'; g.beginPath(); g.arc(80, 425, 3.4, 0, 7); g.arc(100, 425, 3.4, 0, 7); g.fill();
+        for(let d = 16; d > 0; d--){ g.fillStyle = d > 8 ? '#f08a66' : '#e0634a'; g.fillText(txt, x + d*.8, y + d); }
+        g.fillStyle = '#a5dcec'; g.fillText(txt, x, y); g.lineWidth = 4; g.strokeStyle = '#f08a66'; g.strokeText(txt, x, y); };
+      block('HELLO', 400, 300, 190); block('FRIENDS', 430, 490, 160);
+      kittyFace(g, 700, 150, 1.1);
+      g.fillStyle = '#e8456b'; g.font = 'italic 700 52px "Segoe Script", cursive'; g.save(); g.translate(740, 70); g.rotate(-.35); g.fillText('Smile', 0, 0); g.restore();
+      const sp = (x, y, r, c) => { g.fillStyle = c; g.beginPath(); for(let i = 0; i < 8; i++){ const a = i*Math.PI/4, rr = i%2 ? r*.22 : r; g.lineTo(x + Math.cos(a)*rr, y + Math.sin(a)*rr); } g.closePath(); g.fill(); };
+      [[90, 120, 24, '#d9b3e8'], [200, 60, 16, '#f5c34d'], [830, 380, 22, '#d9b3e8'], [60, 420, 18, '#f5c34d'], [640, 600, 20, '#d9b3e8'], [420, 690, 16, '#f5c34d'], [850, 600, 14, '#f5c34d'], [110, 700, 16, '#d9b3e8']].forEach(a => sp(...a));
+      /* Pompompurin */
+      g.fillStyle = '#ffe27a'; g.strokeStyle = '#7a5a30'; g.lineWidth = 3; g.beginPath(); g.ellipse(150, 640, 70, 56, 0, 0, 7); g.fill(); g.stroke();
+      g.fillStyle = '#a06a3a'; g.beginPath(); g.ellipse(150, 590, 44, 20, 0, 0, 7); g.fill();
+      g.fillStyle = '#3a2a30'; g.beginPath(); g.arc(128, 640, 4, 0, 7); g.arc(172, 640, 4, 0, 7); g.fill();
+      /* Keroppi */
+      g.fillStyle = '#8fd86a'; g.strokeStyle = '#3d7a2a'; g.beginPath(); g.ellipse(340, 650, 52, 40, 0, 0, 7); g.fill(); g.stroke();
+      g.fillStyle = '#fff'; g.beginPath(); g.arc(320, 618, 17, 0, 7); g.arc(360, 618, 17, 0, 7); g.fill(); g.stroke();
+      g.fillStyle = '#2b2025'; g.beginPath(); g.arc(322, 620, 6, 0, 7); g.arc(358, 620, 6, 0, 7); g.fill();
+      /* arcoíris */
+      ['#f08aa2', '#ffd36a', '#8fd6ea'].forEach((c, i) => { g.strokeStyle = c; g.lineWidth = 7; g.beginPath(); g.arc(560, 690, 46 - i*9, Math.PI, 0); g.stroke(); });
+      heart(g, 760, 680, 1.1, '#ffd23a');
     });
-    const len = 2.5;
-    const dm = new T.Mesh(new T.CylinderGeometry(R(1.3) + .012, R(.45) + .012, .86, 56, 1, true, -len/2, len), new T.MeshBasicMaterial({map: dec, transparent: true, side: T.FrontSide}));
-    dm.material = M(0xffffff, .4, 0, {map: dec, transparent: true, side: T.FrontSide}); dm.position.y = .88; grp.add(dm);
-    /* tapa, tapa rosa y popote */
-    const lid = new T.Mesh(new T.CylinderGeometry(R(1.5) + .02, R(1.5) + .02, .28, 56), M(0xffffff, .12, 0, {transparent: true, opacity: .32})); lid.position.y = 1.62; grp.add(lid);
-    const cap = new T.Mesh(new T.CylinderGeometry(R(1.5) - .08, R(1.5) - .02, .16, 56), M(0xe98fbf, .4)); cap.position.y = 1.78; grp.add(cap);
-    const flip = new T.Mesh(new T.BoxGeometry(.3, .16, .26), M(0xe98fbf, .4)); flip.position.set(-.3, 1.92, 0); grp.add(flip);
-    const straw = new T.Mesh(new T.CylinderGeometry(.045, .045, 1.15, 14), M(0xff7fb0, .3)); straw.position.set(.16, 2.2, 0); straw.rotation.z = -.08; grp.add(straw);
-    const tip = new T.Mesh(new T.CylinderGeometry(.05, .045, .22, 14), M(0xff7fb0, .3)); tip.position.set(.2, 2.82, 0); tip.rotation.z = -.35; grp.add(tip);
-    /* asa */
-    const curve = new T.CatmullRomCurve3([[.72, 1.34, 0], [1.2, 1.32, 0], [1.34, .96, 0], [1.2, .52, 0], [.66, .44, 0]].map(p => new T.Vector3(...p)));
-    const handle = new T.Mesh(new T.TubeGeometry(curve, 40, .1, 12, false), pink); grp.add(handle);
-    grp.scale.setScalar(.93); grp.position.y = -.9;
-    const wrap = new T.Group(); wrap.add(grp); wrap.rotation.z = .03; wrap.userData.h = 2.9;
+    const dm = new T.Mesh(new T.CylinderGeometry(R(2.7) + .014, R(1.25) + .014, 1.45, 56, 1, true, -1.3, 2.6), M(0xffffff, .4, 0, {map: dec, transparent: true, side: T.FrontSide}));
+    dm.position.y = 1.98; grp.add(dm);
+    /* tapa transparente con tope rosa y popote */
+    const lid = new T.Mesh(new T.CylinderGeometry(R(TOP) + .02, R(TOP) + .02, .3, 56), M(0xffffff, .1, 0, {transparent: true, opacity: .3})); lid.position.y = TOP + .15; grp.add(lid);
+    const cap = new T.Mesh(new T.CylinderGeometry(R(TOP) - .06, R(TOP) - .02, .14, 56), M(0xe98fbf, .4)); cap.position.y = TOP + .35; grp.add(cap);
+    const flip = new T.Mesh(new T.BoxGeometry(.34, .2, .3), M(0xe98fbf, .4)); flip.position.set(-.28, TOP + .5, 0); grp.add(flip);
+    const straw = new T.Mesh(new T.CylinderGeometry(.05, .05, 1.35, 14), M(0xff7fb0, .3)); straw.position.set(.2, TOP + 1.05, 0); straw.rotation.z = -.07; grp.add(straw);
+    const tip = new T.Mesh(new T.CylinderGeometry(.055, .05, .24, 14), M(0xff7fb0, .3)); tip.position.set(.28, TOP + 1.78, 0); tip.rotation.z = -.3; grp.add(tip);
+    /* asa cuadrada */
+    const hm = M(0xf8a9c6, .42, .05), hx = R(2.55) - .02, bar = (x0, y0, x1, y1) => { const m = new T.Mesh(new T.BoxGeometry(Math.abs(x1 - x0) + .17, Math.abs(y1 - y0) + .17, .2), hm); m.position.set((x0 + x1)/2, (y0 + y1)/2, 0); grp.add(m); };
+    bar(hx, 2.55, hx + .62, 2.55); bar(hx + .62, 2.55, hx + .62, 1.5); bar(hx + .62, 1.5, R(1.5) - .02, 1.5);
+    grp.position.y = -.2; const wrap = new T.Group(); wrap.add(grp); wrap.rotation.z = .03;
     return wrap;
   }
 
-  /* ---------- 2. COBIJA doblada ---------- */
+  /* ---------- 2. COBIJA doblada (My Melody) ---------- */
   function makeCobija(){
     const grp = new T.Group();
     const W = 2.0, H = 1.2, rad = .3;
@@ -93,69 +119,91 @@
     geo.translate(0, 0, -.31);
     const chk = tex(256, 256, (g, w, h) => { g.fillStyle = '#fff6f9'; g.fillRect(0, 0, w, h); g.fillStyle = 'rgba(247,170,198,.62)'; g.fillRect(0, 0, w/2, h/2); g.fillRect(w/2, h/2, w/2, h/2); });
     chk.wrapS = chk.wrapT = T.RepeatWrapping; chk.repeat.set(2.2, 2.2);
-    const blanket = new T.Mesh(geo, M(0xffe3ee, .95, 0, {map: chk})); grp.add(blanket);
-    /* dibujos de la tela */
+    grp.add(new T.Mesh(geo, M(0xffe3ee, .95, 0, {map: chk})));
     const front = tex(1024, 640, (g, w, h) => {
       g.clearRect(0, 0, w, h);
       g.fillStyle = '#ffd23a'; g.strokeStyle = '#2b2025'; g.lineWidth = 6;
       g.beginPath(); g.arc(160, 170, 76, 0, 7); g.fill(); g.stroke();
       for(let i = 0; i < 12; i++){ const a = i*Math.PI/6; g.beginPath(); g.moveTo(160 + Math.cos(a)*86, 170 + Math.sin(a)*86); g.lineTo(160 + Math.cos(a + .13)*120, 170 + Math.sin(a + .13)*120); g.lineTo(160 + Math.cos(a - .13)*120, 170 + Math.sin(a - .13)*120); g.closePath(); g.fill(); g.stroke(); }
-      kittyFace(g, 560, 220, 2.5); shell(g, 880, 120, 2.0, '#ffd23a', '#2b2025'); shell(g, 780, 470, 1.6, '#ffd23a', '#2b2025'); shell(g, 130, 500, 1.7, '#ffd23a', '#2b2025');
+      melodyFace(g, 560, 250, 2.5); shell(g, 880, 120, 2.0, '#ffd23a', '#2b2025'); shell(g, 780, 470, 1.6, '#ffd23a', '#2b2025'); shell(g, 130, 500, 1.7, '#ffd23a', '#2b2025');
       heart(g, 330, 480, 2.4, '#ff3f86', '#2b2025'); heart(g, 960, 330, 1.6, '#ff3f86', '#2b2025'); heart(g, 430, 80, 1.2, '#ff3f86', '#2b2025');
     });
     const decal = new T.Mesh(new T.PlaneGeometry(W + .04, H + .04), new T.MeshBasicMaterial({map: front, transparent: true})); decal.position.z = .31 + .17 + .002; grp.add(decal);
     const decalB = decal.clone(); decalB.rotation.y = Math.PI; decalB.position.z = -decal.position.z; grp.add(decalB);
-    /* cinta blanca y asa */
     const band = new T.Mesh(new T.BoxGeometry(.34, H + .46, .62 + .46), M(0xffffff, .8)); band.position.x = .55; grp.add(band);
     const strap = new T.Mesh(new T.TorusGeometry(.3, .04, 10, 32, Math.PI), M(0xffffff, .7)); strap.position.set(.55, H/2 + .22, 0); strap.scale.set(1, .8, 1); grp.add(strap);
-    /* etiqueta de cartón */
     const lab = tex(300, 400, (g, w, h) => {
       g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.fillStyle = '#f08aa2'; g.fillRect(0, 0, w, 90);
       g.fillStyle = '#fff'; for(let i = 0; i < 12; i++){ g.beginPath(); g.arc(12 + i*24, 6, 6, 0, 7); g.fill(); }
-      g.fillStyle = '#fff'; g.font = '700 26px Arial'; g.textAlign = 'center'; g.fillText('HELLO KITTY', w/2, 40); g.fillText('AND FRIENDS', w/2, 70);
-      g.fillStyle = '#e8d6e0'; g.fillRect(24, 110, w - 48, 150); kittyFace(g, w/2, 185, 1.2);
+      g.fillStyle = '#fff'; g.font = '700 26px Arial'; g.textAlign = 'center'; g.fillText('MY MELODY', w/2, 40); g.fillText('AND FRIENDS', w/2, 70);
+      g.fillStyle = '#e8d6e0'; g.fillRect(24, 110, w - 48, 150); melodyFace(g, w/2, 195, 1.15);
       g.fillStyle = '#2c9a8c'; g.fillRect(0, 290, w, 110); g.fillStyle = '#fff'; g.font = '700 30px Arial'; g.fillText('Frazada', w/2, 330);
       g.fillStyle = '#fff'; g.fillRect(190, 345, 90, 40); g.fillStyle = '#222'; for(let i = 0; i < 18; i++) g.fillRect(194 + i*4.8, 349, i%3 ? 2 : 3, 32);
     });
     const label = new T.Mesh(new T.PlaneGeometry(.78, 1.04), M(0xffffff, .7, 0, {map: lab})); label.position.set(-.3, -.12, .31 + .17 + .34 + .02); label.rotation.z = .05; grp.add(label);
     const labB = new T.Mesh(new T.BoxGeometry(.8, 1.06, .02), M(0xffffff, .7)); labB.position.copy(label.position); labB.position.z -= .012; labB.rotation.z = .05; grp.add(labB);
-    grp.rotation.x = -.18; grp.userData.h = 1.9; const wrap = new T.Group(); wrap.add(grp); wrap.userData.h = 1.9;
+    grp.rotation.x = -.18; const wrap = new T.Group(); wrap.add(grp);
     return wrap;
   }
 
-  /* ---------- 3. WAFFLERA en su caja ---------- */
+  /* ---------- 3. WAFFLERA en su caja de Hello Kitty ---------- */
   function makeWafflera(){
     const grp = new T.Group();
-    const BW = 1.75, BH = 1.95, BD = .95;
-    const front = tex(640, 720, (g, w, h) => {
+    const BW = 1.9, BH = 2.05, BD = 1.3;
+    const grid = (g, w, h, step) => { g.strokeStyle = '#efd2d9'; g.lineWidth = 2; for(let x = 0; x <= w; x += step){ g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); } for(let y = 0; y <= h; y += step){ g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); } };
+    const bow = (g, x, y, s, a) => { g.save(); g.translate(x, y); g.rotate(a || 0); g.scale(s, s); g.fillStyle = '#e8708f'; g.strokeStyle = '#b8486a'; g.lineWidth = 3;
+      g.beginPath(); g.ellipse(-26, 0, 28, 20, -.25, 0, 7); g.fill(); g.stroke(); g.beginPath(); g.ellipse(26, 0, 28, 20, .25, 0, 7); g.fill(); g.stroke();
+      g.fillStyle = '#f59ab3'; g.beginPath(); g.arc(0, 0, 12, 0, 7); g.fill(); g.stroke(); g.restore(); };
+    const wafflerOpen = (g, x, y, s) => { g.save(); g.translate(x, y); g.scale(s, s);
+      g.fillStyle = '#3d3d44'; g.beginPath(); g.ellipse(0, -60, 78, 66, 0, 0, 7); g.fill(); g.strokeStyle = '#26262b'; g.lineWidth = 3; g.stroke();
+      g.strokeStyle = '#50505a'; g.lineWidth = 2; for(let i = -5; i <= 5; i++){ g.beginPath(); g.moveTo(i*13, -118); g.lineTo(i*13, -4); g.stroke(); g.beginPath(); g.moveTo(-72, i*10 - 60); g.lineTo(72, i*10 - 60); g.stroke(); }
+      g.fillStyle = '#f2e6d0'; g.beginPath(); g.ellipse(0, 52, 92, 34, 0, 0, 7); g.fill();
+      g.fillStyle = '#d98a3a'; g.beginPath(); g.ellipse(0, 46, 72, 24, 0, 0, 7); g.fill(); g.strokeStyle = '#b06a22'; g.lineWidth = 2; for(let i = -5; i <= 5; i++){ g.beginPath(); g.moveTo(i*12, 26); g.lineTo(i*12, 66); g.stroke(); }
+      g.restore(); };
+    const front = tex(700, 760, (g, w, h) => {
       g.fillStyle = '#fffdfb'; g.fillRect(0, 0, w, h);
-      g.strokeStyle = '#f1c9d3'; g.lineWidth = 2; for(let x = 0; x < w; x += 40){ g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 190); g.stroke(); } for(let y = 0; y < 190; y += 40){ g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
-      g.fillStyle = '#7a4a2c'; g.font = '900 78px Impact, "Arial Black", sans-serif'; g.textAlign = 'center';
-      g.lineWidth = 8; g.strokeStyle = '#fff'; g.strokeText('HELLO KITTY', 300, 128); g.fillText('HELLO KITTY', 300, 128);
-      g.fillStyle = '#e8456b'; g.beginPath(); g.ellipse(560, 100, 38, 26, -.25, 0, 7); g.fill(); g.beginPath(); g.ellipse(610, 118, 26, 36, .35, 0, 7); g.fill(); g.fillStyle = '#ff7a99'; g.beginPath(); g.arc(588, 108, 14, 0, 7); g.fill();
-      /* wafflera */
-      g.fillStyle = '#f7ecd8'; g.strokeStyle = '#d8c7a6'; g.lineWidth = 4; g.beginPath(); g.ellipse(320, 400, 190, 150, 0, 0, 7); g.fill(); g.stroke();
-      g.fillStyle = '#f1e2c4'; g.beginPath(); g.ellipse(320, 400, 160, 124, 0, 0, 7); g.fill();
-      g.fillStyle = '#e8456b'; g.beginPath(); g.ellipse(250, 330, 26, 18, -.25, 0, 7); g.fill(); g.beginPath(); g.ellipse(390, 330, 26, 18, .25, 0, 7); g.fill();
-      kittyFace(g, 320, 410, 1.9);
-      g.fillStyle = '#4a2a2f'; g.beginPath(); g.ellipse(120, 640, 110, 38, 0, 0, 7); g.fill();
-      g.fillStyle = '#f2b36a'; g.beginPath(); g.ellipse(120, 640, 92, 28, 0, 0, 7); g.fill(); g.strokeStyle = '#d98a3a'; g.lineWidth = 2; for(let i = -3; i <= 3; i++){ g.beginPath(); g.moveTo(120 + i*24, 616); g.lineTo(120 + i*24, 664); g.stroke(); }
-      g.fillStyle = '#f9d6de'; g.fillRect(0, 680, w, 40); g.fillStyle = '#7a4a2c'; g.font = '700 26px Arial'; g.textAlign = 'left'; g.fillText('Wafflera Eléctrica', 28, 708);
-      g.fillStyle = '#f3c3cf'; g.fillRect(470, 190, 160, 150); g.fillStyle = '#7a4a2c'; g.font = '600 18px Arial'; g.textAlign = 'center'; g.fillText('Waffles', 550, 230); g.fillText('hechos con', 550, 255); g.fillText('amor', 550, 280);
+      const pg = g.createLinearGradient(0, 560, 0, h); pg.addColorStop(0, 'rgba(250,222,230,0)'); pg.addColorStop(1, 'rgba(250,212,224,1)'); g.fillStyle = pg; g.fillRect(0, 560, w, h - 560);
+      /* etiqueta cuadriculada */
+      g.fillStyle = '#fbf4e6'; g.fillRect(40, 40, 400, 120); g.save(); g.beginPath(); g.rect(40, 40, 400, 120); g.clip(); g.translate(40, 40); grid(g, 400, 120, 28); g.restore();
+      g.fillStyle = '#9c3f2c'; g.font = '700 74px "Segoe Print", "Comic Sans MS", cursive'; g.textAlign = 'center'; g.fillText('HELLO KITTY', 240, 128);
+      bow(g, 570, 100, 1.1, .2);
+      /* la wafflera cerrada */
+      g.fillStyle = '#ecdcbc'; g.strokeStyle = '#a89468'; g.lineWidth = 6; g.beginPath(); g.ellipse(270, 400, 210, 160, 0, 0, 7); g.fill(); g.stroke();
+      const lg = g.createRadialGradient(250, 360, 20, 270, 390, 190); lg.addColorStop(0, '#e6def6'); lg.addColorStop(1, '#a798cc'); g.fillStyle = lg; g.beginPath(); g.ellipse(270, 390, 176, 124, 0, 0, 7); g.fill();
+      g.fillStyle = '#e04050'; g.beginPath(); g.ellipse(235, 285, 15, 8, 0, 0, 7); g.fill(); g.fillStyle = '#3fb070'; g.beginPath(); g.ellipse(265, 285, 15, 8, 0, 0, 7); g.fill();
+      g.strokeStyle = '#f08aa8'; g.lineWidth = 3; g.beginPath(); g.ellipse(270, 400, 38, 28, 0, 0, 7); g.stroke(); g.beginPath(); g.moveTo(236, 380); g.lineTo(226, 350); g.lineTo(252, 366); g.moveTo(304, 380); g.lineTo(314, 350); g.lineTo(288, 366); g.stroke(); bow(g, 322, 372, .4, .2);
+      g.strokeStyle = '#4a3a3a'; g.lineWidth = 5; g.beginPath(); g.moveTo(110, 485); g.lineTo(430, 485); g.stroke();
+      /* iconos de características */
+      [['Placas', 'antiadherentes'], ['Waffles de', '18 cm'], ['Fácil de', 'limpiar']].forEach((t, i) => {
+        const y = 290 + i*118; g.strokeStyle = '#f0b9c6'; g.lineWidth = 3; g.fillStyle = '#fff'; g.beginPath(); g.arc(610, y, 32, 0, 7); g.fill(); g.stroke();
+        g.fillStyle = '#e6a0b0'; g.beginPath(); g.arc(610, y, 14, 0, 7); g.fill();
+        g.fillStyle = '#7a5a60'; g.font = '600 15px Arial'; g.textAlign = 'center'; g.fillText(t[0], 610, y + 52); g.fillText(t[1], 610, y + 69); });
+      /* foto del waffle */
+      g.fillStyle = '#2d2020'; g.fillRect(34, 568, 150, 112); g.fillStyle = '#e8a050'; g.beginPath(); g.ellipse(109, 626, 58, 38, 0, 0, 7); g.fill(); g.strokeStyle = '#b87020'; g.lineWidth = 2; for(let i = -3; i <= 3; i++){ g.beginPath(); g.moveTo(109 + i*16, 592); g.lineTo(109 + i*16, 660); g.stroke(); }
+      g.fillStyle = '#f9d6de'; g.fillRect(0, 700, w, 60); g.fillStyle = '#8a5a66'; g.font = '700 28px Arial'; g.textAlign = 'right'; g.fillText('Wafflera Eléctrica', w - 30, 740);
     });
-    const side = tex(320, 720, (g, w, h) => { g.fillStyle = '#fbe4ea'; g.fillRect(0, 0, w, h); g.fillStyle = '#e8456b'; g.font = '900 52px Impact, sans-serif'; g.textAlign = 'center'; g.save(); g.translate(160, 360); g.rotate(-Math.PI/2); g.fillText('HELLO KITTY', 0, 16); g.restore(); heart(g, 160, 80, 1.1, '#fff'); heart(g, 160, 640, 1.1, '#fff'); });
-    const top = tex(640, 320, (g, w, h) => { g.fillStyle = '#fffdfb'; g.fillRect(0, 0, w, h); g.strokeStyle = '#f1c9d3'; g.lineWidth = 2; for(let x = 0; x < w; x += 40){ g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); } for(let y = 0; y < h; y += 40){ g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); } g.fillStyle = '#e8456b'; g.beginPath(); g.ellipse(250, 160, 44, 30, -.25, 0, 7); g.fill(); g.beginPath(); g.ellipse(390, 160, 44, 30, .25, 0, 7); g.fill(); g.fillStyle = '#ff7a99'; g.beginPath(); g.arc(320, 160, 22, 0, 7); g.fill(); });
+    const sideR = tex(480, 760, (g, w, h) => {
+      g.fillStyle = '#fffdfb'; g.fillRect(0, 0, w, h);
+      g.strokeStyle = '#f4d6de'; g.lineWidth = 3; for(let i = 0; i < 4; i++){ bow(g, 90 + (i%2)*200, 100 + i*160, .8, .2*(i%2 ? 1 : -1)); }
+      g.fillStyle = '#fff'; g.strokeStyle = '#f08aa8'; g.lineWidth = 4; g.beginPath(); g.rect(40, 130, 400, 500); g.fill(); g.stroke();
+      wafflerOpen(g, 250, 340, 1.5);
+      g.fillStyle = '#f7c6d2'; g.fillRect(60, 160, 170, 110); g.fillStyle = '#7a4a52'; g.font = '600 18px Arial'; g.textAlign = 'center'; ['Waffles', 'crujientes por', 'fuera y suaves', 'por dentro en', 'minutos'].forEach((t, i) => g.fillText(t, 145, 188 + i*21));
+      kittyFace(g, 110, 580, .85);
+      g.fillStyle = '#f9d6de'; g.fillRect(0, 690, w, 70);
+    });
+    const sideL = tex(480, 760, (g, w, h) => { g.fillStyle = '#fffdfb'; g.fillRect(0, 0, w, h); for(let i = 0; i < 5; i++){ bow(g, 120 + (i%2)*220, 90 + i*150, .9, i%2 ? .2 : -.2); } g.fillStyle = '#f9d6de'; g.fillRect(0, 690, w, 70); });
+    const top = tex(700, 480, (g, w, h) => { g.fillStyle = '#fffdfb'; g.fillRect(0, 0, w, h); for(let i = 0; i < 4; i++){ bow(g, 120 + i*150, 120 + (i%2)*150, 1.1, .2); } g.fillStyle = '#9c3f2c'; g.font = '700 56px "Segoe Print", "Comic Sans MS", cursive'; g.textAlign = 'center'; g.fillText('HELLO KITTY', w/2, h/2 + 20); });
+    const back = tex(700, 760, (g, w, h) => { g.fillStyle = '#fffdfb'; g.fillRect(0, 0, w, h); bow(g, 350, 300, 2.2, .1); g.fillStyle = '#f9d6de'; g.fillRect(0, 700, w, 60); });
     const m = t => M(0xffffff, .55, 0, {map: t});
-    const box = new T.Mesh(new T.BoxGeometry(BW, BH, BD), [m(side), m(side), m(top), M(0xf6e1e6, .6), m(front), m(front)]);
+    const box = new T.Mesh(new T.BoxGeometry(BW, BH, BD), [m(sideR), m(sideL), m(top), M(0xf6e1e6, .6), m(front), m(back)]);
     grp.add(box);
-    grp.rotation.x = -.1; grp.userData.h = 2.0;
-    const wrap = new T.Group(); wrap.add(grp); wrap.userData.h = 2.0;
+    grp.rotation.x = -.1; const wrap = new T.Group(); wrap.add(grp);
     return wrap;
   }
 
   const makers = [makeTermo, makeCobija, makeWafflera];
   const models = [];
-  let cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
+  let frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
   let W = 0, H = 0;
 
   function resize(){
@@ -169,6 +217,14 @@
 
   host.addEventListener('pointerdown', e => { if(state !== 'shown') return; drag = true; lastX = e.clientX; try{ host.setPointerCapture(e.pointerId); }catch(_){} });
   host.addEventListener('pointermove', e => { if(!drag) return; dragV = (e.clientX - lastX)*.012; lastX = e.clientX; spin += dragV; });
+  let tx0 = 0, ty0 = 0, tt0 = 0, tmv = 0;
+  host.addEventListener('pointerdown', e => { tx0 = e.clientX; ty0 = e.clientY; tt0 = performance.now(); tmv = 0; });
+  host.addEventListener('pointermove', e => { tmv = Math.max(tmv, Math.hypot(e.clientX - tx0, e.clientY - ty0)); });
+  host.addEventListener('pointerup', e => {                         // un toque sobre el regalo pasa al siguiente
+    if(state !== 'shown' || tmv > 10 || performance.now() - tt0 > 600 || !API.onTap) return;
+    try{ const k = cv.width/W, d = cx.getImageData(Math.max(0, e.clientX*k - 14), Math.max(0, e.clientY*k - 14), 28, 28).data; let hit = false; for(let i = 3; i < d.length; i += 4) if(d[i] > 30){ hit = true; break; } if(!hit) return; }catch(_){}
+    const f = API.onTap; API.onTap = null; f();
+  });
   const up = () => { drag = false; }; host.addEventListener('pointerup', up); host.addEventListener('pointercancel', up);
 
   function frame(now){
@@ -176,21 +232,26 @@
     if(state === 'idle' || !cur) return;
     const t = now - t0;
     if(state === 'rising'){
-      const k = Math.min(1, t/1900), e = ease(k), b = back(Math.min(1, k*1.02));
-      cur.position.set(from.x + (to.x - from.x)*e, from.y + (to.y - from.y)*b, 0);
-      const sc = .22 + (1 - .22)*e; cur.scale.setScalar(sc*cur.userData.base);
-      spin += .018*(1 - e); cur.rotation.y = spin + (1 - e)*1.6; cur.rotation.z = Math.sin(k*5)*.12*(1 - k);
-      if(k >= 1){ state = 'shown'; API._res && API._res(); }
+      const k = Math.min(1, t/2400), b = cur.userData.base;
+      if(k < .42){                                                  // sube dentro de la bolsa, recortado por su boca
+        const u = ease(k/.42); cur.position.set(from.x, from.y + (exitY - from.y)*u, 0); cur.scale.setScalar(.5*b); clipOn = true;
+        spin += .02; cur.rotation.y = spin; cur.rotation.z = 0;
+      } else {                                                      // ya afuera: se va al centro y crece
+        const u = ease((k - .42)/.58), v = back(Math.min(1, (k - .42)/.58*1.02)); clipOn = false;
+        cur.position.set(from.x + (to.x - from.x)*u, exitY + (to.y - exitY)*v, 0); cur.scale.setScalar((.5 + .5*u)*b);
+        spin += .02*(1 - u); cur.rotation.y = spin + (1 - u)*1.2; cur.rotation.z = Math.sin(k*5)*.1*(1 - k);
+      }
+      if(k >= 1){ state = 'shown'; clipOn = false; API._res && API._res(); }
     } else if(state === 'shown'){
-      if(!drag){ dragV *= .94; spin += .008 + dragV; }
+      if(frz !== null) spin = frz; else if(!drag){ dragV *= .94; spin += .008 + dragV; }
       cur.rotation.y = spin; cur.rotation.z = Math.sin(now/900)*.03; cur.position.y = to.y + Math.sin(now/700)*.06; cur.position.x = to.x;
     } else if(state === 'leaving'){
       const k = Math.min(1, t/900), e = k*k; cur.position.y = to.y + e*3.4; spin += .05; cur.rotation.y = spin; cur.scale.setScalar(cur.userData.base*(1 + .3*e)); alpha = 1 - k;
-      if(k >= 1){ scene.remove(cur); cur = null; state = 'idle'; host.classList.remove('on'); API._res && API._res(); }
+      if(k >= 1){ scene.remove(cur); cur = null; clipOn = false; state = 'idle'; host.classList.remove('on'); API._res && API._res(); }
     }
     renderer.render(scene, camera);
     cx.clearRect(0, 0, cv.width, cv.height); cx.globalAlpha = Math.max(0, alpha);
-    cx.save(); cx.beginPath(); cx.rect(0, 0, cv.width, clipY ? clipY*renderer.getPixelRatio() : cv.height); cx.clip(); cx.drawImage(gl, 0, 0, cv.width, cv.height); cx.restore();
+    cx.save(); cx.beginPath(); cx.rect(0, 0, cv.width, clipOn && clipY ? clipY*renderer.getPixelRatio() : cv.height); cx.clip(); cx.drawImage(gl, 0, 0, cv.width, cv.height); cx.restore();
   }
   requestAnimationFrame(frame);
 
@@ -200,16 +261,17 @@
     resize();
     if(!models[i]){
       const m = makers[i](), bb = new T.Box3().setFromObject(m), c = bb.getCenter(new T.Vector3()), sz = bb.getSize(new T.Vector3());
-      m.children[0].position.sub(c); m.userData.h = sz.y; models[i] = m;      // el centro del regalo queda en el origen
+      m.children[0].position.sub(c); m.userData.h = sz.y; m.userData.w = Math.max(sz.x, sz.z); models[i] = m;      // el centro del regalo queda en el origen
     }
     cur = models[i]; const h = cur.userData.h;
-    cur.userData.base = Math.min(1.1, ((px || H*.34)/(H/6.3))/h);          // alto del regalo en pantalla
+    cur.userData.base = Math.min(1.1, ((px || H*.34)/(H/6.3))/h, (W*.62/(H/6.3))/cur.userData.w);          // alto del regalo en pantalla
     scene.add(cur); host.classList.add('on'); alpha = 1; spin = -.5; dragV = 0;
-    from = toWorld(mouth.x, mouth.y); from.y -= .6; to = toWorld(target.x, target.y);
-    clipY = mouth.y + 6;
+    const mw = toWorld(mouth.x, mouth.y), half = cur.userData.h*cur.userData.base*.5/2;
+    from = mw.clone(); from.y = mw.y - half - .15; exitY = mw.y + half + .2; to = toWorld(target.x, target.y); to.x = from.x + (to.x - from.x);
+    clipY = mouth.y; clipOn = true;
     state = 'rising'; t0 = performance.now(); API._res = res;
   });
   API.leave = () => new Promise(res => { if(!cur){ res(); return; } state = 'leaving'; t0 = performance.now(); API._res = res; });
-  API.state = () => state;
+  API.state = () => state; API.freeze = v => { frz = v; };
   API.dbg = () => cur ? [state, cur.position.x.toFixed(2), cur.position.y.toFixed(2), cur.scale.x.toFixed(2), to.y.toFixed(2), from.y.toFixed(2), cur.userData.h.toFixed(2)].join(' ') : state;
 })();

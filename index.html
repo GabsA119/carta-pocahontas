@@ -430,10 +430,10 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
 #gcard.on{opacity:1;transform:translate(-50%,0) rotate(-1deg);pointer-events:auto}
 #gcard .gk{font-family:var(--script);font-size:clamp(24px,6.8vw,30px);color:var(--ruby);line-height:1.05;margin:0 0 3px}
 #gcard .gt{font-size:clamp(14px,3.8vw,16px);line-height:1.38;margin:0 0 9px}
-#gcard .btn{padding:10px 22px;font-size:13px}
+#gcard .gh{margin:0;font-size:12.5px;letter-spacing:.06em;color:#2c8c84;font-style:italic;animation:ghp 1.8s ease-in-out infinite}
+@keyframes ghp{50%{opacity:.5}}
 #env-scene .stage{transition:margin-top .9s cubic-bezier(.4,.1,.2,1)}
 #env-scene.gifts .stage{margin-top:calc(42px + 26vh)}
-#gcard .btn{margin:0 auto}
 </style>
 </head>
 <body>
@@ -594,7 +594,7 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
   </g>
  </g>
 </g></svg></div></div>
-<div id="gcard"><p class="gk" id="gk"></p><p class="gt" id="gt"></p><button class="btn" id="gnext">Siguiente 🎁</button></div>
+<div id="gcard"><p class="gk" id="gk"></p><p class="gt" id="gt"></p><p class="gh" id="gh"></p></div>
 <script src="three.min.js"></script>
 <script src="cake_assets.js"></script>
 <script src="audio_assets.js"></script>
@@ -1562,21 +1562,21 @@ async function openEnv(){
 /* ===== Regalos: salen de la bolsa uno por uno, cada uno con su hoja ===== */
 const GIFTS = [
   {t: 'Tu termo', k: '¡Mira, mami! Un termo de Hello Kitty 🎀', x: 'Para tus turnos largos y tus mañanas de «wenosh diash»: un termo rosita, como todo lo que te queda tan bien. Que nunca te falte agua ni ganas de sonreír.'},
-  {t: 'Tu cobija', k: '¡Y una cobija suavecita, mami! 💕', x: 'Porque cómo te gusta dormir: una cobija de Hello Kitty and Friends para que cada «me iré a dormir, chao» sea bien calientito. Y si algún día tienes frío, ya sabes quién quiere abrigarte.'},
+  {t: 'Tu cobija', k: '¡Y una cobija suavecita, mami! 💕', x: 'Porque cómo te gusta dormir: una cobija de My Melody para que cada «me iré a dormir, chao» sea bien calientito. Y si algún día tienes frío, ya sabes quién quiere abrigarte.'},
   {t: 'Tu wafflera', k: '¡Y una wafflera, mami! 🧇', x: 'Para waffles con carita de Kitty, para los desayunos que te debo y los que me vas a regañar por no hacer bien. Cualquier plan se vuelve el mejor contigo.'}
 ];
-const waitTap = () => new Promise(r => { const b = $('gnext'), f = () => { b.removeEventListener('click', f); r(); }; b.addEventListener('click', f); });
+const waitTap = () => new Promise(r => { GIFTS3D.onTap = r; });
 async function giftSequence(){
   if(!(window.GIFTS3D && GIFTS3D.ok)) return;
   const gcard = $('gcard'); $('env-scene').classList.add('gifts'); await sleep(1000);
   for(let i = 0; i < GIFTS.length; i++){
     const g = GIFTS[i];
-    $('gk').textContent = g.t; $('gt').textContent = g.x; $('gnext').textContent = i < GIFTS.length - 1 ? 'Siguiente regalo 🎁' : 'Ver mi carta 💌';
+    $('gk').textContent = g.t; $('gt').textContent = g.x; $('gh').textContent = i < GIFTS.length - 1 ? 'Toca el regalo para ver el siguiente 🎁' : 'Toca el regalo para ver mi carta 💌';
     gcard.classList.add('on'); chime(); kitty.say(g.k, 5000);
     await sleep(600);
     const cb = gcard.getBoundingClientRect(), r = env3d.getBoundingClientRect(), mouth = {x: r.left + r.width/2, y: r.top + r.height*.2};
-    const px = Math.max(110, Math.min(mouth.y - cb.bottom - 24, innerHeight*.36));
-    await GIFTS3D.emerge(i, mouth, {x: innerWidth/2, y: mouth.y - px/2 - 14}, px);
+    const px = innerHeight*.4;                                      // sale de la bolsa y se queda al centro de la pantalla
+    await GIFTS3D.emerge(i, mouth, {x: innerWidth/2, y: Math.max(innerHeight*.5, cb.bottom + px/2 + 14)}, px);
     await waitTap();
     gcard.classList.remove('on'); await GIFTS3D.leave(); await sleep(300);
   }
