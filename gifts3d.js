@@ -292,7 +292,7 @@
 
   const makers = [makeTermo, makeCobija, makeWafflera, makeCaja];
   const models = [];
-  let fN = 0, rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
+  let bandB = 9999, fN = 0, rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
   let W = 0, H = 0;
 
   function resize(){
@@ -349,24 +349,30 @@
     }
     renderer.render(scene, camera);
     cx.clearRect(0, 0, cv.width, cv.height); cx.globalAlpha = Math.max(0, alpha);
-    cx.save(); cx.beginPath(); cx.rect(0, 0, cv.width, clipOn && clipY ? clipY*renderer.getPixelRatio() : cv.height); cx.clip(); cx.drawImage(gl, 0, 0, cv.width, cv.height); cx.restore();
+    const pr = renderer.getPixelRatio(), sh = Math.max(1, Math.min(cv.height, Math.round((clipOn && clipY ? Math.min(clipY, bandB) : bandB)*pr)));      // solo se copia la franja donde está el regalo
+    cx.drawImage(gl, 0, 0, cv.width, sh, 0, 0, cv.width, sh);
   }
   requestAnimationFrame(frame);
 
   API.ok = true;
   /* sale de la bolsa: mouth = {x, y} en píxeles (la boca de la bolsa); target = {x, y} dónde se queda */
-  API.emerge = (i, mouth, target, px) => new Promise(res => {
-    resize();
+  function getModel(i){
     if(!models[i]){
       const m = makers[i](), bb = new T.Box3().setFromObject(m), c = bb.getCenter(new T.Vector3()), sz = bb.getSize(new T.Vector3());
       m.children[0].position.sub(c); m.userData.h = sz.y; m.userData.w = Math.max(sz.x, sz.z); models[i] = m;      // el centro del regalo queda en el origen
     }
+    return models[i];
+  }
+  /* precalienta un regalo cuando no se ve: se arma y se sube a la tarjeta gráfica antes de que salga de la bolsa (así no hay tirón al aparecer) */
+  API.prep = i => { try{ if(state !== 'idle') return; resize(); const m = getModel(i); m.scale.setScalar(.01); m.position.set(0, 0, 0); scene.add(m); renderer.render(scene, camera); scene.remove(m); }catch(e){} };
+  API.emerge = (i, mouth, target, px) => new Promise(res => {
+    resize(); getModel(i);
     cur = models[i]; const h = cur.userData.h;
     cur.userData.base = Math.min(1.1, ((px || H*.34)/(H/6.3))/h, (W*.62/(H/6.3))/cur.userData.w);          // alto del regalo en pantalla
     scene.add(cur); host.classList.add('on'); alpha = 1; spin = -.5; dragV = 0; opened = opening = false; rotX = cur.userData.root ? cur.userData.root.userData.rx0 : 0;
     const mw = toWorld(mouth.x, mouth.y), half = cur.userData.h*cur.userData.base*.5/2;
     from = mw.clone(); from.y = mw.y - half - .15; exitY = mw.y + half + .2; to = toWorld(target.x, target.y); to.x = from.x + (to.x - from.x);
-    clipY = mouth.y; clipOn = true;
+    clipY = mouth.y; clipOn = true; bandB = Math.min(H, target.y + (px || H*.34)*1.15);
     state = 'rising'; t0 = performance.now(); API._res = res;
   });
   API.leave = () => new Promise(res => { if(!cur){ res(); return; } state = 'leaving'; t0 = performance.now(); API._res = res; });

@@ -456,6 +456,8 @@ video.ph{object-position:50% 22%!important;background:#c9a0a8!important}
 @keyframes ghp{50%{opacity:.5}}
 #env-scene .stage{transition:margin-top .9s cubic-bezier(.4,.1,.2,1)}
 #env-scene.gifts .stage{margin-top:calc(42px + 26vh)}
+#env-scene .who,#env-scene .who2{transition:opacity .6s ease}
+#env-scene.gifts .who,#env-scene.gifts .who2{opacity:0}
 
 /* fondo elegante, estilo boda: esmeralda profundo, luz champagne, destellos dorados y ornamentos finos en las esquinas */
 #aurora{background:radial-gradient(120% 70% at 50% -5%,rgba(255,228,176,.30),rgba(255,228,176,0) 62%),radial-gradient(130% 100% at 50% 100%,#0e4c44 0%,#08382f 45%,#031f1c 100%)}
@@ -1503,6 +1505,7 @@ async function run(){
   story.classList.add('hide'); await sleep(1400);
   $('env-scene').classList.remove('hide'); setBg(.15, 1, 0, 0, .3);
   startEnv();
+  [0, 1, 2, 3].forEach(i => setTimeout(() => { if(window.GIFTS3D && GIFTS3D.ok) GIFTS3D.prep(i); }, 1200 + i*900));      // los regalos se arman antes de que se necesiten
   kitty.tip('Toca tu regalo 🎁'); kitty.jump();
 }
 setTimeout(() => { kitty.show(); kitty.tip('Sube el volumen y toca Comenzar 🎶'); }, 700);
@@ -1542,7 +1545,7 @@ const norm = a => ((a % 360) + 540) % 360 - 180;
   }
 })();
 function startEnv(){ layoutBook(); envOn = true; requestAnimationFrame(envLoop); }
-let envFrame = 0, lastEnvT = 0;
+let envFrame = 0, lastEnvT = 0, lastTf = '';
 function envLoop(now){
   if(!envOn) return;
   const dt = Math.min(50, now - (lastEnvT || now)) / 16.7; lastEnvT = now;   // el giro no depende de los Hz de la pantalla
@@ -1550,7 +1553,7 @@ function envLoop(now){
     if(!drag && now >= resumeAt){ ang += SPIN*dt; tiltU *= Math.pow(.985, dt); }
   }
   const tilt = (opening ? 0 : Math.sin(now/1900)*1.2) + tiltU;
-  env3d.style.transform = 'rotateX(' + tilt + 'deg) rotateY(' + ang + 'deg)';
+  const tf = 'rotateX(' + tilt + 'deg) rotateY(' + ang + 'deg)'; if(tf !== lastTf){ env3d.style.transform = tf; lastTf = tf; }      // si no cambió, no se vuelve a escribir
   if((envFrame++ & 7) === 0) env3d.style.setProperty('--sx', (50 + Math.sin(ang*Math.PI/180)*70) + '%');
   const f = true;
   if(f !== facing){
