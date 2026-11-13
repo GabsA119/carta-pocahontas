@@ -854,7 +854,7 @@ const kitty = (() => {
     return out; };
   const lastR = {};
   function lanes(){ let mb = 0; obstacles().forEach(b => { if(b.B < H*.97 && b.B > mb) mb = b.B; });
-    const yF = H*.95, yB = Math.max(H*.85, Math.min(H*.9, (mb || H*.9) - 6));      // solo la franja de abajo, nunca por el centro
+    const yF = H - 6, yB = H*.955;      // camina pegada al borde de abajo para no estorbar nada
     return {yF, yB: Math.min(yB, yF - 14)}; }
   let path = [], after = null, act = '', at = 0, actDur = 0, pdir = 1, rotz = 0, ds = 1;
   let climb = null, perch = null, fall = null, hug = null, drop = null, hold = null;
