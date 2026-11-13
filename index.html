@@ -714,7 +714,7 @@ const kitty = (() => {
   }
   function stopVoice(){ seq++; if(curAudio){ try{ curAudio.pause(); }catch(e){} curAudio = null; } if(talking) setTalk(false); }
   function speak(keys, done){
-    if(!VOICE){ if(done) setTimeout(done, 5500); return; }      // sin voz: la música manda; Kitty solo habla con burbujas
+    if(!VOICE){ if(done) setTimeout(done, 5000); return; }      // sin voz: la música manda; Kitty solo habla con burbujas
     pendingClips = keys; pendingDone = done; if(!unlocked) return;
     stopVoice(); keys = (keys || []).filter(k => k && VB[k]); if(!keys.length){ if(done) setTimeout(done, 6000); return; }
     const my = seq; let i = 0;
@@ -809,7 +809,7 @@ const kitty = (() => {
       if(!t){ bub.classList.remove('on'); say_ = ''; stopVoice(); pendingClips = null; return; }
       bub.classList.remove('on'); bw = 0;
       setTimeout(() => { bub.textContent = t; bub.classList.add('on'); bw = 0; speak(clips, done); }, say_ ? 220 : 0); say_ = t;
-      if(ms) this._t = setTimeout(() => { bub.classList.remove('on'); say_ = ''; }, ms);
+      if(ms) this._t = setTimeout(() => { bub.classList.remove('on'); say_ = ''; }, Math.max(ms, 5000));   // mínimo 5 s en pantalla
     },
     /* una instrucción siempre va al principio o al final de lo que dice, con una frase cariñosa al azar */
     tip(instr){
@@ -819,7 +819,7 @@ const kitty = (() => {
       const go = () => {
         let i; do { i = Math.floor(Math.random()*chat.length); } while(i === lastC); lastC = i;
         const first = Math.random() < .5, t = first ? chat[i] + ' ' + this._instr : this._instr + ' ' + chat[i], ik = INSTR[this._instr];
-        this._say(t, 0, first ? ['c' + i, ik] : [ik, 'c' + i], () => { this._tip = setTimeout(go, 5000 + Math.random()*2500); });   // tras hablar, calla al menos 5 s if(Math.random() < .6) wave();
+        this._say(t, 0, first ? ['c' + i, ik] : [ik, 'c' + i], () => { bub.classList.remove('on'); say_ = ''; this._tip = setTimeout(go, 4000); });   // tras hablar, calla al menos 5 s if(Math.random() < .6) wave();
       };
       go();
     },
