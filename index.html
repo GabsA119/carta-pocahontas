@@ -1719,19 +1719,19 @@ function schedule(){
   }
 }
 /* iPhone: con el switch en vibrador, WebAudio queda mudo. Se pide la categoría "playback" para que suene siempre */
-let keepAlive = null;
+let keepAlive = null, kaT = 0;
+const SILENT_MP3 = 'data:audio/mpeg;base64,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';
 function forcePlayback(){
-  try{ if(navigator.audioSession) navigator.audioSession.type = 'playback'; }catch(e){}
+  try{ if(navigator.audioSession) navigator.audioSession.type = 'playback'; }catch(e){}      // iOS 16.4+: el sonido ignora el switch de vibrador
   try{
-    if(!keepAlive){      // respaldo: un audio silencioso en bucle (elemento HTML) cambia la sesión de audio a reproducción
-      const n = 4410, b = new Uint8Array(44 + n*2), dv = new DataView(b.buffer), w = (o, s) => [...s].forEach((c, i) => b[o+i] = c.charCodeAt(0));
-      w(0,'RIFF'); dv.setUint32(4, 36 + n*2, true); w(8,'WAVE'); w(12,'fmt '); dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
-      dv.setUint32(24,44100,true); dv.setUint32(28,88200,true); dv.setUint16(32,2,true); dv.setUint16(34,16,true); w(36,'data'); dv.setUint32(40, n*2, true);
-      keepAlive = new Audio(URL.createObjectURL(new Blob([b], {type:'audio/wav'}))); keepAlive.loop = true; keepAlive.setAttribute('playsinline', '');
+    if(!keepAlive){      // respaldo para versiones anteriores: un audio casi silencioso en bucle (elemento HTML de verdad) cambia la sesión de audio a reproducción
+      keepAlive = document.createElement('audio'); keepAlive.src = SILENT_MP3; keepAlive.loop = true; keepAlive.preload = 'auto'; keepAlive.setAttribute('playsinline', ''); keepAlive.setAttribute('x-webkit-airplay', 'deny'); keepAlive.style.display = 'none';
+      document.body.appendChild(keepAlive);
     }
-    keepAlive.play().catch(()=>{});
+    if(keepAlive.paused) keepAlive.play().catch(()=>{});
   }catch(e){}
 }
+['touchend', 'pointerup', 'click'].forEach(ev => addEventListener(ev, () => { const t = performance.now(); if(t - kaT > 1500){ kaT = t; forcePlayback(); } }, {passive: true, capture: true}));      // cada toque lo vuelve a pedir
 function startMusic(){
   forcePlayback();
   try{
@@ -2131,6 +2131,7 @@ let mvOn = false, curCh = 0, nxtT = 0;
 async function startMovie(k){
   k = k || 0; const c = CHAPS[k]; if(!c || !c.src) return;
   if(!mvOn){ mvOn = true; filmOn = true; if(bigWrap) await closeBig(); unloadV(heroVid); kitty.say(''); kitty.hide(); musicOff(); }
+  forcePlayback(); $('mvv').muted = false; $('mvv').volume = 1;
   curCh = k; hideNext(); if(!(history.state && history.state.mv)) history.pushState({mv: 1}, '');
   const v = $('mvv'); v.src = c.src; v.poster = c.thumb || ''; $('mv').classList.add('on');
   try{ await v.play(); }catch(e){}
