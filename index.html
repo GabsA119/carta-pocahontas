@@ -760,6 +760,9 @@ figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;p
 @media (max-aspect-ratio:1/1){#nxt.mini{width:auto}}
 .big0{position:absolute;inset:0;display:grid;place-items:center;font-size:64px;font-weight:800;opacity:.35}
 .row.empty .rail{display:none}
+figure.media.tvc.hoja{aspect-ratio:920/1656;background:#fbf5e8;width:clamp(120px,34vw,170px)}
+figure.media.tvc.hoja .pimg{object-fit:cover}
+figure.media.tvc.hoja .hn{position:absolute;left:8px;top:8px;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;font:600 11px var(--sf)}
 #endscr .er .ec b{font-size:17px;line-height:1.15}
 #endscr .er .ec small{font-size:10px}
 @media (max-aspect-ratio:1/1){#endscr .er .ec{aspect-ratio:4/3.4;flex:1 1 0}}
@@ -2035,7 +2038,11 @@ function buildTV(){
     b.innerHTML = '<span class="th">' + (c.thumb ? '<img loading="lazy" draggable="false" alt="" src="' + c.thumb + '">' : '<span class="big0">' + c.n + '</span>') + '<span class="sh2"></span><span class="ct">Capítulo ' + c.n + (c.dur ? ' · ' + c.dur : '') + '</span><span class="cn">' + c.t + '</span><span class="pl2">' + (c.src ? '▶' : '🔒') + '</span></span>';
     rv.appendChild(b);
   });
-  const rp = row('r-pho', 'Fotos', 'próximamente'); rp.parentNode.classList.add('empty');
+  const rp = row('r-pho', 'Fotos', 'toca una para verla en grande');
+  for(let n = 1; n <= 19; n++){      // las 19 hojas de la carta, en orden
+    const f = el('figure', 'media tvc pho hoja'), im = el('img', 'pimg'); im.src = 'media/hojas/hoja_' + String(n).padStart(2, '0') + '.jpg'; im.alt = ''; im.draggable = false; im.loading = 'lazy';
+    f.appendChild(im); f.appendChild(el('span', 'hn', 'Hoja ' + n)); rp.appendChild(f);
+  }
   const sp = el('section', 'surp'); sp.innerHTML = '<div class="sc"><p class="sk">UNA ÚLTIMA SORPRESA</p><h3>Pide tu deseo</h3><p>Cuando termines de ver el capítulo, pide tu deseo y mira lo que guardé para ti.</p><div id="wishslot"></div></div>';
   tv.appendChild(sp); sp.querySelector('#wishslot').appendChild($('wish'));
   // detalle del capítulo
