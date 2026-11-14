@@ -639,6 +639,132 @@ figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;p
 #endscr .ec b{font-size:21px;font-weight:700;letter-spacing:-.02em}
 #endscr .ec.gf{outline:2px solid rgba(255,255,255,.85);outline-offset:-2px}
 #endscr .eb{display:flex;gap:10px;justify-content:center;margin-top:4px}
+
+/* ================= La película ================= */
+#film{position:fixed;inset:0;z-index:36;background:#000;color:#fff;font-family:var(--sf);opacity:0;pointer-events:none;transition:opacity .9s ease;overflow:hidden}
+#film.on{opacity:1;pointer-events:auto}
+#film .b1,#film .b2{position:absolute;inset:-12%;background-size:cover;background-position:center;opacity:0;transition:opacity 1.6s ease;filter:blur(46px) saturate(1.5) brightness(.75);transform:translateZ(0)}
+#film .b1.on,#film .b2.on{opacity:1}
+#film .fvg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 45%,rgba(0,0,0,.6))}
+#film .fst{position:absolute;inset:0}
+#film .fs{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;transition:opacity .9s ease;padding:max(70px,env(safe-area-inset-top)) 26px max(70px,env(safe-area-inset-bottom))}
+#film .fs.in{opacity:1}
+#film .ti .k{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.2em;opacity:.7}
+#film .ti h1{margin:0;font-size:clamp(40px,12vw,72px);font-weight:800;letter-spacing:-.04em;line-height:1.04;animation:fti 2.4s ease-out both}
+#film .ti .s{margin:14px 0 0;font-size:20px;opacity:.85}
+@keyframes fti{from{filter:blur(18px);transform:scale(.94)}to{filter:none;transform:none}}
+#film .tx p{margin:0;max-width:560px;font-size:clamp(22px,6.3vw,30px);line-height:1.45;font-weight:600;letter-spacing:-.015em;text-shadow:0 2px 24px rgba(0,0,0,.55)}
+#film .tx.nt p{font-weight:500;font-size:clamp(20px,5.6vw,26px);opacity:.88}
+#film .tx em{color:#ff9ac6;font-style:normal}
+#film .tx.q p{font-style:italic;font-weight:500;font-size:clamp(24px,7vw,34px)}
+#film .tx .qm{display:block;margin-bottom:14px;font-size:22px;color:#ff9ac6;opacity:.9}
+#film .md{padding:max(64px,env(safe-area-inset-top)) 18px 130px}
+#film .md img,#film .md video{display:block;max-width:100%;max-height:100%;border-radius:22px;object-fit:contain;box-shadow:0 26px 64px rgba(0,0,0,.6);background:#111}
+#film .md img{animation:fkb var(--d,6500ms) ease-out forwards}
+@keyframes fkb{from{transform:scale(1)}to{transform:scale(1.07)}}
+#film .fcap{position:absolute;left:20px;right:20px;bottom:calc(max(44px,env(safe-area-inset-bottom)) + 26px);text-align:center;font-size:17px;font-weight:600;text-shadow:0 2px 14px rgba(0,0,0,.8);opacity:0;transition:opacity .7s ease;pointer-events:none}
+#film .fcap.on{opacity:.95}
+#film .nm h2{margin:0 0 18px;font-size:30px;font-weight:800;letter-spacing:-.03em}
+#film .nc{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:420px}
+#film .nc span{opacity:0;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.14);font-size:16px;font-weight:600;animation:nmi .9s ease forwards}
+@keyframes nmi{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+#film .cr{justify-content:flex-start}
+#film .crs{position:absolute;left:0;right:0;top:100%;padding:0 24px;animation:crl 29s linear forwards}
+@keyframes crl{to{transform:translateY(calc(-100% - 100vh))}}
+#film .crs small{display:block;margin:34px 0 8px;font-size:11.5px;font-weight:700;letter-spacing:.18em;opacity:.6}
+#film .crs b{display:block;font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
+#film .crs p{margin:56px 0 0;font-size:18px;opacity:.85;line-height:1.4}
+#film .crs h3{margin:30px 0 0;font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.15}
+#film .fbar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.18)}
+#film .fbar i{display:block;height:100%;width:0;background:#fff}
+#film .fbt{position:absolute;top:max(12px,env(safe-area-inset-top));right:12px;display:flex;gap:8px;z-index:3}
+#film .fbt button{width:40px;height:40px;border-radius:50%;border:0;color:#fff;font-size:15px;background:rgba(40,40,56,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer;font-family:var(--sf)}
+#endscr{z-index:40}
+
+/* ===== estilo de plantilla de CapCut: transiciones, títulos animados, subtítulos palabra por palabra, grano, destellos y barras de cine ===== */
+#film .fs{transform:scale(.965);transition:opacity .85s ease,transform 1.2s cubic-bezier(.2,.8,.2,1)}
+#film .fs.in{transform:none}
+#film .fs.ex{opacity:0;transform:scale(1.05)}
+#film .fvg{background:radial-gradient(120% 90% at 50% 45%,transparent 40%,rgba(0,0,0,.72))}
+#film .fgr{position:absolute;inset:-50%;pointer-events:none;opacity:.075;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grn .8s steps(1) infinite}
+@keyframes grn{0%{transform:translate(0,0)}20%{transform:translate(-6%,4%)}40%{transform:translate(5%,-7%)}60%{transform:translate(-3%,-3%)}80%{transform:translate(7%,5%)}100%{transform:translate(0,0)}}
+#film .fleak{position:absolute;inset:0;pointer-events:none;opacity:0;mix-blend-mode:screen;background:radial-gradient(60% 50% at 12% 18%,rgba(255,150,60,.8),transparent 70%),radial-gradient(55% 45% at 92% 82%,rgba(255,80,160,.7),transparent 70%)}
+#film .fleak.go{animation:lk 1s ease-out}
+@keyframes lk{0%{opacity:0}30%{opacity:.9}100%{opacity:0}}
+#film .fbl{position:absolute;left:0;right:0;height:0;background:#000;z-index:2;pointer-events:none;transition:height 1.6s cubic-bezier(.2,.8,.2,1)}
+#film .fbl.t{top:0}#film .fbl.b{bottom:0}
+#film.on .fbl{height:4.2vh}
+#film .ftc{position:absolute;left:14px;top:max(16px,env(safe-area-inset-top));z-index:3;font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;opacity:.65}
+#film .fbt{transition:opacity .6s ease}
+#film .fbt.hide{opacity:0;pointer-events:none}
+/* títulos */
+#film .ti{position:absolute}
+#film .ti .bn{position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);font-size:min(62vw,300px);font-weight:800;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.32);opacity:.55;animation:bnz 6s ease-out forwards;pointer-events:none}
+@keyframes bnz{from{transform:translate(-50%,-52%) scale(.9);opacity:0}25%{opacity:.55}to{transform:translate(-50%,-52%) scale(1.08)}}
+#film .ti .k{position:relative;display:flex;align-items:center;gap:12px;margin:0 0 16px;font-size:12px;font-weight:700;letter-spacing:.22em;opacity:.85}
+#film .ti .k i{display:block;width:0;height:1px;background:#fff;animation:kl 1.2s .3s ease-out forwards}
+@keyframes kl{to{width:34px}}
+#film .ti h1{position:relative;animation:none}
+#film .ti .ln{display:inline-block}
+#film .ti .lw{display:inline-block;white-space:nowrap}
+#film .ti .lt{display:inline-block;opacity:0;animation:lti .8s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes lti{from{opacity:0;transform:translateY(.5em) scale(.9);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+#film .ti .s{position:relative;opacity:0;animation:sfi 1.2s 1.3s ease-out forwards}
+@keyframes sfi{to{opacity:.88}}
+/* subtítulos palabra por palabra */
+#film .tx .rl{display:block;width:0;height:2px;margin:0 auto 22px;background:#ff9ac6;animation:rl 1.2s .2s ease-out forwards}
+@keyframes rl{to{width:54px}}
+#film .tx p{max-width:540px}
+#film .wd{display:inline-block;opacity:0;animation:wd .55s ease-out forwards}
+@keyframes wd{0%{opacity:0;transform:translateY(.4em) scale(.88);color:#ff9ac6}45%{opacity:1;transform:scale(1.07);color:#ff9ac6}100%{opacity:1;transform:none;color:#fff}}
+#film .tx em .wd{animation-name:wde}
+@keyframes wde{0%{opacity:0;transform:translateY(.4em) scale(.88)}45%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:none}}
+/* fotos y videos */
+#film .md img,#film .md video{border:1.5px solid rgba(255,255,255,.28);box-shadow:0 30px 70px rgba(0,0,0,.65),0 0 60px rgba(255,255,255,.06)}
+#film .md img{filter:contrast(1.06) saturate(1.12);animation-duration:var(--d,8000ms);animation-timing-function:ease-out;animation-fill-mode:forwards}
+#film .md img.kb0{animation-name:kbA}#film .md img.kb1{animation-name:kbB}#film .md img.kb2{animation-name:kbC}#film .md img.kb3{animation-name:kbD}
+@keyframes kbA{from{transform:scale(1)}to{transform:scale(1.08)}}
+@keyframes kbB{from{transform:scale(1.08)}to{transform:scale(1)}}
+@keyframes kbC{from{transform:scale(1.05) translateX(-2.5%)}to{transform:scale(1.05) translateX(2.5%)}}
+@keyframes kbD{from{transform:scale(1.05) translateX(2.5%)}to{transform:scale(1.05) translateX(-2.5%)}}
+#film .b1.on,#film .b2.on{animation:bdz 18s ease-in-out infinite alternate}
+@keyframes bdz{from{transform:scale(1) translateZ(0)}to{transform:scale(1.12) translate(-2%,2%) translateZ(0)}}
+#film .fcap{left:50%;right:auto;width:max-content;max-width:86%;padding:9px 20px 10px;border-radius:999px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.2);transform:translate(-50%,14px);transition:opacity .6s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+#film .fcap.on{opacity:1;transform:translate(-50%,0)}
+#mv{position:fixed;inset:0;z-index:37;background:#000;display:none}
+#mv.on{display:block}
+#mv video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+#mvx{position:absolute;top:max(12px,env(safe-area-inset-top));right:12px;z-index:2;width:42px;height:42px;border-radius:50%;border:0;color:#fff;font-size:16px;background:rgba(40,40,56,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);cursor:pointer}
+.ch.ep .th{aspect-ratio:16/10}
+.ch.ep .pl2{position:absolute;right:12px;top:12px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:13px;background:rgba(0,0,0,.45);color:#fff}
+.ch.lock{opacity:.7}
+.ch.lock .th{background:linear-gradient(135deg,#2b2b44,#14141f)}
+#endscr{flex-direction:column;justify-content:flex-end;gap:16px;padding:max(18px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(34px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left))}
+#endscr h2{text-align:center;margin:0;font-size:26px}
+#endscr .er{display:flex;gap:14px;justify-content:center;align-items:stretch}
+#endscr .er .ec{flex:0 1 330px;margin:0;aspect-ratio:16/10;opacity:0;transform:translateY(18px)}
+#endscr .ex{position:absolute;top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));width:44px;height:44px;border-radius:50%;border:0;background:#fff;color:#111;font-size:18px;cursor:pointer}
+#nxt{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(max(18px,env(safe-area-inset-bottom)) + 76px);z-index:38;width:min(86vw,330px);padding:12px;border-radius:14px;background:rgba(20,20,28,.92);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:var(--sf);opacity:0;pointer-events:none;transform:translateY(14px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+#nxt.on{opacity:1;pointer-events:auto;transform:none}
+#nxt .nth2{position:relative;display:block;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#2b2b44,#14141f);margin-bottom:10px}
+#nxt .nth2 img{width:100%;height:100%;object-fit:cover;display:block}
+#nxt .nk{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;opacity:.65;margin-bottom:3px}
+#nxt b{display:block;font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:12px}
+#nxt .nbtn{position:relative;display:block;width:100%;height:46px;border:0;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.22);font-family:var(--sf);font-weight:700;font-size:16px;cursor:pointer;color:#fff}
+#nxt .nbtn i{position:absolute;left:0;top:0;bottom:0;width:0;background:#fff}
+#nxt.go .nbtn i{width:100%;transition:width 6s linear}
+#nxt .nbtn span{position:relative;mix-blend-mode:difference;color:#fff}
+#nxt.mini{width:auto;padding:0;background:none;border:0}
+#nxt.mini .nth2,#nxt.mini .nk,#nxt.mini b{display:none}
+#nxt.mini .nbtn{width:auto;padding:0 24px;height:44px;border-radius:22px;background:rgba(40,40,56,.88);border:1px solid rgba(255,255,255,.3)}
+@media (max-aspect-ratio:1/1){#nxt.mini{width:auto}}
+.big0{position:absolute;inset:0;display:grid;place-items:center;font-size:64px;font-weight:800;opacity:.35}
+.row.empty .rail{display:none}
+#endscr .er .ec b{font-size:17px;line-height:1.15}
+#endscr .er .ec small{font-size:10px}
+@media (max-aspect-ratio:1/1){#endscr .er .ec{aspect-ratio:4/3.4;flex:1 1 0}}
+.row.empty h2{margin-bottom:26px}
+@media (max-aspect-ratio:1/1){#nxt{right:50%;transform:translate(50%,14px);width:min(92vw,360px)}#nxt.on{transform:translate(50%,0)}}
 </style>
 </head>
 <body>
@@ -775,6 +901,9 @@ figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;p
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pear" viewBox="0 0 100 120"><path d="M50 24C38 24 35 35 31 47C27 59 13 67 13 88C13 107 29 117 50 117C71 117 87 107 87 88C87 67 73 59 69 47C65 35 62 24 50 24Z"/><path d="M50 26C50 17 52 10 59 3" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M55 16C62 4 76 3 83 9C77 21 63 23 55 16Z"/></symbol></svg>
 <div id="pwr"><div id="crt"><b class="ct"></b><b class="cb"></b><i class="cl"></i></div><div id="plogo"><svg viewBox="0 0 100 120"><use href="#pear"/></svg><span>TV</span></div>
 <div id="remote"><i class="pw"><svg viewBox="0 0 16 16"><path d="M8 1.5v6"/><path d="M4.2 3.6a6 6 0 1 0 7.6 0"/></svg></i><i class="tp"></i><i class="b2 l">‹</i><i class="b2 r">tv</i></div></div>
+<div id="film"><div class="b1"></div><div class="b2"></div><div class="fvg"></div><div class="fst"></div><div class="fleak"></div><div class="fgr"></div><div class="fbl t"></div><div class="fbl b"></div><div class="ftc"></div><div class="fcap"></div><div class="fbar"><i></i></div><div class="fbt"><button data-fskip="1" aria-label="Siguiente escena">⏭</button><button data-fx="1" aria-label="Cerrar">✕</button></div></div>
+<div id="mv"><video id="mvv" playsinline controls preload="metadata" poster="media/cover.jpg"></video><button id="mvx" aria-label="Cerrar">✕</button></div>
+<div id="nxt"></div>
 <div id="endscr"></div>
 <div id="kb" class="kb" aria-hidden="true"></div>
 <div id="kitty" aria-hidden="true"><div class="dz">💫💫</div><div class="stm">♨</div><div class="ks"></div><div class="kw"><svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
@@ -1790,7 +1919,7 @@ async function powerSequence(){
   const ct = C.querySelector('.ct'), cb = C.querySelector('.cb'), cl = C.querySelector('.cl');
   kitty.say(''); kitty.hide(); $('gcard').classList.remove('on');
   P.classList.add('on'); await sleep(450);
-  R.classList.add('up'); await sleep(1500);                      // sube el control desde abajo de la pantalla
+  R.classList.add('up'); tvMode = true; musicOff(); await sleep(1500);                      // sube el control y la música se apaga despacio
   R.classList.add('press'); sfx(1800, 300, .05, .12, 'square'); if(navigator.vibrate) navigator.vibrate(40);   // se aplasta el botón de encendido
   await sleep(520);
   R.classList.remove('up'); sfx(1500, 70, .55, .08);
@@ -1813,7 +1942,6 @@ async function powerSequence(){
   await sleep(1700);
   P.classList.remove('on'); P.querySelectorAll('*').forEach(e => e.getAnimations().forEach(a => a.cancel()));
   tvSync(); tvScroll();
-  kitty.show(); kitty.say('Toca «Ver película» para empezar 🍿');
 }
 
 
@@ -1889,25 +2017,24 @@ function buildTV(){
   const src = [...document.querySelectorAll('.pgsrc')], allV = [], allP = [];
   src.forEach(g => g.querySelectorAll('figure.media').forEach(f => (f.classList.contains('vid') ? allV : allP).push(f)));
   tv.innerHTML = '';
-  const nav = el('nav', 'tvnav', '<button data-to="tvhero" class="on">Inicio</button><button data-to="r-cap">Capítulos</button><button data-to="r-vid">Videos</button><button data-to="r-pho">Fotos</button>');
+  const nav = el('nav', 'tvnav', '<button data-to="tvhero" class="on">Inicio</button><button data-to="r-vid">Capítulos</button><button data-to="r-pho">Fotos</button>');
   tv.appendChild(nav);
   const hero = el('section', 'hero'); hero.id = 'tvhero';
-  hero.innerHTML = '<figure class="hv vid cvid"><img class="pimg" src="media/cover.jpg" alt="" draggable="false"><video class="ph" data-src="media/cover.mp4" data-audio="media/cover.m4a" muted loop playsinline preload="none"></video></figure><div class="hshade"></div>' +
-    '<div class="hinfo"><p class="plg"><svg viewBox="0 0 100 120"><use href="#pear"/></svg>TV</p><p class="hk">UNA PELÍCULA DE GABRIEL</p>' +
-    '<div class="ttl"><h1>Para mi<br>Pocahontas</h1><button class="pill pri" data-play="1">▶︎&nbsp; Ver película</button></div><p class="hs">libre como el viento</p>' +
-    '<div class="hmeta"><span class="bd">♥</span><span>Romance</span><span>2026</span><span>' + src.length + ' capítulos</span><span class="bd">HD</span></div></div>';
+  hero.innerHTML = '<figure class="hv vid cvid"><img class="pimg" src="media/hero.jpg" alt="" draggable="false"><video class="ph" data-src="media/hero.mp4" muted loop playsinline preload="none"></video></figure><div class="hshade"></div>' +
+    '<div class="hinfo"><p class="plg"><svg viewBox="0 0 100 120"><use href="#pear"/></svg>TV</p><p class="hk">UNA SERIE ORIGINAL DE GABRIEL</p>' +
+    '<div class="ttl"><h1>Mis<br>Amores</h1><button class="pill pri" data-play="1">▶︎&nbsp; Ver capítulo 1</button></div><p class="hs">Capítulo 1 · Feliz Cumpleaños</p>' +
+    '<div class="hmeta"><span class="bd">♥</span><span>Romance</span><span>2026</span><span>Temporada 1</span><span class="bd">HD</span></div></div>';
   tv.appendChild(hero); heroFig = hero.querySelector('.hv'); heroVid = heroFig.querySelector('video'); regVid(heroVid);
   heroVid.addEventListener('ended', () => { if(bigVid === heroVid) showEnd(); });
   const row = (id, title, sub) => { const s = el('section', 'row'); s.id = id; s.appendChild(el('h2', '', title + (sub ? '<small>' + sub + '</small>' : ''))); const r = el('div', 'rail'); s.appendChild(r); tv.appendChild(s); return r; };
-  const rc = row('r-cap', 'Capítulos', 'toca uno para verlo');
-  src.forEach((g, i) => {
-    const b = el('button', 'tvc ch'); b.dataset.i = i;
-    b.innerHTML = '<span class="th"><img loading="lazy" draggable="false" alt="" src="' + thumbOf(g) + '"><span class="sh2"></span><span class="ct">Capítulo ' + (i + 1) + '</span><span class="cn">' + CHT[i] + '</span><i class="bar"><b></b></i></span>';
-    rc.appendChild(b);
+  const rv = row('r-vid', 'Capítulos', 'toca uno para verlo');
+  CHAPS.forEach((c, k) => {
+    const b = el(c.src ? 'button' : 'div', 'tvc ch' + (c.src ? '' : ' lock')); if(c.src) b.dataset.chp = k;
+    b.innerHTML = '<span class="th">' + (c.thumb ? '<img loading="lazy" draggable="false" alt="" src="' + c.thumb + '">' : '<span class="big0">' + c.n + '</span>') + '<span class="sh2"></span><span class="ct">Capítulo ' + c.n + (c.dur ? ' · ' + c.dur : '') + '</span><span class="cn">' + c.t + '</span><span class="pl2">' + (c.src ? '▶' : '🔒') + '</span></span>';
+    rv.appendChild(b);
   });
-  const rv = row('r-vid', 'Videos', 'toca para verlos con sonido'); allV.forEach(f => rv.appendChild(mcard(f)));
-  const rp = row('r-pho', 'Fotos', 'pellizca para acercar'); allP.forEach(f => rp.appendChild(mcard(f)));
-  const sp = el('section', 'surp'); sp.innerHTML = '<div class="sc"><p class="sk">UNA ÚLTIMA SORPRESA</p><h3>Pide tu deseo</h3><p>Cuando termines de ver la película, pide tu deseo y mira lo que guardé para ti.</p><div id="wishslot"></div></div>';
+  const rp = row('r-pho', 'Fotos', 'próximamente'); rp.parentNode.classList.add('empty');
+  const sp = el('section', 'surp'); sp.innerHTML = '<div class="sc"><p class="sk">UNA ÚLTIMA SORPRESA</p><h3>Pide tu deseo</h3><p>Cuando termines de ver el capítulo, pide tu deseo y mira lo que guardé para ti.</p><div id="wishslot"></div></div>';
   tv.appendChild(sp); sp.querySelector('#wishslot').appendChild($('wish'));
   // detalle del capítulo
   dt.innerHTML = '<div class="dbg"></div><div class="dsh"></div><button class="pill gl dback" aria-label="Volver">‹&nbsp; Inicio</button><div class="dsc"><p class="dk"></p><h1 class="dtt"></h1><p class="dss"></p><div class="dmeta"></div><div class="dtx"></div><h2 class="dh">En este capítulo</h2><div class="rail drail"></div><button class="dnext"></button></div>';
@@ -1924,7 +2051,7 @@ function tvSync(){
   const pr = seen.size/18; setBg(0, .5, 0, pr, .5 + pr*.4);          // el fondo se tiñe un poco más con cada capítulo leído
   tv.querySelectorAll('.ch').forEach(b => { const w = b.querySelector('.bar b'); if(w) w.style.width = seen.has(+b.dataset.i) ? '100%' : '0'; });
   if(!heroVid) return;
-  if(dtOpen < 0 && !bigWrap && $('letter').classList.contains('show')){ loadV(heroVid); heroVid.play().catch(()=>{}); }
+  if(dtOpen < 0 && !bigWrap && !filmOn && $('letter').classList.contains('show')){ loadV(heroVid); heroVid.play().catch(()=>{}); }
   else if(!bigWrap) unloadV(heroVid);
 }
 function openCh(i){
@@ -1932,7 +2059,7 @@ function openCh(i){
   dtOpen = i; seen.add(i);
   const med = [...g.querySelectorAll('figure.media')], nv = med.filter(f => f.classList.contains('vid')).length, np = med.length - nv;
   dt.querySelector('.dbg').style.backgroundImage = 'url("' + thumbOf(g) + '")';
-  dt.querySelector('.dk').textContent = 'CAPÍTULO ' + (i + 1) + ' DE ' + src.length;
+  dt.querySelector('.dk').textContent = 'HOJA ' + (i + 1) + ' DE ' + src.length;
   dt.querySelector('.dtt').textContent = CHT[i]; dt.querySelector('.dss').textContent = CHS[i];
   dt.querySelector('.dmeta').innerHTML = '<span class="bd">♥</span>' + (nv ? '<span>' + nv + (nv > 1 ? ' videos' : ' video') + '</span>' : '') + (np ? '<span>' + np + (np > 1 ? ' fotos' : ' foto') + '</span>' : '') + '<span>' + Math.max(1, Math.round(g.textContent.split(/\s+/).length/160)) + ' min</span>';
   const tx = dt.querySelector('.dtx'); tx.innerHTML = '';
@@ -1945,7 +2072,7 @@ function openCh(i){
   dt.querySelector('.dh').style.display = med.length ? '' : 'none'; rail.style.display = med.length ? '' : 'none';
   const nx = dt.querySelector('.dnext'), n2 = (i + 1) % src.length;
   nx.dataset.i = i < src.length - 1 ? i + 1 : -1;
-  nx.innerHTML = i < src.length - 1 ? '<span class="nth"><img alt="" draggable="false" src="' + thumbOf(src[n2]) + '"></span><span class="ntx"><small>SIGUIENTE · CAPÍTULO ' + (i + 2) + '</small><b>' + CHT[n2] + '</b></span><span class="nch">›</span>' : '<span class="ntx"><small>FIN</small><b>Volver al inicio</b></span><span class="nch">›</span>';
+  nx.innerHTML = i < src.length - 1 ? '<span class="nth"><img alt="" draggable="false" src="' + thumbOf(src[n2]) + '"></span><span class="ntx"><small>SIGUIENTE · HOJA ' + (i + 2) + '</small><b>' + CHT[n2] + '</b></span><span class="nch">›</span>' : '<span class="ntx"><small>FIN</small><b>Volver al inicio</b></span><span class="nch">›</span>';
   dt.scrollTop = 0; dt.querySelector('.dsc').scrollTop = 0; rail.scrollLeft = 0;
   dt.classList.add('on'); tvSync();
 }
@@ -1965,31 +2092,184 @@ $('letter').addEventListener('pointerup', e => {
   if((x = t.closest('.dback'))){ closeCh(); return; }
   if((x = t.closest('.dnext'))){ const n = +x.dataset.i; if(n < 0) closeCh(); else openCh(n); return; }
   if((x = t.closest('[data-play]'))){ playMovie(); return; }
+  if((x = t.closest('[data-chp]'))){ startMovie(+x.dataset.chp); return; }
   if((x = t.closest('.ch'))){ openCh(+x.dataset.i); return; }
   if((x = t.closest('.tvc.vid'))){ openBig(x); return; }
   if((x = t.closest('.tvc.pho'))){ openPhoto(x.querySelector('img')); return; }
 });
 /* final de la película: recomendaciones como en Netflix (un video y una foto al azar, y el último regalo) */
-function playMovie(){ if(!bigWrap) openBig(heroFig); }
-function showEnd(){
-  stopVidAudio(1000);
-  if(bigAudio){ bigAudio = false; inVideo = false; if(song.paused) song.play().catch(()=>{}); fade(song, musicTarget(), 2200); }
-  const vs = [...tv.querySelectorAll('#r-vid .tvc')], ps = [...tv.querySelectorAll('#r-pho .tvc')], rnd = a => a[Math.floor(Math.random()*a.length)];
-  const rv = rnd(vs), rp = rnd(ps), E = $('endscr');
-  const card = (k, img, lab, ttl) => '<button class="ec' + (k === 'g' ? ' gf' : '') + '" data-rec="' + k + '"><img alt="" draggable="false" src="' + img + '"><span class="eg"></span><span class="et"><small>' + lab + '</small><b>' + ttl + '</b></span></button>';
-  E.innerHTML = '<p class="ek">A CONTINUACIÓN</p><h2>Más para ver</h2>' +
-    card('v', rv.querySelector('.pimg').getAttribute('src'), 'VIDEO', (rv.querySelector('figcaption') || {}).textContent || 'Un video') +
-    card('p', rp.querySelector('.pimg').getAttribute('src'), 'FOTO', (rp.querySelector('figcaption') || {}).textContent || 'Una foto') +
-    card('g', 'media/gift.jpg', 'ÚLTIMO REGALO', 'Tu sorpresa te espera') +
-    '<div class="eb"><button class="pill gl" data-again="1">↻&nbsp; Ver de nuevo</button><button class="pill gl" data-endx="1">Cerrar</button></div>';
-  E.recs = {v: rv, p: rp}; E.classList.add('on');
+/* «Ver capítulo 1»: reproduce el video completo (media/cap1.mp4) */
+const CHAPS = [{n: 1, t: 'Feliz Cumpleaños', src: 'media/cap1.mp4', thumb: 'media/hero.jpg', dur: '22 s'}].concat([{n: 2, t: 'Como toda una Bratz', src: 'media/cap2.mp4', thumb: 'media/cap2.jpg', dur: '30 s'}]).concat([{n: 3, t: 'Mis Dos Amores', src: 'media/cap3.mp4', thumb: 'media/cap3.jpg', dur: '11 s'}]).concat([4, 5, 6, 7, 8, 9].map(n => ({n, t: 'Próximamente', src: '', thumb: '', dur: ''})));
+let mvOn = false, curCh = 0, nxtT = 0;
+async function startMovie(k){
+  k = k || 0; const c = CHAPS[k]; if(!c || !c.src) return;
+  if(!mvOn){ mvOn = true; filmOn = true; if(bigWrap) await closeBig(); unloadV(heroVid); kitty.say(''); kitty.hide(); musicOff(); }
+  curCh = k; hideNext();
+  const v = $('mvv'); v.src = c.src; v.poster = c.thumb || ''; $('mv').classList.add('on');
+  try{ await v.play(); }catch(e){}
+}
+async function stopMovie(){
+  if(!mvOn) return; mvOn = false; filmOn = false; hideNext();
+  const v = $('mvv'); try{ v.pause(); v.removeAttribute('src'); v.load(); }catch(e){}
+  $('mv').classList.remove('on'); musicBack(); if(!tvMode) kitty.show(); tvSync();
+}
+function playMovie(){ startMovie(0); }
+/* como en Netflix: al terminar un capítulo aparece el siguiente con un botón que se llena y pasa solo */
+function hideNext(){ clearTimeout(nxtT); const n = $('nxt'); n.classList.remove('on', 'go', 'mini'); }
+function nxtHtml(c){ return '<span class="nth2">' + (c.thumb ? '<img alt="" draggable="false" src="' + c.thumb + '">' : '<span class="big0">' + c.n + '</span>') + '</span><span class="nk">SIGUIENTE CAPÍTULO</span><b>Capítulo ' + c.n + ' · ' + c.t + '</b><button class="nbtn" data-nxt="1"><i></i><span>▶&nbsp; Siguiente</span></button>'; }
+$('mvv').addEventListener('timeupdate', () => {      // mientras el video sigue, solo aparece el botón «Siguiente»
+  const v = $('mvv'), n = $('nxt'); if(!mvOn || !v.duration || !hasNext(curCh) || n.classList.contains('on')) return;
+  if(v.duration - v.currentTime <= Math.min(10, v.duration*.4)){ n.innerHTML = nxtHtml(CHAPS[curCh + 1]); n.classList.add('mini', 'on'); }
+});
+$('mvv').addEventListener('timeupdate', () => {      // en los últimos 4 s el botón empieza a llenarse (tarda 6 s: al acabar el video le faltan 2)
+  const v = $('mvv'), n = $('nxt'); if(!mvOn || !v.duration || !n.classList.contains('mini') || n.classList.contains('go')) return;
+  if(v.duration - v.currentTime <= 4){ n.classList.add('go'); clearTimeout(nxtT); nxtT = setTimeout(nxtAdvance, 6000); }
+});
+const hasNext = k => !!(CHAPS[k + 1] && CHAPS[k + 1].src);      // el botón «Siguiente» solo existe si hay un capítulo siguiente con video
+function nxtAdvance(){      // el botón ya se llenó: pasa al siguiente capítulo (o a la pantalla final si aún no hay video)
+  if(!mvOn) return; const v = $('mvv');
+  if(!v.ended && v.duration - v.currentTime > .4){ nxtT = setTimeout(nxtAdvance, 400); return; }
+  const c = CHAPS[curCh + 1]; if(c && c.src) startMovie(curCh + 1); else showSeriesEnd();
+}
+function onChapterEnd(){
+  if(!mvOn) return;
+  const nx = curCh + 1; if(!hasNext(curCh)){ showSeriesEnd(); return; }
+  const n = $('nxt');
+  if(n.classList.contains('on') && n.classList.contains('go')){ n.classList.remove('mini'); return; }      // el botón ya venía llenándose: solo se muestra la vista previa y le faltan 2 s
+  n.classList.remove('on', 'mini', 'go'); void n.offsetWidth; n.innerHTML = nxtHtml(CHAPS[nx]);
+  n.classList.add('on'); void n.offsetWidth; n.classList.add('go'); clearTimeout(nxtT); nxtT = setTimeout(nxtAdvance, 6000);
+}
+$('nxt').addEventListener('click', e => { if(e.target.closest('[data-nxt]')){ clearTimeout(nxtT); const c = CHAPS[curCh + 1]; if(c && c.src) startMovie(curCh + 1); else showSeriesEnd(); } });
+$('mvv').addEventListener('ended', onChapterEnd);
+async function endClose(){ $('endscr').classList.remove('on'); await stopFilm(); await stopMovie(); if(bigWrap) await closeBig(); }
+function showSeriesEnd(){
+  hideNext(); stopVidAudio(1000);
+  const E = $('endscr'), card = (k, img, lab, ttl) => '<button class="ec' + (k === 'g' ? ' gf' : '') + '" data-rec="' + k + '"><img alt="" draggable="false" src="' + img + '"><span class="eg"></span><span class="et"><small>' + lab + '</small><b>' + ttl + '</b></span></button>';
+  E.innerHTML = '<button class="ex" data-endx="1" aria-label="Cerrar">✕</button><h2>Recomendado para ti</h2><div class="er">' +
+    card('r', CHAPS[0].thumb, 'VOLVER A EMPEZAR', 'Mis Amores · Capítulo 1') + card('g', 'media/gift.jpg', 'ÚLTIMO REGALO', 'Tu sorpresa te espera') + '</div>';
+  E.classList.add('on');
 }
 $('endscr').addEventListener('click', async e => {
-  const E = $('endscr'), t = e.target.closest ? e.target : null; if(!t) return; let x;
-  if((x = t.closest('[data-rec]'))){ const k = x.dataset.rec, r = E.recs; await closeBig(); if(k === 'v') openBig(r.v); else if(k === 'p') openPhoto(r.p.querySelector('img')); else $('wish').click(); }
-  else if(t.closest('[data-again]')){ await closeBig(); playMovie(); }
-  else if(t.closest('[data-endx]')) closeBig();
+  const t = e.target.closest ? e.target : null; if(!t) return; let x;
+  if((x = t.closest('[data-rec]'))){ const k = x.dataset.rec; $('endscr').classList.remove('on'); if(k === 'r') startMovie(0); else { await endClose(); $('wish').click(); } }
+  else if(t.closest('[data-endx]')) endClose();
 });
+/* ================= La película: todo el contenido seguido, con textos, poemas, fotos y videos ================= */
+let filmOn = false;
+const FDUR = {L1: 13.2, L2: 17.8, L3: 14.7, L4: 9.1, L5: 20, L6: 10.3, L7: 6.6, L8: 3.7, L9: 7.8, L10: 18.2, L11: 20, L13: 15.1, L14: 8.8, L16: 9.9, L17: 15, L19: 9.9, L20: 7.7, L21: 14.6, L22: 5.8, L23: 4.9, L26: 10.4, L27: 15.1, L36: 7.2, cover: 10.7};
+const FQ = ['Contigo hasta el silencio suena bonito.', 'Si volviera a nacer, te buscaría en cada vida.', 'Eres mi lugar favorito en el mundo.', 'Qué suerte la mía: cruzarme contigo.', 'Tu sonrisa es mi mejor mañana.', 'Hay personas que son hogar: tú eres la mía.', 'Contigo aprendí que hasta lo simple es mágico.', 'Si me preguntan qué es bonito, pienso en ti.', 'Te quiero en lo grande, y más en lo pequeño.', 'Eres la razón de mis mejores casualidades.', 'A tu lado el tiempo se vuelve cuento.', 'Que nunca te falte luz, mi Judith.', 'Mi parte favorita del día es pensarte.', 'En cada versión de mí, siempre estás tú.', 'Quién diría que un «hola» sería el comienzo de todo.', 'Eres poesía sin esfuerzo.', 'Por ti, hasta la lluvia es bonita.', 'Cuidarte es mi forma favorita de quererte.', 'Todo lo bonito me recuerda a ti.'];
+const wc = h => h.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+function buildScript(){
+  const src = [...document.querySelectorAll('.pgsrc')], S = [];
+  S.push({t: 'title', k: 'PERA TV Y GABRIEL', h: 'presentan', ms: 3400, bd: 'media/cover.jpg'});
+  S.push({t: 'title', k: 'UNA PELÍCULA DE GABRIEL', h: 'Para mi<br>Pocahontas', s: 'libre como el viento', ms: 5600, bd: 'media/cover.jpg'});
+  S.push({t: 'video', src: 'media/cover.mp4', aud: 'media/cover.m4a', poster: 'media/cover.jpg', dur: FDUR.cover, cap: ''});
+  const media = f => {
+    const v = f.querySelector('video'), cap = (f.querySelector('figcaption') || {}).textContent || '';
+    if(v){ const s0 = v.dataset.src || v.getAttribute('src'), key = s0.replace(/^.*\//, '').replace(/\.\w+$/, ''); return {t: 'video', src: s0, aud: v.hasAttribute('data-silent') ? '' : v.dataset.audio, poster: v.getAttribute('poster'), dur: FDUR[key] || 10, cap}; }
+    const s1 = f.querySelector('img').getAttribute('src'); return {t: 'photo', src: s1, cap, ms: 6500};
+  };
+  src.forEach((g, i) => {
+    S.push({t: 'title', n: i + 1, k: 'CAPÍTULO ' + (i + 1), h: CHT[i], s: CHS[i], ms: 4200, bd: thumbOf(g)});
+    [...g.children].forEach(c => {
+      if(c.matches('.p,.ps')) S.push({t: 'text', html: c.innerHTML, note: c.classList.contains('note') || c.classList.contains('ps'), ms: Math.min(17000, Math.max(5000, 2000 + wc(c.innerHTML)*340))});
+      else if(c.matches('.chips')){ const l = [...c.children].map(x => x.textContent); S.push({t: 'names', list: l, ms: (l.length*1.05 + 4)*1000}); }
+      else if(c.matches('.zone')) c.querySelectorAll('figure.media').forEach(f => S.push(media(f)));
+    });
+    if(i < src.length - 1) S.push({t: 'quote', html: FQ[i % FQ.length], ms: 5200});
+  });
+  S.push({t: 'credits', ms: 29000});
+  S.forEach(s => { s.est = (s.t === 'video' ? Math.min(s.dur, 24) + 1 : s.ms/1000) + 1.2; });
+  return S;
+}
+const fbufs = new Map(); let fSrc = null, fGain = null;
+async function getFBuf(src){ if(fbufs.has(src)) return fbufs.get(src); try{ const b = await audioBuf(src); fbufs.set(src, b); while(fbufs.size > 3) fbufs.delete(fbufs.keys().next().value); return b; }catch(e){ return null; } }
+function stopFA(ms){ if(!fGain) return; const g = fGain, s = fSrc; fGain = fSrc = null; try{ const t = actx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0, t + ms/1000); }catch(e){} setTimeout(() => { try{ s.stop(); }catch(e){} }, ms + 80); }
+function startFA(buf, from){ stopFA(0); fGain = actx.createGain(); fGain.connect(actx.destination); fSrc = actx.createBufferSource(); fSrc.buffer = buf; fSrc.connect(fGain); fSrc.start(0, Math.min(from, buf.duration - .05)); }
+let tvMode = false;      // en la parte de Pera TV no hay música de fondo ni Kitty
+function musicOff(){      // la música de fondo se va despacio y, cuando ya no se oye, se pone en pausa
+  inVideo = true;
+  try{ if(actx && master) master.gain.setTargetAtTime(0, actx.currentTime, 1.4); }catch(e){}
+  fade(song, 0, 4500).then(() => { if(filmOn || tvMode) song.pause(); });
+}
+function musicBack(){
+  if(tvMode) return;
+  inVideo = false;
+  try{ if(actx && master) master.gain.setTargetAtTime(musicOn ? .9 : 0, actx.currentTime, .6); }catch(e){}
+  if(musicOn){ if(song.paused) song.play().catch(()=>{}); fade(song, musicTarget(), 2500); }
+}
+let film = null;
+const Fq = s => $('film').querySelector(s);
+function mk(cls, html){ const e = document.createElement('div'); e.className = 'fs ' + cls; e.innerHTML = html; Fq('.fst').appendChild(e); void e.offsetWidth; e.classList.add('in'); return e; }
+async function outE(e){ e.classList.remove('in'); e.classList.add('ex'); await sleep(850); e.remove(); }
+function flash(){ const l = Fq('.fleak'); l.classList.remove('go'); void l.offsetWidth; l.classList.add('go'); }      // destello de luz, como en las plantillas
+function wordify(html, ms){      // las palabras aparecen una por una, como los subtítulos animados
+  const d = document.createElement('div'); d.innerHTML = html; let n = 0;
+  const walk = node => [...node.childNodes].forEach(c => {
+    if(c.nodeType === 3){ const f = document.createDocumentFragment(); c.textContent.split(/(\s+)/).forEach(t => { if(!t) return; if(/^\s+$/.test(t)) f.appendChild(document.createTextNode(t)); else { const w = document.createElement('span'); w.className = 'wd'; w.textContent = t; w.dataset.i = n++; f.appendChild(w); } }); node.replaceChild(f, c); }
+    else if(c.nodeType === 1) walk(c); });
+  walk(d); const step = Math.max(.11, Math.min(.45, ms*.0006/Math.max(1, n)));
+  d.querySelectorAll('.wd').forEach(w => w.style.animationDelay = (.6 + w.dataset.i*step).toFixed(2) + 's');
+  return d.innerHTML;
+}
+function letters(html){      // letras que suben una a una (título animado)
+  let k = 0; return html.split(/<br\s*\/?>/).map(line => '<span class="ln">' + line.split(' ').map(w => '<span class="lw">' + [...w].map(ch => '<span class="lt" style="animation-delay:' + (.25 + (k++)*.045).toFixed(2) + 's">' + ch + '</span>').join('') + '</span>').join(' ') + '</span>').join('<br>');
+}
+let kbn = 0;
+function setBd(src){ if(!src) return; const a = Fq('.b1'), b = Fq('.b2'), on = a.classList.contains('on') ? a : b, off = on === a ? b : a; if(on.dataset.s === src) return; off.style.backgroundImage = 'url("' + src + '")'; off.dataset.s = src; off.classList.add('on'); on.classList.remove('on'); }
+function setCap(t){ const c = Fq('.fcap'); c.classList.remove('on'); if(t) setTimeout(() => { if(filmOn){ c.textContent = t; c.classList.add('on'); } }, 450); }
+const fwait = (my, ms) => new Promise(res => { const t = setTimeout(res, ms); my.skip = () => { clearTimeout(t); res(); }; });
+async function playScene(my, sc){
+  if(sc.bd) setBd(sc.bd);
+  const bar = Fq('.fbar i'); bar.style.transition = 'width ' + sc.est.toFixed(1) + 's linear'; bar.style.width = Math.min(100, (my.cum + sc.est)/my.total*100) + '%'; my.cum += sc.est;
+  let e;
+  if(sc.t === 'title'){ if(sc.n) flash(); e = mk('ti', (sc.n ? '<span class="bn">' + String(sc.n).padStart(2, '0') + '</span>' : '') + '<p class="k"><i></i>' + sc.k + '<i></i></p>' + (sc.h ? '<h1>' + letters(sc.h) + '</h1>' : '') + (sc.s ? '<p class="s">' + sc.s + '</p>' : '')); await fwait(my, sc.ms); }
+  else if(sc.t === 'text'){ e = mk('tx' + (sc.note ? ' nt' : ''), '<i class="rl"></i><p>' + wordify(sc.html, sc.ms) + '</p>'); await fwait(my, sc.ms); }
+  else if(sc.t === 'quote'){ e = mk('tx q', '<span class="qm">❦</span><p>' + wordify(sc.html, sc.ms) + '</p>'); await fwait(my, sc.ms); }
+  else if(sc.t === 'names'){ e = mk('nm', '<h2>Todos tus nombres</h2><div class="nc">' + sc.list.map((n, i) => '<span style="animation-delay:' + (i*1.05 + .8).toFixed(2) + 's">' + n + '</span>').join('') + '</div>'); await fwait(my, sc.ms); }
+  else if(sc.t === 'photo'){ setBd(sc.src); flash(); e = mk('md', '<img class="kb' + (kbn++ % 4) + '" src="' + sc.src + '" alt="" draggable="false" style="--d:' + (sc.ms + 1500) + 'ms">'); setCap(sc.cap); await fwait(my, sc.ms); setCap(''); }
+  else if(sc.t === 'credits'){
+    e = mk('cr', '<div class="crs"><small>PROTAGONISTA</small><b>Judith Alejandra<br>Arcoamarillo Soto</b><small>TAMBIÉN CONOCIDA COMO</small><b>Mi Pocahontas · Mi Pucca<br>Flaquita · Mi Kuromi con corazón de Kitty</b><small>DIRECCIÓN Y GUION</small><b>Gabriel, el moreno</b><small>CON LA PARTICIPACIÓN ESPECIAL DE</small><b>Kitty, la peluche</b><small>MÚSICA</small><b>Once y once</b><small>REGALOS</small><b>Un termo, una cobija, una wafflera<br>y una cajita azul</b><small>DISTRIBUIDA POR</small><b>Pera TV</b><p>Hecha con todo mi cariño,<br>aunque un poquito tarde.</p><h3>Feliz mes de tu cumpleaños,<br>mi Judith 💙</h3></div>'); await fwait(my, sc.ms);
+  }
+  else if(sc.t === 'video'){
+    setBd(sc.poster); flash(); e = mk('md vd', '<video muted playsinline preload="auto"></video>'); const v = e.querySelector('video'); my.v = v; v.poster = sc.poster; v.src = sc.src; setCap(sc.cap);
+    const buf = (sc.aud && actx) ? await getFBuf(sc.aud) : null;
+    try{ await v.play(); }catch(x){}
+    if(buf && !my.stop){ if(actx.state !== 'running') actx.resume(); startFA(buf, v.currentTime); }
+    await new Promise(res => { v.onended = res; const t = setTimeout(res, Math.min(sc.dur, 24)*1000 + 3500); my.skip = () => { clearTimeout(t); res(); }; });
+    stopFA(500); setCap('');
+    try{ v.pause(); v.removeAttribute('src'); v.load(); }catch(x){} my.v = null;
+  }
+  if(e) await outE(e);
+}
+async function startFilm(){
+  if(filmOn) return; filmOn = true;
+  if(bigWrap) await closeBig();
+  const my = film = {stop: false, cum: 0, skip: null, v: null}, S = buildScript(); my.total = S.reduce((a, s) => a + s.est, 0);
+  unloadV(heroVid); kitty.say(''); kitty.hide();
+  if(actx && actx.state !== 'running') actx.resume(); musicOff();
+  const F = $('film'); Fq('.fbar i').style.transition = 'none'; Fq('.fbar i').style.width = '0'; F.classList.add('on'); showFCtl(); const t0 = performance.now(); clearInterval(my.tc = null); my.tc = setInterval(() => { const q = Math.floor((performance.now() - t0)/1000), m = String(Math.floor(q/60)).padStart(2, '0'), ss = String(q%60).padStart(2, '0'); Fq('.ftc').textContent = '● ' + m + ':' + ss + ' / ' + String(Math.round(my.total/60)).padStart(2, '0') + ':00'; }, 1000);
+  await sleep(700);
+  for(const sc of S){ if(my.stop) return; await playScene(my, sc); }
+  if(my.stop) return;
+  Fq('.fbar i').style.width = '100%'; showEnd();
+}
+async function stopFilm(){
+  if(!filmOn) return; filmOn = false;
+  if(film){ clearInterval(film.tc); film.stop = true; if(film.skip) film.skip(); if(film.v){ try{ film.v.pause(); film.v.removeAttribute('src'); film.v.load(); }catch(e){} } }
+  stopFA(300); musicBack();
+  const F = $('film'); F.classList.remove('on'); setTimeout(() => { if(!filmOn) Fq('.fst').innerHTML = ''; }, 900);
+  if(!tvMode) kitty.show(); tvSync();
+}
+let fctl = 0;
+function showFCtl(){ const b = Fq('.fbt'); b.classList.remove('hide'); clearTimeout(fctl); fctl = setTimeout(() => b.classList.add('hide'), 3500); }
+$('film').addEventListener('click', e => {
+  showFCtl();
+  if(e.target.closest('[data-fx]')){ stopFilm(); return; }
+  if(e.target.closest('[data-fskip]')){ if(film && film.skip) film.skip(); return; }
+  if(film && film.v && film.v.paused) film.v.play().catch(()=>{});
+});
+
 async function showBook(){
   buildTV(); layoutBook();
   const L = $('letter'), cdEl = env3d.querySelector('.cd');
@@ -2000,7 +2280,6 @@ async function showBook(){
   await sleep(120); tv.classList.add('in');
   await sleep(1400);
   envOn = false; tvSync(); tvScroll();
-  kitty.show(); kitty.say('Toca «Ver película» para empezar 🍿');
 }
 
 /* ================= Videos de la carta ================= */
@@ -2238,7 +2517,7 @@ addEventListener('keydown', e => { if(e.key === 'Escape') closePhoto(); });
 /* ================= Deseo: las hojas se van y de la bolsa sale la caja con el collar, la pulsera y el anillo ================= */
 let sealed = false;
 $('wish').addEventListener('click', async () => {
-  if(sealed) return; sealed = true;
+  if(sealed) return; sealed = true; tvMode = false; musicBack();      // termina la parte de Pera TV: vuelve la música y Kitty para los regalos
   if(navigator.vibrate) navigator.vibrate([40,70,40]);
   chime();
   const k0 = performance.now(); (function fade(n){ petalK = Math.max(0, 1 - (n - k0)/1500); if(petalK > 0) requestAnimationFrame(fade); })(k0);
