@@ -771,7 +771,9 @@ figure.media.tvc.hoja .hn{position:absolute;left:8px;top:8px;padding:4px 9px;bor
 @media (max-aspect-ratio:1/1){#nxt{right:50%;transform:translate(50%,14px);width:min(92vw,360px)}#nxt.on{transform:translate(50%,0)}}
 #gimg{position:fixed;left:0;top:0;z-index:9;opacity:0;pointer-events:none;transform:translateY(22px);transition:opacity .5s ease,transform .7s cubic-bezier(.2,.9,.25,1);text-align:center;cursor:zoom-in}
 #gimg.on{opacity:1;transform:none;pointer-events:auto}
-#gimg img{display:block;width:100%;height:auto;border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.18);background:#fbf5e8}
+#gimg .lcw{position:relative;overflow:hidden;border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.18);background:linear-gradient(#fffefb,#faf3e6)}
+#gimg .lc{position:absolute;left:0;top:0;transform-origin:0 0}
+#gimg .lc .sheet{box-shadow:none;border-radius:0}
 #gimg .gh2{display:block;margin-top:7px;font:600 12px var(--sf);color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.8)}
 #gtoast{position:fixed;left:50%;bottom:calc(max(24px,env(safe-area-inset-bottom)) + 46px);transform:translate(-50%,16px);z-index:12;max-width:86vw;padding:14px 20px;border-radius:18px;background:rgba(30,30,48,.94);border:1px solid rgba(255,255,255,.2);color:#fff;font:600 16px/1.35 var(--sf);text-align:center;opacity:0;pointer-events:none;transition:opacity .4s,transform .5s}
 #gtoast.on{opacity:1;transform:translate(-50%,0)}
@@ -950,7 +952,7 @@ figure.media.tvc.hoja .hn{position:absolute;left:8px;top:8px;padding:4px 9px;bor
   </g>
  </g>
 </g></svg></div></div>
-<div id="gimg"><img alt="" draggable="false"><span class="gh2"></span></div>
+<div id="gimg"><div class="lcw"></div><img alt="" draggable="false" style="display:none"><span class="gh2"></span></div>
 <div id="gtoast"></div>
 <div id="gcard"><p class="gk" id="gk"></p><p class="gt" id="gt"></p><p class="gh" id="gh"></p></div>
 <script src="three.min.js"></script>
@@ -1968,15 +1970,40 @@ const GIFTS = [
 const waitTap = () => new Promise(r => { GIFTS3D.onTap = r; });
 /* las cartas: cada regalo trae su hoja encima; al tocarla se ve grande y con zoom */
 const gimg = $('gimg'), gtoast = $('gtoast'); let gimgOpen = null;
+const PGMAP = {1: 1, 2: 7, 3: 11, 4: 15, 5: 17}, SHAPES2 = {tall: ['arch', 'oval', 'blob'], sq: ['heart', 'flower', 'hex', 'star', 'diamond', 'squircle', 'blob'], wide: ['oval', 'wave', 'squircle']};
+let shapeJ = 0;
+function buildLive(n, gh){      // la carta es una hoja de verdad en miniatura: los videos se mueven y se pueden tocar
+  const src = document.querySelectorAll('.pgsrc')[PGMAP[n]], k = gh/828, wrap = gimg.querySelector('.lcw');
+  wrap.innerHTML = ''; wrap.style.width = (460*k) + 'px'; wrap.style.height = gh + 'px';
+  const lc = el('div', 'lc'), sh = el('div', 'sheet cur'), pg = el('div', 'pg'), fit = el('div', 'fit');
+  lc.style.cssText = 'width:460px;height:828px;transform:scale(' + k + ')'; if(src.dataset.lay) pg.dataset.lay = src.dataset.lay;
+  [...src.childNodes].forEach(c => fit.appendChild(c.cloneNode(true)));
+  fit.querySelectorAll('.wish,.rose,button').forEach(e => e.remove());
+  fit.querySelectorAll('.p,.moment,.sign,.ps,.media').forEach(e => e.classList.add('in'));
+  pg.appendChild(fit); sh.appendChild(pg); lc.appendChild(sh); wrap.appendChild(lc);
+  fit.querySelectorAll('.zone:not(.rd) .media').forEach(m => {      // formas distintas para cada foto y video
+    if(!m.offsetWidth || !m.offsetHeight) return; const r = m.offsetWidth/m.offsetHeight, list = r < .8 ? SHAPES2.tall : r > 1.3 ? SHAPES2.wide : SHAPES2.sq, nm = list[shapeJ++ % list.length];
+    m.classList.add('sh', 'sh-' + nm);
+  });
+  let kf = 1; fit.style.setProperty('--fs', kf);      // el texto se achica hasta caber
+  const over = () => fit.lastElementChild && fit.lastElementChild.getBoundingClientRect().bottom > fit.getBoundingClientRect().bottom + 1;
+  while(kf > .6 && over()){ kf -= .04; fit.style.setProperty('--fs', kf); }
+  fit.querySelectorAll('video').forEach(v => { v.muted = true; v.loop = true; v.playsInline = true; regVid(v); loadV(v); v.play().catch(()=>{}); });
+}
 function showLetter(n, pos, gh, hint){
-  const im = gimg.querySelector('img'), w = gh*920/1656; im.src = 'media/cartas/carta' + n + '.jpg'; gimg.style.width = w + 'px';
+  const im = gimg.querySelector('img'), w = gh*460/828; im.src = 'media/cartas/carta' + n + '.jpg'; buildLive(n, gh); gimg.style.width = w + 'px';
   gimg.style.left = Math.max(8, Math.min(innerWidth - w - 8, pos.x - w/2)) + 'px'; gimg.style.top = pos.top + 'px'; gimg.querySelector('.gh2').textContent = hint || ''; gimg.classList.add('on');
 }
-function hideLetter(){ gimg.classList.remove('on'); }
+function hideLetter(){ gimg.classList.remove('on'); gimg.querySelectorAll('video').forEach(unloadV); setTimeout(() => { if(!gimg.classList.contains('on')) gimg.querySelector('.lcw').innerHTML = ''; }, 700); }
 function toast(t, ms){ gtoast.textContent = t; gtoast.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => gtoast.classList.remove('on'), ms || 3200); }
 let gT = null;
 gimg.addEventListener('pointerdown', e => { gT = {x: e.clientX, y: e.clientY}; });
-gimg.addEventListener('pointerup', e => { if(!gT) return; const d = Math.hypot(e.clientX - gT.x, e.clientY - gT.y); gT = null; if(d <= 12){ if(gimgOpen) gimgOpen(); openPhoto(gimg.querySelector('img')); } });
+gimg.addEventListener('pointerup', e => {
+  if(!gT) return; const d = Math.hypot(e.clientX - gT.x, e.clientY - gT.y); gT = null; if(d > 12 || bigWrap || pbg.classList.contains('on')) return;
+  if(gimgOpen) gimgOpen();
+  const t = e.target, v = t.closest && t.closest('.vid'), f = t.closest && t.closest('.pho');
+  if(v) openBig(v); else if(f) openPhoto(f.querySelector('img')); else openPhoto(gimg.querySelector('img'));      // un video o una foto se hacen grandes; el resto de la hoja se lee completa
+});
 async function giftSequence(){
   if(!(window.GIFTS3D && GIFTS3D.ok)) return;
   $('env-scene').classList.add('gifts'); await sleep(1000);
@@ -2379,7 +2406,7 @@ async function closeBig(){
   if(!bigWrap) return;
   if(bigWrap === sbig) return closeSlideBig();
   const wrap = bigWrap; bigWrap = null; $('endscr').classList.remove('on');
-  if(bigVid && bigPh && bigPh.parentNode){ if(bigVid.zoomReset) bigVid.zoomReset(); bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); if(bigVid === heroVid){ bigVid.loop = true; bigVid.play().catch(()=>{}); } else unloadV(bigVid); } bigVid = bigPh = null; $('vfull').classList.remove('on');
+  if(bigVid && bigPh && bigPh.parentNode){ if(bigVid.zoomReset) bigVid.zoomReset(); bigPh.parentNode.insertBefore(bigVid, bigPh); bigPh.remove(); if(bigVid === heroVid){ bigVid.loop = true; bigVid.play().catch(()=>{}); } else if(bigVid.closest && bigVid.closest('.lc')){ loadV(bigVid); bigVid.play().catch(()=>{}); } else unloadV(bigVid); } bigVid = bigPh = null; $('vfull').classList.remove('on');
   wrap.classList.remove('big'); $('vbg').classList.remove('on');
   if(!bigAudio) return;
   bigAudio = false; inVideo = false;
@@ -2545,7 +2572,7 @@ function makeZoom(el, onClose){
 makeZoom(pim, () => closePhoto());
 function openPhoto(img){ pim.src = img.currentSrc || img.src; pim.zoomReset(); pbg.classList.add('on'); }
 let onPhotoClosed = null;
-document.body.appendChild(pbg);      // la vista grande queda fuera de la carta para poder usarse también con los regalos
+document.body.appendChild(pbg); document.body.appendChild($('vbg')); document.body.appendChild($('vfull'));      // la vista grande queda fuera de la carta para poder usarse también con los regalos
 function closePhoto(){ const was = pbg.classList.contains('on'); pbg.classList.remove('on'); pim.zoomReset(); if(was && onPhotoClosed) onPhotoClosed(); }
 document.querySelectorAll('.pho').forEach(f => f.addEventListener('click', () => openPhoto(f.querySelector('img'))));
 pbg.addEventListener('click', e => { if(e.target === pbg || e.target === $('px')) closePhoto(); });
