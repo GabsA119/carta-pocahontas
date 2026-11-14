@@ -783,6 +783,9 @@ figure.media.tvc.hoja .hn{position:absolute;left:8px;top:8px;padding:4px 9px;bor
 #gimg .lc .sheet{box-shadow:none;border-radius:0}
 #gimg .gh2{display:block;margin-top:7px;font:600 12px var(--sf);color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.8)}
 #gtoast{position:fixed;left:50%;bottom:calc(max(24px,env(safe-area-inset-bottom)) + 46px);transform:translate(-50%,16px);z-index:12;max-width:86vw;padding:14px 20px;border-radius:18px;background:rgba(30,30,48,.94);border:1px solid rgba(255,255,255,.2);color:#fff;font:600 16px/1.35 var(--sf);text-align:center;opacity:0;pointer-events:none;transition:opacity .4s,transform .5s}
+#gexit{position:fixed;top:max(14px,env(safe-area-inset-top));left:14px;z-index:13;height:44px;padding:0 18px;border-radius:22px;border:1px solid rgba(255,255,255,.3);background:rgba(40,40,56,.9);color:#fff;font:600 15px var(--sf);cursor:pointer;display:none;touch-action:manipulation}
+#gexit.on{display:block}
+#gexit svg{width:15px;height:18px;fill:#fff;vertical-align:-3px}
 #gtoast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
@@ -961,6 +964,7 @@ figure.media.tvc.hoja .hn{position:absolute;left:8px;top:8px;padding:4px 9px;bor
 </g></svg></div></div>
 <div id="gimg"><div class="lcw"></div><img alt="" draggable="false" style="display:none"><span class="gh2"></span></div>
 <div id="gtoast"></div>
+<button id="gexit" aria-label="Volver a Pera TV"><svg viewBox="0 0 100 120"><use href="#pear"/></svg>&nbsp;TV</button>
 <div id="lview"><button id="lx" aria-label="Cerrar">✕</button><div class="lvz"><div class="lcw2"></div></div></div>
 <div id="gcard"><p class="gk" id="gk"></p><p class="gt" id="gt"></p><p class="gh" id="gh"></p></div>
 <script src="three.min.js"></script>
@@ -2643,6 +2647,14 @@ $('wish').addEventListener('click', async () => {
     if(st !== 1) return; st = 2; hideLetter(); GIFTS3D.lift('collar', 0);
     setTimeout(() => { GIFTS3D.lift('pulsera', 1); chime(); setTimeout(() => cardAt(5, 'pulsera'), 700); kitty.say('¡Qué bonito, mami! 💖', 5000); }, 500);
   };
+  const leaveBox = async () => {      // salida: de la caja de regalos de vuelta a Pera TV
+    clearTimeout(tm); GIFTS3D.onItem = null; gimgOpen = null; onPhotoClosed = null; $('gexit').classList.remove('on');
+    hideLetter(); closeLive(); if(bigWrap) closeBig(); gcard.classList.remove('on'); gtoast.classList.remove('on'); kitty.say(''); kitty.hide(); GIFTS3D.leave();
+    tvMode = true; musicOff(); const sc2 = $('env-scene'); sc2.classList.add('hide'); sc2.classList.remove('gifts'); envOn = false;
+    const L2 = $('letter'); L2.style.transition = 'none'; L2.classList.add('show', 'front'); tv.classList.add('in'); tvSync(); tvScroll(); sealed = false;
+  };
+  let gxT = 0; const gx = e => { if(e && e.cancelable) e.preventDefault(); if(performance.now() - gxT < 500) return; gxT = performance.now(); leaveBox(); };
+  $('gexit').onclick = gx; $('gexit').onpointerup = gx; $('gexit').classList.add('on');
   gimgOpen = () => clearTimeout(tm); onPhotoClosed = () => { if(st === 1){ clearTimeout(tm); tm = setTimeout(goBracelet, 1200); } };
   GIFTS3D.onItem = name => {
     if(name === 'anillo'){ GIFTS3D.shake(); toast('Este regalo solo se puede dar en persona 💍'); if(navigator.vibrate) navigator.vibrate([30, 50, 30]); return; }
