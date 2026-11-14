@@ -643,6 +643,7 @@ figure.media.tvc figcaption{position:absolute;left:0;right:0;bottom:0;margin:0;p
 /* ================= La película ================= */
 #film{position:fixed;inset:0;z-index:36;background:#000;color:#fff;font-family:var(--sf);opacity:0;pointer-events:none;transition:opacity .9s ease;overflow:hidden}
 #film.on{opacity:1;pointer-events:auto}
+#film:not(.on){display:none}      /* la capa de la película en la página ya no se usa: apagada no gasta memoria ni animaciones (el grano giraba siempre) */
 #film .b1,#film .b2{position:absolute;inset:-12%;background-size:cover;background-position:center;opacity:0;transition:opacity 1.6s ease;filter:blur(46px) saturate(1.5) brightness(.75);transform:translateZ(0)}
 #film .b1.on,#film .b2.on{opacity:1}
 #film .fvg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 45%,rgba(0,0,0,.6))}
