@@ -1387,13 +1387,13 @@ const kitty = (() => {
   requestAnimationFrame(frame);
   const api = {
     show(){ size(); if(on) return; on = true; x = W*.5; y = lanes().yF; tx = x; ty = y; path = []; mode = 'idle'; until = 1.2; el.classList.add('on'); jump(true); wave(); },
-    hide(){ on = false; this._gen = (this._gen || 0) + 1; clearInterval(this._tip); el.classList.remove('on'); bub.classList.remove('on'); },
+    hide(){ on = false; this._gen = (this._gen || 0) + 1; clearInterval(this._tip); clearTimeout(this._t); stopVoice(); pendingClips = null; say_ = ''; el.classList.remove('on'); bub.classList.remove('on'); },
     say(t, ms){ clearInterval(this._tip); this._gen = (this._gen || 0) + 1; this._say(t, ms, REACT[t] ? [REACT[t]] : null); },
     _say(t, ms, clips, done){
       clearTimeout(this._t);
       if(!t){ bub.classList.remove('on'); say_ = ''; stopVoice(); pendingClips = null; return; }
       bub.classList.remove('on'); bw = 0;
-      setTimeout(() => { bub.textContent = t; bub.classList.add('on'); bw = 0; speak(clips, done); }, say_ ? 220 : 0); say_ = t;
+      setTimeout(() => { if(!on) return; bub.textContent = t; bub.classList.add('on'); bw = 0; speak(clips, done); }, say_ ? 220 : 0); say_ = t;
       if(ms) this._t = setTimeout(() => { bub.classList.remove('on'); say_ = ''; }, Math.max(ms, 5000));   // mínimo 5 s en pantalla
     },
     /* una instrucción siempre va al principio o al final de lo que dice, con una frase cariñosa al azar */
@@ -1669,7 +1669,7 @@ function fade(el, to, ms){ return new Promise(res => {
   clearInterval(fades.get(el)); const g = chan.get(el), from = g ? g.gain.value : el.volume, t0 = performance.now();
   const id = setInterval(() => { const k = Math.min(1, (performance.now() - t0)/ms); vol(el, from + (to - from)*k); if(k >= 1){ clearInterval(id); res(); } }, 40);
   fades.set(el, id); }); }
-const musicTarget = () => (musicOn && !inVideo) ? MUSIC*(window.kittyDuck ? .4 : 1) : 0;
+const musicTarget = () => (musicOn && !inVideo && !tvMode) ? MUSIC*(window.kittyDuck ? .4 : 1) : 0;
 let actx = null, master = null, musicOn = true, nextT = 0, step = 0, timer = null;
 const CH = [
   {bass:110.00, arp:[220.00,261.63,329.63,440.00]},   // Am
@@ -1754,7 +1754,9 @@ document.addEventListener('visibilitychange', () => {
     fade(song, 0, 160);
     setTimeout(() => { if(document.hidden){ try{ actx.suspend(); song.pause(); if(keepAlive) keepAlive.pause(); }catch(e){} } }, 260);
   } else {
-    forcePlayback(); actx.resume().catch(()=>{}); song.play().catch(()=>{});
+    forcePlayback(); actx.resume().catch(()=>{});
+    if(tvMode) return;                          // en Pera TV no vuelve la música de fondo al regresar a Safari
+    song.play().catch(()=>{});
     try{ master.gain.cancelScheduledValues(actx.currentTime); master.gain.setTargetAtTime(musicOn ? .9 : 0, actx.currentTime + .05, .25); }catch(e){}
     fade(song, musicTarget(), 700);
   }
@@ -1917,9 +1919,9 @@ function sfx(f0, f1, dur, vol, type){
 async function powerSequence(){
   const P = $('pwr'), R = $('remote'), C = $('crt'), G = $('plogo'), L = $('letter');
   const ct = C.querySelector('.ct'), cb = C.querySelector('.cb'), cl = C.querySelector('.cl');
-  kitty.say(''); kitty.hide(); $('gcard').classList.remove('on');
+  kitty.say(''); kitty.hide(); $('gcard').classList.remove('on'); tvMode = true; musicOff();      // desde que empieza Pera TV: sin música de fondo y sin Kitty
   P.classList.add('on'); await sleep(450);
-  R.classList.add('up'); tvMode = true; musicOff(); await sleep(1500);                      // sube el control y la música se apaga despacio
+  R.classList.add('up'); await sleep(1500);                      // sube el control y la música se apaga despacio
   R.classList.add('press'); sfx(1800, 300, .05, .12, 'square'); if(navigator.vibrate) navigator.vibrate(40);   // se aplasta el botón de encendido
   await sleep(520);
   R.classList.remove('up'); sfx(1500, 70, .55, .08);
