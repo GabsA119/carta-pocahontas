@@ -524,10 +524,10 @@ html,body{font-family:var(--sf);background:#08080f}
 .tvnav button{border:0;background:none;color:rgba(255,255,255,.72);font-weight:600;font-size:13px;padding:0 11px;border-radius:999px;cursor:pointer;transition:background .3s,color .3s}
 .tvnav button.on{background:rgba(255,255,255,.92);color:#111}
 .hero{position:relative;height:min(80vh,660px);min-height:470px;overflow:hidden}
-.hv{position:absolute;inset:0;margin:0;will-change:transform;-webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent)}
-.hv .pimg,.hv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:none;border-radius:0;box-shadow:none}
+.hv{position:absolute;inset:0;margin:0;will-change:transform}
+.hv video{opacity:0;transition:opacity .5s}.hv video.on{opacity:1}.hv .pimg,.hv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:none;border-radius:0;box-shadow:none}
 .hv.vid.big{opacity:1}
-.hshade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,rgba(5,5,12,.7),rgba(5,5,12,0) 58%),linear-gradient(rgba(5,5,12,.45),transparent 22%)}
+.hshade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top,#05050c 4%,rgba(5,5,12,.7) 28%,rgba(5,5,12,0) 62%),linear-gradient(rgba(5,5,12,.45),transparent 22%)}
 .hinfo{position:absolute;left:20px;right:20px;bottom:14px}
 .hk{margin:0;font-size:11.5px;font-weight:700;letter-spacing:.14em;opacity:.75}
 .hinfo h1{margin:6px 0 4px;font-size:clamp(40px,11.5vw,62px);font-weight:800;letter-spacing:-.04em;line-height:1.02}
@@ -2141,7 +2141,7 @@ function buildTV(){
     '<div class="hinfo"><p class="plg"><svg viewBox="0 0 100 120"><use href="#pear"/></svg>TV</p><p class="hk">UNA SERIE ORIGINAL DE GABRIEL</p>' +
     '<div class="ttl"><h1>Mis<br>Amores</h1><button class="pill pri" data-play="1">▶︎&nbsp; Ver capítulo 1</button></div><p class="hs">Capítulo 1 · Feliz Cumpleaños</p>' +
     '<div class="hmeta"><span class="bd">♥</span><span>Romance</span><span>2026</span><span>Temporada 1</span><span class="bd">HD</span></div></div>';
-  tv.appendChild(hero); heroFig = hero.querySelector('.hv'); heroVid = heroFig.querySelector('video'); regVid(heroVid);
+  tv.appendChild(hero); heroFig = hero.querySelector('.hv'); heroVid = heroFig.querySelector('video'); regVid(heroVid); heroVid.addEventListener('playing', () => heroVid.classList.add('on')); heroVid.addEventListener('emptied', () => heroVid.classList.remove('on'));
   heroVid.addEventListener('ended', () => { if(bigVid === heroVid) showEnd(); });
   const row = (id, title, sub) => { const s = el('section', 'row'); s.id = id; s.appendChild(el('h2', '', title + (sub ? '<small>' + sub + '</small>' : ''))); const r = el('div', 'rail'); s.appendChild(r); tv.appendChild(s); return r; };
   const rv = row('r-vid', 'Capítulos', 'toca uno para verlo');
