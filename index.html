@@ -2681,13 +2681,14 @@ async function boxScene(){
     setTimeout(() => { GIFTS3D.lift('pulsera', 1); chime(); setTimeout(() => cardAt(5, 'pulsera'), 700); kitty.say('¡Qué bonito, mami! 💖', 5000); }, 500);
   };
   const closeBoxNow = async () => {      // cierra la carta y la caja; la caja vuelve a la bolsa y se elige qué sigue
-    clearTimeout(boxTm); st = 3; GIFTS3D.onItem = null; hideLetter(); GIFTS3D.lift('pulsera', 0); gtoast.classList.remove('on'); await GIFTS3D.close(); chime();
+    clearTimeout(boxTm); st = 3; GIFTS3D.onItem = null; hideLetter(); GIFTS3D.lift('pulsera', 0); GIFTS3D.lift('collar', 0); gtoast.classList.remove('on'); await GIFTS3D.close(); chime();
     await sleep(300); await GIFTS3D.back(); gimgClose = null; gimgOpen = null; onPhotoClosed = null;
     $('gk').textContent = ''; $('gchoice').classList.add('on'); kitty.show(); kitty.say('¿Qué quieres hacer, mami? 💕', 5000);
   };
   gimgClose = () => { if(st === 1){ clearTimeout(boxTm); goBracelet(); } else if(st === 2) closeBoxNow(); };
   gimgOpen = () => clearTimeout(boxTm); onPhotoClosed = () => { if(st === 1){ clearTimeout(boxTm); boxTm = setTimeout(goBracelet, 1200); } };
   GIFTS3D.onItem = name => {
+    if(name === 'tapa'){ if(st < 3) closeBoxNow(); return; }      // tocar la tapa abierta: se cierra la caja y se mete en la bolsa
     if(name === 'anillo'){ GIFTS3D.shake(); toast('Este regalo solo se puede dar en persona'); if(navigator.vibrate) navigator.vibrate([30, 50, 30]); return; }
     if(st === 0 && name === 'collar'){ st = 1; gcard.classList.remove('on'); GIFTS3D.lift('collar', 1); chime(); setTimeout(() => cardAt(4, 'collar'), 600); boxTm = setTimeout(goBracelet, 9000); }
     else if(st === 0) toast('Primero toca el collar 💎');

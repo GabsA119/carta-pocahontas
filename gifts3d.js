@@ -287,6 +287,7 @@
     /* zonas invisibles para tocar el collar, la pulsera y el anillo */
     const proxies = [], proxy = (name, geo, x, y, z) => { const m = new T.Mesh(geo, new T.MeshBasicMaterial({visible: false})); m.position.set(x, y, z); m.userData.item = name; jew.add(m); proxies.push(m); };
     proxy('collar', new T.BoxGeometry(1.9, .5, 1.0), 0, 0, -.25); proxy('pulsera', new T.BoxGeometry(1.3, .4, .45), -.1, 0, .42); proxy("anillo", new T.SphereGeometry(.38, 8, 6), 0, .05, -.75);
+    { const lid = new T.Mesh(new T.BoxGeometry(SW, .06, SD), new T.MeshBasicMaterial({visible: false})); lid.position.y = SH/2 - .025; lid.userData.item = 'tapa'; sleeve.add(lid); proxies.push(lid); }      // al tocar la tapa se cierra la caja
     root.userData.neck = neck; root.userData.br = br; root.userData.ring = ring; root.userData.proxies = proxies; root.userData.jew = jew; root.userData.lifts = {collar: {v: 0, t: 0}, pulsera: {v: 0, t: 0}};
     root.add(tray);
     const OPEN = 1.75; root.userData.setOpen = (u, tilt) => { tray.position.z = OPEN*u; root.position.z = -OPEN*u*.5; };
