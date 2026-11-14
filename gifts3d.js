@@ -273,7 +273,7 @@
     }
     const cp = new T.Mesh(new T.TorusGeometry(.03, .008, 6, 14), gold); cp.rotation.x = Math.PI/2; cp.position.set(.96, .02, .02); br.add(cp);
     /* anillo de plata: piedra rectangular de corte esmeralda (escalonada) en una canasta de cuatro garras, banda con piedritas */
-    const ring = new T.Group(); ring.position.set(-.5, .05, -.74); ring.rotation.set(0, -Math.PI/2, Math.PI/2); ring.scale.setScalar(1.05); jew.add(ring);      // tumbado, con la piedra metida bajo la tapa: solo se asoma un poco
+    const ring = new T.Group(); ring.position.set(0, .05, -.84); ring.rotation.set(0, -Math.PI/2, Math.PI/2); ring.scale.setScalar(1.05); jew.add(ring);      // tumbado, con la piedra metida bajo la tapa: solo se asoma un poco
     const band = new T.Mesh(new T.TorusGeometry(.2, .024, 10, 40), silver); band.rotation.y = Math.PI/2; ring.add(band);
     const oct = (a, b, c) => { const e = new T.Shape(); e.moveTo(-a + c, -b); e.lineTo(a - c, -b); e.lineTo(a, -b + c); e.lineTo(a, b - c); e.lineTo(a - c, b); e.lineTo(-a + c, b); e.lineTo(-a, b - c); e.lineTo(-a, -b + c); e.closePath(); return e; };
     const stm = clear();
@@ -285,7 +285,7 @@
       inst.instanceMatrix.needsUpdate = true; ring.add(inst); }
     /* zonas invisibles para tocar el collar, la pulsera y el anillo */
     const proxies = [], proxy = (name, geo, x, y, z) => { const m = new T.Mesh(geo, new T.MeshBasicMaterial({visible: false})); m.position.set(x, y, z); m.userData.item = name; jew.add(m); proxies.push(m); };
-    proxy('collar', new T.BoxGeometry(1.9, .5, 1.0), 0, 0, -.25); proxy('pulsera', new T.BoxGeometry(1.3, .4, .45), -.1, 0, .42); proxy('anillo', new T.SphereGeometry(.38, 8, 6), -.5, .05, -.74);
+    proxy('collar', new T.BoxGeometry(1.9, .5, 1.0), 0, 0, -.25); proxy('pulsera', new T.BoxGeometry(1.3, .4, .45), -.1, 0, .42); proxy("anillo", new T.SphereGeometry(.38, 8, 6), 0, .05, -.75);
     root.userData.neck = neck; root.userData.br = br; root.userData.ring = ring; root.userData.proxies = proxies; root.userData.jew = jew; root.userData.lifts = {collar: {v: 0, t: 0}, pulsera: {v: 0, t: 0}};
     root.add(tray);
     const OPEN = 1.75; root.userData.setOpen = (u, tilt) => { tray.position.z = OPEN*u; root.position.z = -OPEN*u*.5; };
@@ -351,7 +351,7 @@
         const J = root.userData, L = J.lifts; L.collar.v += (L.collar.t - L.collar.v)*.16; L.pulsera.v += (L.pulsera.t - L.pulsera.v)*.16;
         J.neck.position.y = L.collar.v*.45; J.neck.scale.setScalar(1 + .1*L.collar.v);
         J.br.position.set(-.6, L.pulsera.v*.7, .4 + L.pulsera.v*.45); J.br.rotation.x = -L.pulsera.v*.75; J.br.scale.setScalar(1 + .22*L.pulsera.v);
-        const sk = Math.max(0, 1 - (now - shakeT)/650); J.ring.position.x = -.5 + Math.sin((now - shakeT)/38)*.06*sk;
+        const sk = Math.max(0, 1 - (now - shakeT)/650); J.ring.position.x = Math.sin((now - shakeT)/38)*.06*sk;
       }
       cur.rotation.x = rotX; cur.rotation.y = spin + (opened ? Math.sin(now/1500)*.06 : 0); cur.rotation.z = Math.sin(now/900)*.03; cur.position.y = to.y + Math.sin(now/700)*.06; cur.position.x = to.x;
     } else if(state === 'leaving'){
