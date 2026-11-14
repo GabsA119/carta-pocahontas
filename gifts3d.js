@@ -273,7 +273,7 @@
     }
     const cp = new T.Mesh(new T.TorusGeometry(.03, .008, 6, 14), gold); cp.rotation.x = Math.PI/2; cp.position.set(.96, .02, .02); br.add(cp);
     /* anillo de plata: piedra rectangular de corte esmeralda (escalonada) en una canasta de cuatro garras, banda con piedritas */
-    const ring = new T.Group(); ring.position.set(0, .05, -.84); ring.rotation.set(0, -Math.PI/2, Math.PI/2); ring.scale.setScalar(1.05); jew.add(ring);      // tumbado, con la piedra metida bajo la tapa: solo se asoma un poco
+    const ring = new T.Group(); ring.position.set(0, .05, -.78); ring.rotation.set(0, -Math.PI/2, Math.PI/2); ring.scale.set(1.05, .76, 1.05); jew.add(ring);      // tumbado, con la piedra metida bajo la tapa: solo se asoma un poco
     const band = new T.Mesh(new T.TorusGeometry(.2, .024, 10, 40), silver); band.rotation.y = Math.PI/2; ring.add(band);
     const oct = (a, b, c) => { const e = new T.Shape(); e.moveTo(-a + c, -b); e.lineTo(a - c, -b); e.lineTo(a, -b + c); e.lineTo(a, b - c); e.lineTo(a - c, b); e.lineTo(-a + c, b); e.lineTo(-a, b - c); e.lineTo(-a, -b + c); e.closePath(); return e; };
     const stm = clear();
@@ -283,6 +283,7 @@
     { const pvm = clear(), inst = new T.InstancedMesh(new T.SphereGeometry(.0105, 6, 5), pvm, 30), d = new T.Object3D(); let k = 0;
       for(let i = 0; i < 15; i++) [-1, 1].forEach(sd => { const t = (i - 7)/7*1.1; d.position.set(sd*.022, Math.cos(t)*.2, Math.sin(t)*.2); d.updateMatrix(); inst.setMatrixAt(k++, d.matrix); });
       inst.instanceMatrix.needsUpdate = true; ring.add(inst); }
+    ring.children.forEach(ch => { if(ch !== band && !ch.isInstancedMesh) ch.visible = false; });      // la piedra y las garras apuntan hacia la pared de atrás: no se dibujan para que nada sobresalga de la caja
     /* zonas invisibles para tocar el collar, la pulsera y el anillo */
     const proxies = [], proxy = (name, geo, x, y, z) => { const m = new T.Mesh(geo, new T.MeshBasicMaterial({visible: false})); m.position.set(x, y, z); m.userData.item = name; jew.add(m); proxies.push(m); };
     proxy('collar', new T.BoxGeometry(1.9, .5, 1.0), 0, 0, -.25); proxy('pulsera', new T.BoxGeometry(1.3, .4, .45), -.1, 0, .42); proxy("anillo", new T.SphereGeometry(.38, 8, 6), 0, .05, -.75);
@@ -297,7 +298,7 @@
 
   const makers = [makeTermo, makeCobija, makeWafflera, makeCaja];
   const models = [];
-  let shakeT = -9999, bandB = 9999, fN = 0, rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
+  let closing = false, closeT0 = 0, resClose = null, shakeT = -9999, bandB = 9999, fN = 0, rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
   let W = 0, H = 0;
 
   function resize(){
@@ -340,7 +341,10 @@
     } else if(state === 'shown'){
       const ud = cur.userData, root = ud.root;
       if(root && root.userData.tick) root.userData.tick(now);
-      if(opening){                                                  // la caja se endereza hacia ti y el cajón se desliza
+      if(closing){                                                  // la caja se cierra: el cajón entra y vuelve a girar
+        const k = Math.min(1, (now - closeT0)/1500), e = ease(k); root.userData.setOpen(1 - e); rotX = root.userData.rx1 + (root.userData.rx0 - root.userData.rx1)*e; cur.scale.setScalar(ud.base*(1 - .14*(1 - e)));
+        if(k >= 1){ closing = false; opened = false; frz = null; resClose && resClose(); }
+      } else if(opening){                                                  // la caja se endereza hacia ti y el cajón se desliza
         const k = Math.min(1, (now - openT0)/2000), e1 = ease(Math.min(1, k/.5)), e2 = ease(Math.max(0, (k - .3)/.7));
         spin = os0*(1 - e1); rotX = root.userData.rx0 + (root.userData.rx1 - root.userData.rx0)*e1; root.userData.setOpen(e2);
         cur.scale.setScalar(ud.base*(1 - .14*e2));
@@ -354,6 +358,12 @@
         const sk = Math.max(0, 1 - (now - shakeT)/650); J.ring.position.x = Math.sin((now - shakeT)/38)*.06*sk;
       }
       cur.rotation.x = rotX; cur.rotation.y = spin + (opened ? Math.sin(now/1500)*.06 : 0); cur.rotation.z = Math.sin(now/900)*.03; cur.position.y = to.y + Math.sin(now/700)*.06; cur.position.x = to.x;
+    } else if(state === 'sinking'){                                  // la caja vuelve a la bolsa: baja al centro de la boca y se mete recortada
+      const k = Math.min(1, t/1700), b = cur.userData.base;
+      if(k < .55){ const u = ease(k/.55); cur.position.set(to.x + (from.x - to.x)*u, to.y + (exitY - to.y)*u, 0); cur.scale.setScalar((1 - .5*u)*b); clipOn = false; }
+      else { const u = ease((k - .55)/.45); cur.position.set(from.x, exitY + (from.y - exitY)*u, 0); cur.scale.setScalar(.5*b); clipOn = true; }
+      spin += .025; cur.rotation.y = spin; cur.rotation.x = rotX; cur.rotation.z = 0;
+      if(k >= 1){ scene.remove(cur); cur = null; clipOn = false; state = 'idle'; host.classList.remove('on'); API._res && API._res(); }
     } else if(state === 'leaving'){
       const k = Math.min(1, t/900), e = k*k; cur.position.y = to.y + e*3.4; spin += .05; cur.rotation.y = spin; cur.scale.setScalar(cur.userData.base*(1 + .3*e)); alpha = 1 - k;
       if(k >= 1){ scene.remove(cur); cur = null; clipOn = false; state = 'idle'; host.classList.remove('on'); API._res && API._res(); }
@@ -395,6 +405,8 @@
   API.shake = () => { shakeT = performance.now(); };
   API.itemScreen = name => { if(!cur || !cur.userData.root) return null; const m = cur.userData.root.userData.proxies.find(p => p.userData.item === name); if(!m) return null; cur.updateMatrixWorld(true); const v = m.getWorldPosition(new T.Vector3()); v.y += .35; v.project(camera); return {x: (v.x + 1)/2*W, y: (1 - v.y)/2*H}; };
   host.addEventListener('pointerup', e => { if(!API.onItem || state !== 'shown' || !opened || tmv > 10 || performance.now() - tt0 > 700) return; const n = API.pick(e.clientX, e.clientY); if(n) API.onItem(n); });
+  API.back = () => new Promise(res => { if(!cur){ res(); return; } state = 'sinking'; t0 = performance.now(); API._res = res; });
+  API.close = () => new Promise(res => { if(!cur || !cur.userData.root || !opened || closing){ res(); return; } closing = true; closeT0 = performance.now(); resClose = res; });
   API.state = () => state; API.freeze = v => { frz = v; };
   API.dbg = () => cur ? [state, cur.position.x.toFixed(2), cur.position.y.toFixed(2), cur.scale.x.toFixed(2), to.y.toFixed(2), from.y.toFixed(2), cur.userData.h.toFixed(2)].join(' ') : state;
 })();
