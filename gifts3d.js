@@ -240,13 +240,14 @@
     const clear = () => { const m = MM(0xd5deee, .02, 0, .55, {transparent: true, opacity: .8, flatShading: true, emissive: 0x6f7ca5, emissiveIntensity: .1}); m.userData.b = .1; glow.push(m); return m; };
     const colorGem = c => { const m = MM(c, .04, .1, 1.3, {flatShading: true, emissive: c, emissiveIntensity: .3}); m.userData.b = .3; glow.push(m); return m; };
     const jew = new T.Group(); jew.position.y = y0; tray.add(jew);
+    const neck = new T.Group(); jew.add(neck);      // el collar es un grupo aparte para poder levantarlo al tocarlo
     /* collar: cadena fina de plata (eslabones planos) y dije de corazón de cristal con flecha */
     const curve = new T.CatmullRomCurve3([[-.8, -.62], [-.56, -.4], [-.32, -.2], [-.12, -.09], [0, -.075], [.12, -.09], [.32, -.2], [.56, -.4], [.8, -.62]].map(p => new T.Vector3(p[0], .012, p[1])));
     const lgeo = new T.TorusGeometry(.02, .006, 5, 10);
     { const N = 91, inst = new T.InstancedMesh(lgeo, champ, N), d = new T.Object3D();      // una sola pieza instanciada: un solo dibujo en vez de 91
       for(let i = 0; i < N; i++){ const u = i/(N - 1), p = curve.getPoint(u), tg = curve.getTangent(u); d.position.copy(p); d.rotation.set(0, 0, 0); d.scale.set(1.4, 1, .7); d.lookAt(p.clone().add(tg)); d.rotateY(Math.PI/2); if(i%2) d.rotateX(Math.PI/2); d.updateMatrix(); inst.setMatrixAt(i, d.matrix); }
-      inst.instanceMatrix.needsUpdate = true; jew.add(inst); }
-    const pend = new T.Group(); pend.position.set(0, 0, .13); jew.add(pend);
+      inst.instanceMatrix.needsUpdate = true; neck.add(inst); }
+    const pend = new T.Group(); pend.position.set(0, 0, .13); neck.add(pend);
     const hs = new T.Shape(); hs.moveTo(0, -.14); hs.bezierCurveTo(-.2, -.01, -.16, .17, 0, .09); hs.bezierCurveTo(.16, .17, .2, -.01, 0, -.14);
     const heart = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .03, bevelEnabled: true, bevelThickness: .035, bevelSize: .02, bevelSegments: 1}), clear()); heart.rotation.x = -Math.PI/2; heart.position.y = .025; pend.add(heart);
     const table = new T.Mesh(new T.ExtrudeGeometry(hs, {depth: .01, bevelEnabled: true, bevelThickness: .015, bevelSize: .01, bevelSegments: 1}), clear()); table.scale.setScalar(.62); table.rotation.x = -Math.PI/2; table.position.set(0, .088, -.012); pend.add(table);
@@ -282,6 +283,10 @@
     { const pvm = clear(), inst = new T.InstancedMesh(new T.SphereGeometry(.0105, 6, 5), pvm, 30), d = new T.Object3D(); let k = 0;
       for(let i = 0; i < 15; i++) [-1, 1].forEach(sd => { const t = (i - 7)/7*1.1; d.position.set(sd*.022, Math.cos(t)*.2, Math.sin(t)*.2); d.updateMatrix(); inst.setMatrixAt(k++, d.matrix); });
       inst.instanceMatrix.needsUpdate = true; ring.add(inst); }
+    /* zonas invisibles para tocar el collar, la pulsera y el anillo */
+    const proxies = [], proxy = (name, geo, x, y, z) => { const m = new T.Mesh(geo, new T.MeshBasicMaterial({visible: false})); m.position.set(x, y, z); m.userData.item = name; jew.add(m); proxies.push(m); };
+    proxy('collar', new T.BoxGeometry(1.9, .5, 1.0), 0, 0, -.25); proxy('pulsera', new T.BoxGeometry(1.3, .4, .45), -.1, 0, .42); proxy('anillo', new T.SphereGeometry(.38, 8, 6), -.5, .05, -.74);
+    root.userData.neck = neck; root.userData.br = br; root.userData.ring = ring; root.userData.proxies = proxies; root.userData.jew = jew; root.userData.lifts = {collar: {v: 0, t: 0}, pulsera: {v: 0, t: 0}};
     root.add(tray);
     const OPEN = 1.75; root.userData.setOpen = (u, tilt) => { tray.position.z = OPEN*u; root.position.z = -OPEN*u*.5; };
     root.userData.tick = now => glow.forEach((m, i) => { m.emissiveIntensity = (m.userData.b || .35)*(.75 + .5*Math.sin(now/260 + i*1.3)); });
@@ -292,7 +297,7 @@
 
   const makers = [makeTermo, makeCobija, makeWafflera, makeCaja];
   const models = [];
-  let bandB = 9999, fN = 0, rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
+  let shakeT = -9999, bandB = 9999, fN = 0, rotX = 0, opened = false, opening = false, openT0 = 0, os0 = 0, resOpen = null, frz = null, exitY = 0, clipOn = false, cur = null, state = 'idle', t0 = 0, from = null, to = null, spin = 0, dragX = 0, dragV = 0, drag = false, lastX = 0, alpha = 1, clipY = 0;
   let W = 0, H = 0;
 
   function resize(){
@@ -342,6 +347,12 @@
         if(k >= 1){ opening = false; opened = true; resOpen && resOpen(); }
       } else if(opened){ if(!drag){ dragV *= .94; } spin += dragV; }
       else if(frz !== null) spin = frz; else if(!drag){ dragV *= .94; spin += .008 + dragV; }
+      if(root && root.userData.lifts){                              // el collar y la pulsera se levantan al tocarlos; el anillo se sacude
+        const J = root.userData, L = J.lifts; L.collar.v += (L.collar.t - L.collar.v)*.16; L.pulsera.v += (L.pulsera.t - L.pulsera.v)*.16;
+        J.neck.position.y = L.collar.v*.45; J.neck.scale.setScalar(1 + .1*L.collar.v);
+        J.br.position.set(-.6, L.pulsera.v*.7, .4 + L.pulsera.v*.45); J.br.rotation.x = -L.pulsera.v*.75; J.br.scale.setScalar(1 + .22*L.pulsera.v);
+        const sk = Math.max(0, 1 - (now - shakeT)/650); J.ring.position.x = -.5 + Math.sin((now - shakeT)/38)*.06*sk;
+      }
       cur.rotation.x = rotX; cur.rotation.y = spin + (opened ? Math.sin(now/1500)*.06 : 0); cur.rotation.z = Math.sin(now/900)*.03; cur.position.y = to.y + Math.sin(now/700)*.06; cur.position.x = to.x;
     } else if(state === 'leaving'){
       const k = Math.min(1, t/900), e = k*k; cur.position.y = to.y + e*3.4; spin += .05; cur.rotation.y = spin; cur.scale.setScalar(cur.userData.base*(1 + .3*e)); alpha = 1 - k;
@@ -377,6 +388,13 @@
   });
   API.leave = () => new Promise(res => { if(!cur){ res(); return; } state = 'leaving'; t0 = performance.now(); API._res = res; });
   API.open = () => new Promise(res => { if(!cur || !cur.userData.root || opening || opened){ res(); return; } os0 = ((spin + Math.PI)%(Math.PI*2) + Math.PI*2)%(Math.PI*2) - Math.PI; opening = true; openT0 = performance.now(); resOpen = res; });
+  /* toques sobre el collar, la pulsera y el anillo de la caja abierta */
+  const rc = new T.Raycaster();
+  API.pick = (px, py) => { if(!cur || !cur.userData.root || !cur.userData.root.userData.proxies) return null; rc.setFromCamera(new T.Vector2(px/W*2 - 1, -(py/H)*2 + 1), camera); cur.updateMatrixWorld(true); const h = rc.intersectObjects(cur.userData.root.userData.proxies, false); return h.length ? h[0].object.userData.item : null; };
+  API.lift = (name, on, now) => { const L = cur && cur.userData.root && cur.userData.root.userData.lifts; if(L && L[name]){ L[name].t = on ? 1 : 0; if(now) L[name].v = L[name].t; } };
+  API.shake = () => { shakeT = performance.now(); };
+  API.itemScreen = name => { if(!cur || !cur.userData.root) return null; const m = cur.userData.root.userData.proxies.find(p => p.userData.item === name); if(!m) return null; cur.updateMatrixWorld(true); const v = m.getWorldPosition(new T.Vector3()); v.y += .35; v.project(camera); return {x: (v.x + 1)/2*W, y: (1 - v.y)/2*H}; };
+  host.addEventListener('pointerup', e => { if(!API.onItem || state !== 'shown' || !opened || tmv > 10 || performance.now() - tt0 > 700) return; const n = API.pick(e.clientX, e.clientY); if(n) API.onItem(n); });
   API.state = () => state; API.freeze = v => { frz = v; };
   API.dbg = () => cur ? [state, cur.position.x.toFixed(2), cur.position.y.toFixed(2), cur.scale.x.toFixed(2), to.y.toFixed(2), from.y.toFixed(2), cur.userData.h.toFixed(2)].join(' ') : state;
 })();

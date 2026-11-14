@@ -768,6 +768,12 @@ figure.media.tvc.hoja .hn{position:absolute;left:8px;top:8px;padding:4px 9px;bor
 @media (max-aspect-ratio:1/1){#endscr .er .ec{aspect-ratio:4/3.4;flex:1 1 0}}
 .row.empty h2{margin-bottom:26px}
 @media (max-aspect-ratio:1/1){#nxt{right:50%;transform:translate(50%,14px);width:min(92vw,360px)}#nxt.on{transform:translate(50%,0)}}
+#gimg{position:fixed;left:0;top:0;z-index:9;opacity:0;pointer-events:none;transform:translateY(22px);transition:opacity .5s ease,transform .7s cubic-bezier(.2,.9,.25,1);text-align:center;cursor:zoom-in}
+#gimg.on{opacity:1;transform:none;pointer-events:auto}
+#gimg img{display:block;width:100%;height:auto;border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.18);background:#fbf5e8}
+#gimg .gh2{display:block;margin-top:7px;font:600 12px var(--sf);color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+#gtoast{position:fixed;left:50%;bottom:calc(max(24px,env(safe-area-inset-bottom)) + 46px);transform:translate(-50%,16px);z-index:12;max-width:86vw;padding:14px 20px;border-radius:18px;background:rgba(30,30,48,.94);border:1px solid rgba(255,255,255,.2);color:#fff;font:600 16px/1.35 var(--sf);text-align:center;opacity:0;pointer-events:none;transition:opacity .4s,transform .5s}
+#gtoast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
@@ -943,6 +949,8 @@ figure.media.tvc.hoja .hn{position:absolute;left:8px;top:8px;padding:4px 9px;bor
   </g>
  </g>
 </g></svg></div></div>
+<div id="gimg"><img alt="" draggable="false"><span class="gh2"></span></div>
+<div id="gtoast"></div>
 <div id="gcard"><p class="gk" id="gk"></p><p class="gt" id="gt"></p><p class="gh" id="gh"></p></div>
 <script src="three.min.js"></script>
 <script src="cake_assets.js"></script>
@@ -1957,19 +1965,29 @@ const GIFTS = [
   {t: 'Tu wafflera', k: '¡Y una wafflera, mami! 🧇', x: 'Para waffles con carita de Kitty, para los desayunos que te debo y los que me vas a regañar por no hacer bien. Cualquier plan se vuelve el mejor contigo.'}
 ];
 const waitTap = () => new Promise(r => { GIFTS3D.onTap = r; });
+/* las cartas: cada regalo trae su hoja encima; al tocarla se ve grande y con zoom */
+const gimg = $('gimg'), gtoast = $('gtoast'); let gimgOpen = null;
+function showLetter(n, pos, gh, hint){
+  const im = gimg.querySelector('img'), w = gh*920/1656; im.src = 'media/cartas/carta' + n + '.jpg'; gimg.style.width = w + 'px';
+  gimg.style.left = Math.max(8, Math.min(innerWidth - w - 8, pos.x - w/2)) + 'px'; gimg.style.top = pos.top + 'px'; gimg.querySelector('.gh2').textContent = hint || ''; gimg.classList.add('on');
+}
+function hideLetter(){ gimg.classList.remove('on'); }
+function toast(t, ms){ gtoast.textContent = t; gtoast.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => gtoast.classList.remove('on'), ms || 3200); }
+let gT = null;
+gimg.addEventListener('pointerdown', e => { gT = {x: e.clientX, y: e.clientY}; });
+gimg.addEventListener('pointerup', e => { if(!gT) return; const d = Math.hypot(e.clientX - gT.x, e.clientY - gT.y); gT = null; if(d <= 12){ if(gimgOpen) gimgOpen(); openPhoto(gimg.querySelector('img')); } });
 async function giftSequence(){
   if(!(window.GIFTS3D && GIFTS3D.ok)) return;
-  const gcard = $('gcard'); $('env-scene').classList.add('gifts'); await sleep(1000);
+  $('env-scene').classList.add('gifts'); await sleep(1000);
   for(let i = 0; i < GIFTS.length; i++){
     const g = GIFTS[i]; setBg(.15 + i*.2, 1, 0, 0, .4 + i*.1);
-    $('gk').textContent = g.t; $('gt').textContent = g.x; $('gh').textContent = i < GIFTS.length - 1 ? 'Toca el regalo para ver el siguiente 🎁' : 'Toca el regalo para ver mi carta 💌';
-    gcard.classList.add('on'); chime(); kitty.say(g.k, 5000);
+    const gh = innerHeight*.36, top = Math.max(innerHeight*.03, 18), px = innerHeight*.36;
+    showLetter(i + 1, {x: innerWidth/2, top}, gh, 'Toca la carta · toca el regalo para seguir 🎁'); chime(); kitty.say(g.k, 5000);
     await sleep(600);
-    const cb = gcard.getBoundingClientRect(), r = env3d.getBoundingClientRect(), mouth = {x: r.left + r.width/2, y: r.top + 6};
-    const px = innerHeight*.4;                                      // sale de la bolsa y se queda al centro de la pantalla
-    await GIFTS3D.emerge(i, mouth, {x: innerWidth/2, y: Math.max(innerHeight*.5, cb.bottom + px/2 + 14)}, px);
+    const r = env3d.getBoundingClientRect(), mouth = {x: r.left + r.width/2, y: r.top + 6};
+    await GIFTS3D.emerge(i, mouth, {x: innerWidth/2, y: Math.max(innerHeight*.5, top + gh + 34 + px/2 + 8)}, px);      // sale de la bolsa y se queda debajo de su carta
     await waitTap();
-    gcard.classList.remove('on'); await GIFTS3D.leave(); await sleep(300);
+    hideLetter(); await GIFTS3D.leave(); await sleep(300);
   }
   $('env-scene').classList.remove('gifts'); await sleep(950);
 }
@@ -2524,7 +2542,9 @@ function makeZoom(el, onClose){
 }
 makeZoom(pim, () => closePhoto());
 function openPhoto(img){ pim.src = img.currentSrc || img.src; pim.zoomReset(); pbg.classList.add('on'); }
-function closePhoto(){ pbg.classList.remove('on'); pim.zoomReset(); }
+let onPhotoClosed = null;
+document.body.appendChild(pbg);      // la vista grande queda fuera de la carta para poder usarse también con los regalos
+function closePhoto(){ const was = pbg.classList.contains('on'); pbg.classList.remove('on'); pim.zoomReset(); if(was && onPhotoClosed) onPhotoClosed(); }
 document.querySelectorAll('.pho').forEach(f => f.addEventListener('click', () => openPhoto(f.querySelector('img'))));
 pbg.addEventListener('click', e => { if(e.target === pbg || e.target === $('px')) closePhoto(); });
 addEventListener('keydown', e => { if(e.key === 'Escape') closePhoto(); });
@@ -2553,8 +2573,19 @@ $('wish').addEventListener('click', async () => {
   await waitTap();
   if(navigator.vibrate) navigator.vibrate(30);
   gcard.classList.remove('on'); await GIFTS3D.open(); chime();
-  $('gk').textContent = 'Para ti, mi Judith'; $('gt').textContent = 'Un collar, una pulsera y un anillo, para que me lleves contigo a donde vayas. Que todos tus deseos se cumplan. Feliz mes de tu cumpleaños, mi Pocahontas 🌿'; $('gh').textContent = 'Con amor, siempre';
-  gcard.classList.add('on'); kitty.say('¡Qué bonito, mami! 💖', 5000);
+  $('gk').textContent = 'Tu último regalo 💎'; $('gt').textContent = 'Toca el collar para ver su carta.'; $('gh').textContent = ''; gcard.classList.add('on');
+  let st = 0, tm = 0;
+  const cardAt = (n, name) => { const pt = GIFTS3D.itemScreen(name) || {x: innerWidth/2, y: innerHeight*.5}, gh = innerHeight*.34; showLetter(n, {x: pt.x, top: Math.max(innerHeight*.04, pt.y - gh - 40)}, gh, 'Toca la carta para leerla'); };
+  const goBracelet = () => {      // después del collar sale la pulsera con su carta encima
+    if(st !== 1) return; st = 2; hideLetter(); GIFTS3D.lift('collar', 0);
+    setTimeout(() => { GIFTS3D.lift('pulsera', 1); chime(); setTimeout(() => cardAt(5, 'pulsera'), 700); kitty.say('¡Qué bonito, mami! 💖', 5000); }, 500);
+  };
+  gimgOpen = () => clearTimeout(tm); onPhotoClosed = () => { if(st === 1){ clearTimeout(tm); tm = setTimeout(goBracelet, 1200); } };
+  GIFTS3D.onItem = name => {
+    if(name === 'anillo'){ GIFTS3D.shake(); toast('Este regalo solo se puede dar en persona 💍'); if(navigator.vibrate) navigator.vibrate([30, 50, 30]); return; }
+    if(st === 0 && name === 'collar'){ st = 1; gcard.classList.remove('on'); GIFTS3D.lift('collar', 1); chime(); setTimeout(() => cardAt(4, 'collar'), 600); tm = setTimeout(goBracelet, 9000); }
+    else if(st === 0) toast('Primero toca el collar 💎');
+  };
 });
 </script>
 </body>
